@@ -1,18 +1,52 @@
 form{
-    
     display: flex;
     flex-direction: column;
-    max-width: 480px;
-    margin: auto auto;
+    width: 100%;
+    padding: 3rem 2.5rem 2.25rem;
 
     .form-group{
         width: 100%;
+        margin: 5px 0;
+        &.form-group--actions{
+            display: flex;
+            justify-content: space-between;
+        }
+
         input{
+            border-radius: 4px;
+            height: 56px;
+            margin: 1px 1px 0 1px;
+            padding: 13px 15px;
             width: 100%;
-            border: 1px solid #dbdbdb;
+            background: var(--ligtershade);
+            border: 1px solid var(--shade);
             outline: none;
             padding: 1rem 0.85rem;
             border-radius: 4px;
+
+            // Theming.
+            @include theme(".dark"){
+                input{
+                background: rgba(255,255,255,.03) !important;
+                }
+            }
+
+            &:focus{
+                border-color: var(--acc);
+                border-width: 2px;
+            }
+
+            &.error{
+                border-color: var(--err);
+                border-width: 2px;
+            }
+        }
+
+        .alert{
+            font-size: 0.8rem;
+            color: var(--err);
+            font-weight: lighter;
+            padding-left: 5px;
         }
     }
 

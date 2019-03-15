@@ -1,0 +1,10 @@
+/**
+    Typography.
+*/
+@include font-face(Grotesk, styles/font/Thin, light, null, ttf);
+@include font-face(Grotesk, styles/font/Regular, Standard, null, ttf);
+@include font-face(Grotesk, styles/font/Medium, Medium, null, ttf);
+@include font-face(Grotesk, styles/font/Bold, Bold, null, ttf);
+
+$family-sans-serif: 'Grotesk','Helvetica', 'Arial', sans-serif;
+$render-mode: optimizeLegibility;

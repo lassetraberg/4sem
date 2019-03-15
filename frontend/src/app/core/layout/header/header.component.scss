@@ -1,0 +1,24 @@
+@import 'shared';
+
+.header{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    background: var(--lightershade);
+    border-bottom: 1px solid var(--shade);
+
+    // Theming.
+    @include theme(".dark"){
+        .header{
+           background: var(--darkshade);
+           border-bottom: 1px solid var(--lightershade);
+        }
+    }
+
+    .user{
+        margin-left: auto;
+    }
+}

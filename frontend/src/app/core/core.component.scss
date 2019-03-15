@@ -1,0 +1,36 @@
+//@import 'shared';
+
+:host{
+    display: grid;
+    min-height: 100vh;
+    margin: auto auto;
+    grid-template-areas: "header" 
+                            "main";
+    grid-template-rows: auto 1fr;
+
+
+    header{
+        grid-area: header;
+        z-index: 99;
+        grid-area: header;
+        height: 60px;
+        transition: height 250ms ease-in-out;
+        transition-delay: 200ms;
+    }
+
+    main{
+        background: var(--bg);
+        grid-area: main;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    // Absolute positioning for router outlet.
+    /deep/ router-outlet ~ * {
+        position: absolute;
+        width: calc(100vw - 32px);
+        margin-left: 16px;
+        margin-right: 16px;
+    }
+
+}
