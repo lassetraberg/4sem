@@ -24,19 +24,15 @@ export class SigninComponent implements OnInit {
         Validators.required
       ])
     });
-  
+
   }
   
   get username() { return this.form.get('username'); }
-
   get password() { return this.form.get('password'); }
 
-
-
   public async submit() {
-    const result = await this.auth.login(this.user.username, this.user.password).toPromise();
-
-    console.log(result)
+    const result = await this.auth.login(this.form.controls.username.value, this.form.controls.password.value).toPromise();
+    // Redirect
   }
 
 }

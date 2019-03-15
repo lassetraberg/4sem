@@ -4,6 +4,7 @@ import { CoreRoutingModule } from './core-routing.module';
 import { HeaderComponent } from './layout/header/header.component';
 import { ScreenService } from '../shared/services/screen.service';
 import { TitleService } from '../shared/services/title.service';
+import { AuthGuard } from '../shared/guards/auth.guard';
 @NgModule({
   declarations: [
       CoreComponent,
