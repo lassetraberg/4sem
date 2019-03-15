@@ -1,7 +1,7 @@
-DROP TABLE IF EXISTS account;
-DROP TABLE IF EXISTS connects;
-DROP TABLE IF EXISTS device;
-DROP TABLE IF EXISTS vehicle;
+DROP TABLE IF EXISTS account CASCADE;
+DROP TABLE IF EXISTS connects CASCADE;
+DROP TABLE IF EXISTS device CASCADE;
+DROP TABLE IF EXISTS vehicle CASCADE;
 
 CREATE TABLE account (
     account_id BIGSERIAL PRIMARY KEY,
@@ -33,3 +33,4 @@ CREATE TABLE connects (
     device_id UUID NOT NULL REFERENCES device(device_id),
     PRIMARY KEY(account_id, device_id)
 );
+
