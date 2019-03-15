@@ -40,6 +40,14 @@ export class AuthService {
         localStorage.setItem('id_token', result.token);
         localStorage.setItem("expires_at", JSON.stringify(result.valueOf()) );
     }
+
+    /**
+     * 
+     */
+    public isAuthenticated(): boolean {
+        const token = localStorage.getItem("id_token");
+        return token !== null;
+      }
     
 
 }
