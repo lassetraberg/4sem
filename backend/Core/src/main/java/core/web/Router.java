@@ -2,6 +2,7 @@ package core.web;
 
 import common.spi.IAccessManagerService;
 import common.spi.IRouterService;
+import common.spi.IWebSocketService;
 import common.util.SPILocator;
 import io.javalin.Javalin;
 
@@ -17,6 +18,15 @@ public class Router {
         for (IAccessManagerService configService : locateAccessManagerServices()) {
             app.accessManager(configService::configure);
         }
+
+        for (IWebSocketService webSocketService : locateWebSocketServices()) {
+            app.ws(webSocketService.getPath(), ws -> {
+                ws.onConnect(webSocketService::onConnect);
+                ws.onMessage(webSocketService::onMessage);
+                ws.onClose(webSocketService::onClose);
+                ws.onError(webSocketService::onError);
+            });
+        }
     }
 
     private List<IRouterService> locateRouterServices() {
@@ -25,5 +35,9 @@ public class Router {
 
     private List<IAccessManagerService> locateAccessManagerServices() {
         return SPILocator.locateAll(IAccessManagerService.class);
+    }
+
+    private List<IWebSocketService> locateWebSocketServices() {
+        return SPILocator.locateAll(IWebSocketService.class);
     }
 }
