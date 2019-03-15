@@ -20,7 +20,7 @@ public class MqttConnection {
         options.setUserName(Config.getInstance("core").getProperty("mqtt.username"));
         options.setPassword(Config.getInstance("core").getProperty("mqtt.password").toCharArray());
         try {
-            client = new MqttClient(Config.getInstance("core").getProperty("mqtt.url"), clientId);
+            client = new MqttClient(Config.getInstance("core").getProperty("mqtt.url"), ".mqtt-client-"+clientId);
             client.connect(options);
         } catch (MqttException e) {
             e.printStackTrace();
