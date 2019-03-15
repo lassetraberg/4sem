@@ -4,11 +4,9 @@ import common.config.Config;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.function.Consumer;
 
-public class DatabaseConnection  {
+public class DatabaseConnection {
     private DataSource dataSource;
 
     public DatabaseConnection() {

@@ -1,8 +1,7 @@
 package core.web;
 
-import io.javalin.BadRequestResponse;
-import io.javalin.Javalin;
-import io.javalin.UnauthorizedResponse;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import io.javalin.*;
 import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,27 +14,52 @@ public class ErrorExceptionMapper {
 
     public static void register(Javalin app) {
         app.exception(Exception.class, (e, ctx) -> {
-            log.error(String.format("Exception ocurred for req -> %s", e));
+            log.error(String.format("Exception occurred for req -> %s", e));
+            e.printStackTrace();
             ErrorResponse err = new ErrorResponse(Collections.singletonMap("Unknown error", Collections.singletonList(e.toString())));
             ctx.json(err).status(HttpStatus.INTERNAL_SERVER_ERROR_500);
         });
 
         app.exception(SQLException.class, (e, ctx) -> {
-            log.error(String.format("SQL Exception ocurred for req -> %s", e));
+            log.error(String.format("SQL Exception occurred for req -> %s", e));
             ErrorResponse err = new ErrorResponse(Collections.singletonMap("Unknown error", Collections.singletonList(e.toString())));
             ctx.json(err).status(HttpStatus.INTERNAL_SERVER_ERROR_500);
         });
 
         app.exception(BadRequestResponse.class, (e, ctx) -> {
-            log.error(String.format("BadRequestResponse ocurred for req -> %s", e));
+            log.error(String.format("BadRequestResponse occurred for req -> %s", e));
             ErrorResponse err = new ErrorResponse(Collections.singletonMap("body", Collections.singletonList("can't be empty or invalid")));
             ctx.json(err).status(HttpStatus.INTERNAL_SERVER_ERROR_500);
         });
 
         app.exception(UnauthorizedResponse.class, (e, ctx) -> {
-            log.error(String.format("UnauthorizedResponse ocurred for req -> %s", e));
-            ErrorResponse err = new ErrorResponse(Collections.singletonMap("login", Collections.singletonList("Account not authenticated")));
+            log.error(String.format("UnauthorizedResponse occurred for req -> %s", e));
+            ErrorResponse err = new ErrorResponse(Collections.singletonMap("login", Collections.singletonList(e.getMessage())));
             ctx.json(err).status(HttpStatus.UNAUTHORIZED_401);
+        });
+
+        app.exception(ForbiddenResponse.class, (e, ctx) -> {
+            log.error(String.format("ForbiddenResponse occurred for req -> %s", e));
+            ErrorResponse err = new ErrorResponse(Collections.singletonMap("login", Collections.singletonList("Account doesn't have permission to do this")));
+            ctx.json(err).status(HttpStatus.FORBIDDEN_403);
+        });
+
+        app.exception(JWTVerificationException.class, (e, ctx) -> {
+            log.error(String.format("JWTVerificationException occurred for req -> %s", e));
+            ErrorResponse err = new ErrorResponse(Collections.singletonMap("token", Collections.singletonList("Invalid JWT token")));
+            ctx.json(err).status(HttpStatus.FORBIDDEN_403);
+        });
+
+        app.exception(NotFoundResponse.class, (e, ctx) -> {
+            log.error(String.format("NotFoundResponse occurred for req -> %s", e));
+            ErrorResponse err = new ErrorResponse(Collections.singletonMap("body", Collections.singletonList("404 Not Found")));
+            ctx.json(err).status(HttpStatus.NOT_FOUND_404);
+        });
+
+        app.exception(HttpResponseException.class, (e, ctx) -> {
+            log.error(String.format("HttpResponseException occurred for req -> %s", e));
+            ErrorResponse err = new ErrorResponse(Collections.singletonMap("body", Collections.singletonList(e.getMessage())));
+            ctx.json(err).status(e.getStatus());
         });
 
     }

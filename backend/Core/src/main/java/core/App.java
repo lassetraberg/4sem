@@ -1,6 +1,5 @@
 package core;
 
-import core.config.AppConfig;
 import core.config.ConfigFactory;
 
 public class App {

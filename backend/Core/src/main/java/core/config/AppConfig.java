@@ -1,5 +1,6 @@
 package core.config;
 
+import core.web.ErrorExceptionMapper;
 import core.web.Router;
 import io.javalin.Javalin;
 
@@ -19,6 +20,7 @@ public class AppConfig {
                 .port(port)
                 .enableRouteOverview("/routes");
         router.register(app);
+        ErrorExceptionMapper.register(app);
 
         return app;
     }
