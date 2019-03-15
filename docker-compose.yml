@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+    mqtt:
+        image: eclipse-mosquitto
+        volumes:
+            - "./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf"
+            - "./mqtt/acl.conf:/mosquitto/config/acl.conf"
+            - "./mqtt/password.conf:/mosquitto/config/password.conf"
+        ports:
+            - "1883:1883"
+
+    db:
+        image: postgres
+        ports:
+            - "5432:5432"
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=4semdb
+        volumes:
+            - db_data:/var/lib/postgresql/data
+
+volumes:
+    db-data:

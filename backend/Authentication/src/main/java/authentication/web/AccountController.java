@@ -14,20 +14,21 @@ public class AccountController {
     }
 
     public void register(Context ctx) {
-        AccountDTO user = ctx.validatedBodyAsClass(AccountDTO.class)
-                .check(u -> !u.getUsername().isEmpty())
-                .check(u -> !u.getPassword().isEmpty())
-                .getOrThrow();
+        AccountDTO user = getOrThrow(ctx);
         Account createdAccount = accountService.create(DomainMapper.toAccount(user));
         ctx.json(createdAccount);
     }
 
     public void login(Context ctx) {
-        AccountDTO user = ctx.validatedBodyAsClass(AccountDTO.class)
-                .check(u -> !u.getUsername().isEmpty())
-                .check(u -> !u.getPassword().isEmpty())
-                .getOrThrow();
+        AccountDTO user = getOrThrow(ctx);
         Account authenticatedAccount = accountService.authenticate(DomainMapper.toAccount(user));
         ctx.json(authenticatedAccount);
+    }
+
+    private AccountDTO getOrThrow(Context ctx) {
+        return ctx.validatedBodyAsClass(AccountDTO.class)
+                .check(u -> u.getUsername() != null && !u.getUsername().isEmpty())
+                .check(u -> u.getPassword() != null && !u.getPassword().isEmpty())
+                .getOrThrow();
     }
 }
