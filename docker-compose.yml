@@ -1,6 +1,20 @@
 version: '3'
 
 services:
+    frontend:
+        image: sdugrp4/vehicle-telematics:frontend
+        build:
+            context: ./frontend
+        ports:
+            - "80:80"
+
+    backend:
+        image: sdugrp4/vehicle-telematics:backend
+        build:
+            context: ./backend
+        ports:
+            - "7000:7000"
+
     mqtt:
         image: eclipse-mosquitto
         volumes:
