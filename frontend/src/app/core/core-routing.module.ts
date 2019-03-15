@@ -5,11 +5,17 @@ const routes: Routes = [
     {
       path: '',
       loadChildren: "../modules/home/home.module#HomeModule",
-      canActivate: [AuthGuard]
+      canActivate: [AuthGuard],
+      data: {
+        animation: 'routerAnimation'
+      }
     },
     {
-      path: 'login',
-      loadChildren: "../modules/auth/auth.module#AuthModule"
+      path: 'auth',
+      loadChildren: "../modules/auth/auth.module#AuthModule",
+      data: {
+        animation: 'HomePage'
+      }
     }
 ];
 

@@ -4,15 +4,18 @@ import { CoreRoutingModule } from './core-routing.module';
 import { HeaderComponent } from './layout/header/header.component';
 import { ScreenService } from '../shared/services/screen.service';
 import { TitleService } from '../shared/services/title.service';
-import { AuthGuard } from '../shared/guards/auth.guard';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ThemeService } from '../shared/services/theme.service';
+
 @NgModule({
   declarations: [
       CoreComponent,
       HeaderComponent,
   ],
   imports: [
-    CoreRoutingModule
+    CoreRoutingModule,
+    BrowserAnimationsModule
   ],
-  providers: [ScreenService, TitleService]
+  providers: [ScreenService, TitleService, ThemeService]
 })
 export class CoreModule { }
