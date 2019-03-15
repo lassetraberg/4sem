@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, FormControl} from '@angular/forms';
 
 @Component({
@@ -12,10 +12,14 @@ export class SigninComponent implements OnInit {
 
   form: FormGroup;
   user = { username: '', password: ''};
+  return: string = '';
 
-  constructor(private auth: AuthService, private fb:FormBuilder, private router: Router) { }
+  constructor(private auth: AuthService, private fb:FormBuilder, private router: Router, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.route.queryParams
+    .subscribe(params => this.return = params['return'] || '/');
+
     this.form = new FormGroup({
       'username': new FormControl(this.user.username, [
         Validators.required
@@ -26,13 +30,15 @@ export class SigninComponent implements OnInit {
     });
 
   }
-  
+
   get username() { return this.form.get('username'); }
   get password() { return this.form.get('password'); }
 
   public async submit() {
-    const result = await this.auth.login(this.form.controls.username.value, this.form.controls.password.value).toPromise();
-    // Redirect
+    await this.auth.login(this.form.controls.username.value, this.form.controls.password.value).toPromise();
+    if(this.auth.isAuthenticated()){
+      this.router.navigateByUrl(this.return);
+    }
   }
 
 }
