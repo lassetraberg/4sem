@@ -1,4 +1,4 @@
-package common.spi.accessManagerService;
+package common.spi;
 
 import io.javalin.Context;
 import io.javalin.Handler;

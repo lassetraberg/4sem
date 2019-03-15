@@ -1,6 +1,6 @@
 package core.web;
 
-import common.spi.IConfigurationService;
+import common.spi.IAccessManagerService;
 import common.spi.IRouterService;
 import common.util.SPILocator;
 import io.javalin.Javalin;
@@ -14,8 +14,8 @@ public class Router {
             app.routes(router.getRoutes());
         }
 
-        for (IConfigurationService configService : locateConfigServices()) {
-            configService.configure(app);
+        for (IAccessManagerService configService : locateAccessManagerServices()) {
+            app.accessManager(configService::configure);
         }
     }
 
@@ -23,7 +23,7 @@ public class Router {
         return SPILocator.locateAll(IRouterService.class);
     }
 
-    private List<IConfigurationService> locateConfigServices() {
-        return SPILocator.locateAll(IConfigurationService.class);
+    private List<IAccessManagerService> locateAccessManagerServices() {
+        return SPILocator.locateAll(IAccessManagerService.class);
     }
 }

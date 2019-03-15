@@ -5,8 +5,11 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import commonAuthentication.config.authConfig.Roles;
 import io.javalin.Context;
 import io.javalin.ForbiddenResponse;
+import io.javalin.Handler;
 import io.javalin.Javalin;
 import io.javalin.security.Role;
+
+import java.util.Set;
 
 public class AuthConfig {
     private final String headerTokenName = "Authorization";
@@ -17,29 +20,33 @@ public class AuthConfig {
         this.jwtProvider = jwtProvider;
     }
 
-    public void configure(Javalin app) {
-        app.accessManager((handler, ctx, roles) -> {
-            DecodedJWT jwtToken = getJwtTokenHeader(ctx);
-            Role userRole = getUserRole(jwtToken);
-            if (userRole == null) {
-                userRole = Roles.ANYONE;
-            }
-            if (!roles.contains(userRole)) {
-                throw new ForbiddenResponse();
-            }
-            ctx.attribute("username", getUsername(jwtToken));
-            handler.handle(ctx);
-        });
+    public void configure(Handler handler, Context ctx, Set<Role> permittedRoles) throws Exception {
+        DecodedJWT jwtToken = getJwtTokenHeader(ctx);
+        Role userRole = getUserRole(jwtToken);
+        if (userRole == null) {
+            userRole = Roles.ANYONE;
+        }
+        if (!permittedRoles.contains(userRole)) {
+            throw new ForbiddenResponse();
+        }
+        ctx.attribute("username", getUsername(jwtToken));
+        handler.handle(ctx);
     }
 
     private DecodedJWT getJwtTokenHeader(Context ctx) {
-        if (ctx.header(headerTokenName) == null) {
+        String authHeader = ctx.header(headerTokenName);
+        if (authHeader == null) {
             return null;
         }
 
-        String tokenHeader = ctx.header(headerTokenName).split("Token")[1].trim();
+        String[] tokenParts = authHeader.split("Bearer");
 
-        return jwtProvider.decodedJWT(tokenHeader);
+        if (tokenParts.length == 2) {
+            String tokenHeader = tokenParts[1].trim();
+            return jwtProvider.decodedJWT(tokenHeader);
+        } else {
+            return null;
+        }
     }
 
     private String getUsername(DecodedJWT jwtToken) {
