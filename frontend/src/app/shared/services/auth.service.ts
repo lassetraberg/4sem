@@ -16,12 +16,12 @@ export class AuthService {
      * @param username 
      * @param password 
      */
-    login(username:string, password:string) {
+    login(username:string, password:string): Observable<any> {
         return this.http.post<string>(`${environment.api}/accounts/login`, {
             username,
             password
         }).pipe(
-            tap(res => this.setSession)
+            tap(res => this.setSession(res))
         );
     }
 
@@ -37,7 +37,7 @@ export class AuthService {
      * @param result 
      */
     private setSession(result): void {
-        localStorage.setItem('id_token', result.idToken);
+        localStorage.setItem('id_token', result.token);
         localStorage.setItem("expires_at", JSON.stringify(result.valueOf()) );
     }
     

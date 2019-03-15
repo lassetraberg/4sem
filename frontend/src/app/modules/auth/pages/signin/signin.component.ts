@@ -35,7 +35,8 @@ export class SigninComponent implements OnInit {
 
   public async submit() {
     const result = await this.auth.login(this.user.username, this.user.password).toPromise();
-    console.log(result);
+
+    console.log(result)
   }
 
 }
