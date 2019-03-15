@@ -1,3 +1,7 @@
+backend/.attach_pid*
+backend/mqtt-client-*
+
+
 # JAVA
 # Compiled class file
 *.class

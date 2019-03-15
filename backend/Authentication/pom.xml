@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>RELEASE</version>
+            <version>3.7.0</version>
         </dependency>
         <dependency>
             <groupId>sdu.grp4</groupId>

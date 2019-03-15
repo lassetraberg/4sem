@@ -33,4 +33,17 @@ public class Config {
     public String getProperty(String key) {
         return properties.getProperty(key);
     }
+
+    public String getEnv(String key) {
+        return System.getenv(key);
+    }
+
+    public String getEnvOrDefaultProperty(String key) {
+        String env = getEnv(key);
+        if (env != null) {
+            return env;
+        } else {
+            return getProperty(key);
+        }
+    }
 }

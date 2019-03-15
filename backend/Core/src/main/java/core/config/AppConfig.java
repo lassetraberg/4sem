@@ -1,8 +1,11 @@
 package core.config;
 
+import commonAuthentication.config.authConfig.Roles;
 import core.web.ErrorExceptionMapper;
 import core.web.Router;
 import io.javalin.Javalin;
+
+import java.util.Collections;
 
 public class AppConfig {
 
@@ -18,7 +21,7 @@ public class AppConfig {
         Javalin app = Javalin.create()
                 .enableCorsForAllOrigins()
                 .port(port)
-                .enableRouteOverview("/routes");
+                .enableRouteOverview("/routes", Collections.singleton(Roles.ANYONE));
         router.register(app);
         ErrorExceptionMapper.register(app);
 
