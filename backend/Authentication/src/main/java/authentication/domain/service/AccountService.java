@@ -1,10 +1,10 @@
 package authentication.domain.service;
 
-import authentication.config.authConfig.Roles;
 import authentication.domain.Account;
 import authentication.domain.repository.AccountRepository;
 import authentication.util.Cipher;
 import authentication.util.JwtProvider;
+import commonAuthentication.config.authConfig.Roles;
 import io.javalin.HttpResponseException;
 import io.javalin.UnauthorizedResponse;
 import org.eclipse.jetty.http.HttpStatus;
@@ -18,9 +18,9 @@ public class AccountService {
     private JwtProvider jwtProvider;
     private java.util.Base64.Encoder base64Encoder = Base64.getEncoder();
 
-    public AccountService(AccountRepository accountRepository) {
+    public AccountService(AccountRepository accountRepository, JwtProvider jwtProvider) {
         this.accountRepository = accountRepository;
-        jwtProvider = new JwtProvider();
+        this.jwtProvider = jwtProvider;
     }
 
     public Account create(Account account) {

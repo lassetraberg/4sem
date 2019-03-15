@@ -19,7 +19,7 @@ public class Config {
 
     private Config(String module) {
         try {
-            InputStream in = this.getClass().getClassLoader().getResourceAsStream(module + "/"+ module + "Config.properties");
+            InputStream in = this.getClass().getClassLoader().getResourceAsStream(module + "/" + module + "Config.properties");
             properties = new Properties();
             properties.load(in);
         } catch (FileNotFoundException e) {

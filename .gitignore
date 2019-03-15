@@ -2,6 +2,8 @@
 # Compiled class file
 *.class
 */target/**
+backend/*/target
+
 
 # Maven
 **/dependency-reduced-pom.xml

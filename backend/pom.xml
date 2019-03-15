@@ -12,6 +12,7 @@
         <module>Core</module>
         <module>Common</module>
         <module>Authentication</module>
+        <module>CommonAuthentication</module>
     </modules>
 
 

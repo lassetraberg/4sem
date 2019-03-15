@@ -1,4 +1,4 @@
-package authentication.config.authConfig;
+package commonAuthentication.config.authConfig;
 
 import io.javalin.security.Role;
 
