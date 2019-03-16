@@ -4,6 +4,7 @@ import common.config.Config;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
@@ -25,8 +26,8 @@ public class DatabaseConnection {
 
 
     protected void executeQuery(IDatabaseCallback callback) {
-        try {
-            callback.accept(dataSource.getConnection());
+        try (Connection connection = dataSource.getConnection()) {
+            callback.accept(connection);
         } catch (SQLException e) {
             e.printStackTrace();
         }
