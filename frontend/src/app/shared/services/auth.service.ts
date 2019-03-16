@@ -12,9 +12,9 @@ export class AuthService {
     }
 
     /**
-     * 
-     * @param username 
-     * @param password 
+     * JWT authentication signin method.
+     * @param username credentials 
+     * @param password credentials
      */
     login(username:string, password:string): Observable<any> {
         return this.http.post<string>(`${environment.api}/accounts/login`, {
@@ -26,15 +26,15 @@ export class AuthService {
     }
 
     /**
-     * 
+     * Remove JWT from local storage.
      */
     logout(): void {
-        localStorage.removeItem('token');
+        localStorage.removeItem('id_token');
     }
 
     /**
-     * 
-     * @param result 
+     * Assigns JWT and expiration to local storage.
+     * @param result token retrieved from API.
      */
     private setSession(result): void {
         localStorage.setItem('id_token', result.token);
@@ -42,7 +42,7 @@ export class AuthService {
     }
 
     /**
-     * 
+     * Checks if JWT exists in local storage.
      */
     public isAuthenticated(): boolean {
         const token = localStorage.getItem("id_token");

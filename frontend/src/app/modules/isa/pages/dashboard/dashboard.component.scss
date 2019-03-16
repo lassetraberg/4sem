@@ -1,0 +1,71 @@
+.dashboard{
+
+    .vehicle{
+        height: 60px;
+        background: var(--shade);
+        width: calc(100% + 32);
+        margin-left: -16px;
+        margin-right: -16px;
+
+        .vehicle_option{
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            > span{height: 100%}
+            .icon{
+                width: 80px;
+                flex-shrink: 0;
+                background: white;
+            }
+            .info{
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                padding: .5rem .8rem;
+                padding-right: 12px;
+                justify-content: center;
+                .model{
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    font-size: .75rem;
+                    font-weight: normal;
+                    margin-bottom: 5px;
+                }
+                .details{
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    font-size: .625rem;
+                    font-weight: lighter;
+                    opacity: 0.5;
+                    .license{
+
+                        &::after{
+                            content: " · ";
+                        }
+
+                    }
+                    .year{
+
+                    }
+                }
+            }
+            .dropdown{
+                margin-left: auto;
+                margin-right: 14px;
+                width: 0; 
+                height: 0; 
+                opacity: 0.5;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 5px solid var(--text-color);
+            }
+        }
+    }
+
+
+}

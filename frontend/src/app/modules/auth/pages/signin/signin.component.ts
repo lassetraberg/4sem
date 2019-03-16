@@ -14,7 +14,7 @@ export class SigninComponent implements OnInit {
   user = { username: '', password: ''};
   return: string = '';
 
-  constructor(private auth: AuthService, private fb:FormBuilder, private router: Router, private route: ActivatedRoute) { }
+  constructor(private auth: AuthService, private fb:FormBuilder, private router: Router, private route: ActivatedRoute) {  }
 
   ngOnInit(): void {
     this.route.queryParams

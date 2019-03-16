@@ -1,5 +1,7 @@
 <div class="header">
   <div class="user">
-    <button routerLink="/auth/signin" class="secondary">Sign In</button>
+    <button *ngIf="!auth.isAuthenticated()" routerLink="/auth/signin" class="secondary">Sign In</button>
+    <button *ngIf="auth.isAuthenticated()" (click)="signout()" class="cancel">Sign Out</button>
+    
   </div>
 </div>
