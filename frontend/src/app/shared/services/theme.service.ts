@@ -34,11 +34,11 @@ export class ThemeService {
     L_acc: string = "#1a73e8";
 
     // Dark theme.
-    D_bg: string = "#1E1E1E"
+    D_bg: string = "#181818"
     D_lighterShade: string = "#2C2C2C";
     D_lightShade: string = "#2C2C2C";
     D_shade: string = "#2C2C2C";
-    D_darkShade: string = "#191919"
+    D_darkShade: string = "#121212"
     D_textColor: string = "#FFFFFF";
     D_acc: string = "#1a73e8";
 
