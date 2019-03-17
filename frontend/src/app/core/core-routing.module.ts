@@ -13,7 +13,8 @@ const routes: Routes = [
     },
     {
       path: 'isa',
-      loadChildren: "../modules/isa/isa.module#IsaModule"
+      loadChildren: "../modules/isa/isa.module#IsaModule",
+      canActivate: [AuthGuard]
     }
 ];
 
