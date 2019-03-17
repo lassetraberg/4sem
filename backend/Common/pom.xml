@@ -38,6 +38,11 @@
             <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
             <version>1.2.1</version>
         </dependency>
+        <dependency>
+            <groupId>at.favre.lib</groupId>
+            <artifactId>bcrypt</artifactId>
+            <version>0.7.0</version>
+        </dependency>
 
     </dependencies>
 
