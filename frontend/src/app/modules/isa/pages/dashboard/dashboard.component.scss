@@ -2,23 +2,37 @@
 
     .vehicle{
         height: 60px;
-        background: var(--shade);
         width: calc(100% + 32);
         margin-left: -16px;
         margin-right: -16px;
+        position: relative;
 
         .vehicle_option{
+
+            &.vehicle_option--current{
+                z-index: 2;
+                position: relative;
+            }
+
+            background: var(--shade);
             cursor: pointer;
             width: 100%;
-            height: 100%;
+            height: 60px;
             display: flex;
             flex-direction: row;
             align-items: center;
             > span{height: 100%}
             .icon{
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 width: 80px;
                 flex-shrink: 0;
-                background: white;
+                > img{
+                    width: calc(100% - 1rem);
+                    -webkit-filter: invert(1);
+                    filter: invert(1);
+                }
             }
             .info{
                 overflow: hidden;
@@ -64,6 +78,16 @@
                 border-right: 5px solid transparent;
                 border-top: 5px solid var(--text-color);
             }
+        }
+
+        .vehicle_list{
+            max-height: calc(100vh - 60px - 60px);
+            overflow-y: scroll;
+            position: absolute;
+            z-index: 1;
+            top: 60px;
+            left: 0;
+            right: 0;
         }
     }
 
