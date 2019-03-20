@@ -6,7 +6,6 @@ import commonAuthentication.config.authConfig.Roles;
 import io.javalin.Context;
 import io.javalin.ForbiddenResponse;
 import io.javalin.Handler;
-import io.javalin.Javalin;
 import io.javalin.security.Role;
 
 import java.util.Set;
