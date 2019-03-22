@@ -3,13 +3,13 @@ package authentication.web;
 import authentication.domain.Account;
 import authentication.domain.dto.AccountDTO;
 import authentication.domain.mapper.DomainMapper;
-import authentication.domain.service.AccountService;
+import authentication.domain.service.IAccountService;
 import io.javalin.Context;
 
 public class AccountController {
-    private AccountService accountService;
+    private IAccountService accountService;
 
-    public AccountController(AccountService accountService) {
+    public AccountController(IAccountService accountService) {
         this.accountService = accountService;
     }
 
