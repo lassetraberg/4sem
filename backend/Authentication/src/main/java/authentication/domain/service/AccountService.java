@@ -1,52 +1,55 @@
 package authentication.domain.service;
 
 import authentication.domain.Account;
-import authentication.domain.repository.AccountRepository;
-import authentication.util.Cipher;
+import authentication.domain.repository.IAccountRepository;
+import authentication.util.IHasher;
 import authentication.util.JwtProvider;
+import common.web.exceptions.ValidationException;
 import commonAuthentication.config.authConfig.Roles;
-import io.javalin.HttpResponseException;
 import io.javalin.UnauthorizedResponse;
-import org.eclipse.jetty.http.HttpStatus;
 
-import java.util.Base64;
-import java.util.Collections;
-import java.util.Map;
-
-public class AccountService {
-    private AccountRepository accountRepository;
+public class AccountService implements IAccountService {
+    private IAccountRepository accountRepository;
     private JwtProvider jwtProvider;
-    private java.util.Base64.Encoder base64Encoder = Base64.getEncoder();
+    private IHasher hasher;
 
-    public AccountService(AccountRepository accountRepository, JwtProvider jwtProvider) {
+    public AccountService(IAccountRepository accountRepository, JwtProvider jwtProvider, IHasher hasher) {
         this.accountRepository = accountRepository;
         this.jwtProvider = jwtProvider;
+        this.hasher = hasher;
     }
 
     public Account create(Account account) {
         Account existingAccount = accountRepository.findByUsername(account.getUsername());
         if (existingAccount != null) {
-            Map<String, String> details = Collections.singletonMap("Error", "Username already registered");
-            throw new HttpResponseException(HttpStatus.BAD_REQUEST_400,
-                    "Username already registered", details);
-        } else {
-            String hashedPassword = new String(base64Encoder.encode(Cipher.encrypt(account.getPassword())));
-            account.setPassword(hashedPassword);
-            account.setToken(generateJwtToken(account));
-            accountRepository.createUser(account);
-            return account;
+            throw new ValidationException("Username already registered");
         }
+        if (account.getPassword().length() < 6) {
+            throw new ValidationException("Password must be at least 6 characters");
+        }
+        if (account.getUsername().length() < 2) {
+            throw new ValidationException("Username must be at least 2 characters");
+        }
+
+        String hashedPassword = hasher.hashPassword(account.getPassword());
+        account.setPassword(hashedPassword);
+        account.setToken(generateJwtToken(account));
+        accountRepository.createUser(account);
+        return account;
     }
 
     public Account authenticate(Account account) {
         Account existingAccount = accountRepository.findByUsername(account.getUsername());
-        String hashedPassword = new String(base64Encoder.encode(Cipher.encrypt(account.getPassword())));
-        if (existingAccount != null && existingAccount.getPassword().equals(hashedPassword)) {
-            existingAccount.setToken(generateJwtToken(account));
-            return existingAccount;
-        } else {
+        if (existingAccount == null) {
             throw new UnauthorizedResponse("Invalid username or password!");
         }
+
+        if (!hasher.isPasswordCorrect(account.getPassword(), existingAccount.getPassword())) {
+            throw new UnauthorizedResponse("Invalid username or password!");
+        }
+
+        existingAccount.setToken(generateJwtToken(account));
+        return existingAccount;
     }
 
     private String generateJwtToken(Account account) {

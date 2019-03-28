@@ -10,7 +10,7 @@ import java.time.Instant;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class AccountRepository extends DatabaseConnection {
+public class AccountRepository extends DatabaseConnection implements IAccountRepository {
     public Long createUser(Account account) {
         String sql = "INSERT INTO account (username, password) VALUES (?, ?) RETURNING account_id;";
         AtomicLong createdId = new AtomicLong(-1);

@@ -10,16 +10,16 @@ public class Config {
     private Properties properties;
     private static Config ourInstance;
 
-    public static Config getInstance(String module) {
+    public static Config getInstance() {
         if (ourInstance == null) {
-            ourInstance = new Config(module);
+            ourInstance = new Config();
         }
         return ourInstance;
     }
 
-    private Config(String module) {
+    private Config() {
         try {
-            InputStream in = this.getClass().getClassLoader().getResourceAsStream(module + "/" + module + "Config.properties");
+            InputStream in = this.getClass().getClassLoader().getResourceAsStream("common/config.properties");
             properties = new Properties();
             properties.load(in);
         } catch (FileNotFoundException e) {
