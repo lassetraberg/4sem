@@ -1,7 +1,7 @@
 package simulation.hardware.sensors;
 
 import common.data.mqtt.MqttConnection;
-import common.data.mqtt.MqttTopic;
+import common.data.mqtt.topics.VariableMqttTopic;
 import simulation.hardware.AbstractDevice;
 import simulation.hardware.State;
 
@@ -15,7 +15,7 @@ public class VelocitySensor extends AbstractDevice {
 
     @Override
     public void call(State state) {
-        client.publish(MqttTopic.VEHICLE_VELOCITY, state.getDeviceId(), toJson(generateVelocity()));
+        client.publish(VariableMqttTopic.VEHICLE_VELOCITY, state.getDeviceId(), toJson(generateVelocity()));
     }
 
     private String toJson(int speed) {

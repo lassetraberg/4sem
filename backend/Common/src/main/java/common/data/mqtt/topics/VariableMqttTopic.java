@@ -1,12 +1,12 @@
-package common.data.mqtt;
+package common.data.mqtt.topics;
 
-public enum MqttTopic {
+public enum VariableMqttTopic {
     VEHICLE_ALL("/%s/vehicle/#"), VEHICLE_GPS("/%s/vehicle/gps"), VEHICLE_VELOCITY("/%s/vehicle/speed"),
     VEHICLE_ALARM_SPEEDING("/%s/vehicle/alarms/speeding"), VEHICLE_MAX_ALLOWED_VELOCITY("/%s/vehicle/maxSpeed");
 
     private String topic;
 
-    MqttTopic(String topic) {
+    VariableMqttTopic(String topic) {
         this.topic = topic;
     }
 
@@ -18,9 +18,9 @@ public enum MqttTopic {
         return String.format(topic, deviceId);
     }
 
-    public static MqttTopic fromString(String topic) {
+    public static VariableMqttTopic fromString(String topic) {
         String originalTopic = getOriginalTopic(topic);
-        for (MqttTopic value : MqttTopic.values()) {
+        for (VariableMqttTopic value : VariableMqttTopic.values()) {
             if (value.topic.equalsIgnoreCase(originalTopic)) {
                 return value;
             }

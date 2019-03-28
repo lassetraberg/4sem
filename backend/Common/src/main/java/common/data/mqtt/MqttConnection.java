@@ -1,6 +1,8 @@
 package common.data.mqtt;
 
 import common.config.Config;
+import common.data.mqtt.topics.StaticMqttTopic;
+import common.data.mqtt.topics.VariableMqttTopic;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.UUID;
@@ -13,21 +15,41 @@ public class MqttConnection {
         connect();
     }
 
-    public void publish(MqttTopic topic, String deviceId, String message) {
+    public void publish(StaticMqttTopic topic, String message) {
+        this.realPublish(topic.getTopic(), message);
+    }
+
+    public void publish(VariableMqttTopic topic, String deviceId, String message) {
+        this.realPublish(topic.format(deviceId), message);
+    }
+
+    private void realPublish(String topic, String message) {
         MqttMessage mqttMsg = new MqttMessage(message.getBytes());
         mqttMsg.setQos(0);
         mqttMsg.setRetained(true);
         try {
-            client.publish(topic.format(deviceId), mqttMsg);
+            client.publish(topic, mqttMsg);
         } catch (MqttException e) {
             e.printStackTrace();
         }
     }
 
-    public void subscribe(MqttTopic topic, String deviceId, BiConsumer<MqttTopic, String> callback) {
+    public void subscribe(StaticMqttTopic topic, BiConsumer<StaticMqttTopic, String> callback) {
+        this.realSubscribe(topic.getTopic(), (returnTopic, msg) -> {
+            callback.accept(StaticMqttTopic.fromString(returnTopic), msg);
+        });
+    }
+
+    public void subscribe(VariableMqttTopic topic, String deviceId, BiConsumer<VariableMqttTopic, String> callback) {
+        this.realSubscribe(topic.format(deviceId), (returnTopic, msg) -> {
+            callback.accept(VariableMqttTopic.fromString(returnTopic), msg);
+        });
+    }
+
+    private void realSubscribe(String topic, BiConsumer<String, String> callback) {
         try {
-            client.subscribe(topic.format(deviceId), (mqttTopic, msg) -> {
-               callback.accept(MqttTopic.fromString(mqttTopic), new String(msg.getPayload()));
+            client.subscribe(topic, (mqttTopic, msg) -> {
+                callback.accept(mqttTopic, new String(msg.getPayload()));
             });
         } catch (MqttException e) {
             e.printStackTrace();
