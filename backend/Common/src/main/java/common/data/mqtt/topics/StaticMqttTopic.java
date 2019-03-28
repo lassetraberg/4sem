@@ -1,7 +1,8 @@
 package common.data.mqtt.topics;
 
 public enum StaticMqttTopic {
-    Test("test");
+    Test("/vehicle/test");
+
     private String topic;
 
     StaticMqttTopic(String topic) {

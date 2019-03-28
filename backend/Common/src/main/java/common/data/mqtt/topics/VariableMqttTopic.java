@@ -10,10 +10,6 @@ public enum VariableMqttTopic {
         this.topic = topic;
     }
 
-    public String getTopic() {
-        return topic;
-    }
-
     public String format(String deviceId) {
         return String.format(topic, deviceId);
     }
