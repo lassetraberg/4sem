@@ -13,9 +13,9 @@ public class DatabaseConnection {
     public DatabaseConnection() {
         BasicDataSource bds = new BasicDataSource();
 
-        bds.setUrl(Config.getInstance("core").getProperty("db.url"));
-        bds.setUsername(Config.getInstance("core").getProperty("db.username"));
-        bds.setPassword(Config.getInstance("core").getProperty("db.password"));
+        bds.setUrl(Config.getInstance().getProperty("db.url"));
+        bds.setUsername(Config.getInstance().getProperty("db.username"));
+        bds.setPassword(Config.getInstance().getProperty("db.password"));
 
         dataSource = bds;
     }
