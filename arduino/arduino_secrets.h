@@ -1,2 +1,2 @@
-#define SECRET_SSID "Dennis's iPhone"
-#define SECRET_PASS "dennistp"
+#define SECRET_SSID "Mit WiFi"
+#define SECRET_PASS "Password"
