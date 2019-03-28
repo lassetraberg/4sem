@@ -1,7 +1,7 @@
 package common.data.mqtt;
 
 public enum MqttTopic {
-    VEHICLE_GPS("/vehicle/gps");
+    VEHICLE_ALL("/vehicle/#"), VEHICLE_GPS("/vehicle/gps"), VEHICLE_SPEED("/vehicle/speed");
 
     private String topic;
 
