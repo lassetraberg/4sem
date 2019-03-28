@@ -1,18 +1,20 @@
-package simulation.sensors;
+package simulation.hardware.sensors;
 
 import common.data.mqtt.MqttConnection;
 import common.data.mqtt.MqttTopic;
+import simulation.hardware.AbstractDevice;
+import simulation.hardware.State;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GPSSensor extends AbstractSensor {
+public class GPSSensor extends AbstractDevice {
 
     public GPSSensor(MqttConnection client) {
         super(client);
     }
 
-    public void call() {
-        client.publish(MqttTopic.VEHICLE_GPS, toJson(generateGpsLatLon()));
+    public void call(State state) {
+        client.publish(MqttTopic.VEHICLE_GPS, state.getDeviceId(), toJson(generateGpsLatLon()));
     }
 
     private String toJson(double[] gpsLatLon) {

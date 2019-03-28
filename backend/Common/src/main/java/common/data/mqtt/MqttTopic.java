@@ -1,7 +1,8 @@
 package common.data.mqtt;
 
 public enum MqttTopic {
-    VEHICLE_ALL("/vehicle/#"), VEHICLE_GPS("/vehicle/gps"), VEHICLE_SPEED("/vehicle/speed");
+    VEHICLE_ALL("/#/vehicle/#"), VEHICLE_GPS("/%s/vehicle/gps"), VEHICLE_VELOCITY("/%s/vehicle/speed"),
+    VEHICLE_ALARM_SPEEDING("/%s/vehicle/alarms/speeding"), VEHICLE_MAX_ALLOWED_VELOCITY("/%s/vehicle/maxSpeed");
 
     private String topic;
 
@@ -11,6 +12,10 @@ public enum MqttTopic {
 
     public String getTopic() {
         return topic;
+    }
+
+    public String format(String deviceId) {
+        return String.format(topic, deviceId);
     }
 
     public static MqttTopic fromString(String topic) {

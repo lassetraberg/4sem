@@ -13,21 +13,22 @@ public class MqttConnection {
         connect();
     }
 
-    public void publish(MqttTopic topic, String message) {
+    public void publish(MqttTopic topic, String deviceId, String message) {
         MqttMessage mqttMsg = new MqttMessage(message.getBytes());
         mqttMsg.setQos(0);
         mqttMsg.setRetained(true);
         try {
-            client.publish(topic.getTopic(), mqttMsg);
+            client.publish(topic.format(deviceId), mqttMsg);
         } catch (MqttException e) {
             e.printStackTrace();
         }
     }
 
-    public void subscribe(MqttTopic topic, BiConsumer<MqttTopic, String> callback) {
+    public void subscribe(MqttTopic topic, String deviceId, BiConsumer<MqttTopic, String> callback) {
         try {
-            client.subscribe(topic.getTopic(), (mqttTopic, msg) ->
-                    callback.accept(MqttTopic.fromString(mqttTopic), new String(msg.getPayload())));
+            client.subscribe(topic.format(deviceId), (mqttTopic, msg) -> {
+               callback.accept(MqttTopic.fromString(mqttTopic), new String(msg.getPayload()));
+            });
         } catch (MqttException e) {
             e.printStackTrace();
         }
