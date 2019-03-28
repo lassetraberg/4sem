@@ -13,7 +13,7 @@
         <module>Common</module>
         <module>Authentication</module>
         <module>CommonAuthentication</module>
-        <module>simulation</module>
+        <module>Simulation</module>
     </modules>
 
 

@@ -1,6 +1,7 @@
 package simulation;
 
-import common.data.mqtt.MqttConnection;
+import common.spi.IMqttService;
+import common.util.SPILocator;
 import simulation.hardware.AbstractDevice;
 import simulation.hardware.State;
 import simulation.hardware.actuators.SpeedingAlarmActuator;
@@ -13,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class SimulationMain {
     public static void main(String[] args) {
-        MqttConnection mqttConnection = new MqttConnection();
+        IMqttService mqttConnection = SPILocator.locateAll(IMqttService.class).get(0);
         State state = new State();
         int howLong = 1;
 
@@ -32,11 +33,11 @@ public class SimulationMain {
         mqttConnection.disconnect();
     }
 
-    private static List<AbstractDevice> getPublishers(MqttConnection mqttConnection) {
+    private static List<AbstractDevice> getPublishers(IMqttService mqttConnection) {
         return Arrays.asList(new GPSSensor(mqttConnection), new VelocitySensor(mqttConnection));
     }
 
-    private static List<AbstractDevice> getSubscribers(MqttConnection mqttConnection) {
+    private static List<AbstractDevice> getSubscribers(IMqttService mqttConnection) {
         return Arrays.asList(new SpeedingAlarmActuator(mqttConnection));
     }
 

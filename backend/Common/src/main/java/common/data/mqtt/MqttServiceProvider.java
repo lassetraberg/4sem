@@ -3,15 +3,16 @@ package common.data.mqtt;
 import common.config.Config;
 import common.data.mqtt.topics.StaticMqttTopic;
 import common.data.mqtt.topics.VariableMqttTopic;
+import common.spi.IMqttService;
 import org.eclipse.paho.client.mqttv3.*;
 
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
-public class MqttConnection {
+class MqttServiceProvider implements IMqttService {
     private IMqttClient client;
 
-    public MqttConnection() {
+    public MqttServiceProvider() {
         connect();
     }
 

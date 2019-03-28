@@ -1,14 +1,14 @@
 package simulation.hardware;
 
-import common.data.mqtt.MqttConnection;
+import common.spi.IMqttService;
 
 import java.util.Random;
 
 public abstract class AbstractDevice {
-    protected MqttConnection client;
+    protected IMqttService client;
     protected Random random;
 
-    public AbstractDevice(MqttConnection client) {
+    public AbstractDevice(IMqttService client) {
         this.random = new Random();
         this.client = client;
     }

@@ -1,7 +1,7 @@
 package simulation.hardware.sensors;
 
-import common.data.mqtt.MqttConnection;
 import common.data.mqtt.topics.VariableMqttTopic;
+import common.spi.IMqttService;
 import simulation.hardware.AbstractDevice;
 import simulation.hardware.State;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class GPSSensor extends AbstractDevice {
 
-    public GPSSensor(MqttConnection client) {
+    public GPSSensor(IMqttService client) {
         super(client);
     }
 

@@ -1,12 +1,12 @@
 package simulation.hardware.actuators;
 
-import common.data.mqtt.MqttConnection;
 import common.data.mqtt.topics.VariableMqttTopic;
+import common.spi.IMqttService;
 import simulation.hardware.AbstractDevice;
 import simulation.hardware.State;
 
 public class SpeedingAlarmActuator extends AbstractDevice {
-    public SpeedingAlarmActuator(MqttConnection client) {
+    public SpeedingAlarmActuator(IMqttService client) {
         super(client);
     }
 
