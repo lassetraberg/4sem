@@ -33,6 +33,7 @@ services:
             - POSTGRES_PASSWORD=password
             - POSTGRES_DB=4semdb
         volumes:
+            - "./migrations/:/docker-entrypoint-initdb.d/"
             - db_data:/var/lib/postgresql/data
 
 volumes:
