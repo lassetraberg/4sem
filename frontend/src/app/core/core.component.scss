@@ -1,21 +1,24 @@
-//@import 'shared';
+@import 'shared';
 
 :host{
     display: grid;
     min-height: 100vh;
     margin: auto auto;
     grid-template-areas: "header" 
+                            "main"
+                            "nav";
+    grid-template-rows: auto 1fr auto;
+    @include tablet{
+        grid-template-areas: "header"
                             "main";
-    grid-template-rows: auto 1fr;
+        grid-template-rows: auto 1fr;
+    }
 
 
     header{
         grid-area: header;
         z-index: 99;
-        grid-area: header;
         height: 60px;
-        transition: height 250ms ease-in-out;
-        transition-delay: 200ms;
     }
 
     main{
@@ -23,6 +26,11 @@
         grid-area: main;
         overflow-y: auto;
         overflow-x: hidden;
+    }
+
+    nav{
+        grid-area: nav;
+        height: 55px;
     }
 
     // Absolute positioning for router outlet.

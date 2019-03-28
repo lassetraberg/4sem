@@ -6,11 +6,13 @@ import { ScreenService } from '../shared/services/screen.service';
 import { TitleService } from '../shared/services/title.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ThemeService } from '../shared/services/theme.service';
+import { NavComponent } from './layout/nav/nav.component';
 
 @NgModule({
   declarations: [
       CoreComponent,
       HeaderComponent,
+      NavComponent,
   ],
   imports: [
     CoreRoutingModule,

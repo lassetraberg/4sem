@@ -19,4 +19,8 @@ export class HeaderComponent implements OnInit {
     this.router.navigateByUrl("/");
   }
 
+  get username(): string {
+    return localStorage.getItem('username');
+  }
+
 }
