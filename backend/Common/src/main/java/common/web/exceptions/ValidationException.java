@@ -5,7 +5,6 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.Map;
 
 public class ValidationException extends HttpResponseException {
     public ValidationException(@NotNull String msg) {
