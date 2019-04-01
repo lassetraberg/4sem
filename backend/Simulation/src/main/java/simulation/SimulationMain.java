@@ -16,7 +16,7 @@ public class SimulationMain {
     public static void main(String[] args) {
         IMqttService mqttConnection = SPILocator.locateAll(IMqttService.class).get(0);
         State state = new State();
-        int howLong = 1;
+        int howLong = 10;
 
         for (AbstractDevice subscriber : getSubscribers(mqttConnection)) {
             subscriber.call(state);

@@ -1,8 +1,13 @@
 package common.data.mqtt.topics;
 
+
+import common.util.StringUtils;
+
+import java.util.UUID;
+
 public enum VariableMqttTopic {
-    VEHICLE_ALL("/%s/vehicle/#"), VEHICLE_GPS("/%s/vehicle/gps"), VEHICLE_VELOCITY("/%s/vehicle/speed"),
-    VEHICLE_ALARM_SPEEDING("/%s/vehicle/alarms/speeding"), VEHICLE_MAX_ALLOWED_VELOCITY("/%s/vehicle/maxSpeed");
+    VEHICLE_ALL("/vehicle/%s/#"), VEHICLE_GPS("/vehicle/%s/gps"), VEHICLE_VELOCITY("/vehicle/%s/velocity"),
+    VEHICLE_ALARM_SPEEDING("/vehicle/%s/alarms/speeding"), VEHICLE_MAX_ALLOWED_VELOCITY("/vehicle/%s/maxSpeed");
 
     private String topic;
 
@@ -10,8 +15,8 @@ public enum VariableMqttTopic {
         this.topic = topic;
     }
 
-    public String format(String deviceId) {
-        return String.format(topic, deviceId);
+    public String format(UUID deviceId) {
+        return String.format(topic, deviceId.toString());
     }
 
     public static VariableMqttTopic fromString(String topic) {
@@ -21,18 +26,23 @@ public enum VariableMqttTopic {
                 return value;
             }
         }
-        throw new IllegalArgumentException("No constant with topic '" + topic + "' found");
+        return null;
     }
 
     private static String getOriginalTopic(String topic) {
         String[] parts = topic.split("/");
-        StringBuilder sb = new StringBuilder("/%s");
-        if (parts.length > 3) {
-            for (int i = 2; i < parts.length; i++) {
-                sb.append("/").append(parts[i]);
+        StringBuilder sb = new StringBuilder();
+        for (String part : parts) {
+            if (part.isEmpty()) continue;
+            sb.append("/");
+            if (StringUtils.isValidUUID(part)) {
+                sb.append(("%s"));
+            } else {
+                sb.append(part);
             }
         }
 
         return sb.toString();
     }
+
 }

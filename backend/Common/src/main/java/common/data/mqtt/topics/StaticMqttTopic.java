@@ -1,7 +1,8 @@
 package common.data.mqtt.topics;
 
+
 public enum StaticMqttTopic {
-    Test("/vehicle/test");
+    ALL_VEHICLES("/vehicle/#"), ALL_VEHICLES_GPS("/vehicle/+/gps"), ALL_VEHICLES_VELOCITY("/vehicle/+/velocity");
 
     private String topic;
 
@@ -19,6 +20,6 @@ public enum StaticMqttTopic {
                 return value;
             }
         }
-        throw new IllegalArgumentException("No constant with topic '" + topic + "' found");
+        return null;
     }
 }

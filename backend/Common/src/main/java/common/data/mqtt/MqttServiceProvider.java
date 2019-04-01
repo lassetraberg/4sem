@@ -9,7 +9,7 @@ import org.eclipse.paho.client.mqttv3.*;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
-class MqttServiceProvider implements IMqttService {
+public class MqttServiceProvider implements IMqttService {
     private IMqttClient client;
 
     public MqttServiceProvider() {
@@ -20,13 +20,13 @@ class MqttServiceProvider implements IMqttService {
         this.realPublish(topic.getTopic(), message);
     }
 
-    public void publish(VariableMqttTopic topic, String deviceId, String message) {
+    public void publish(VariableMqttTopic topic, UUID deviceId, String message) {
         this.realPublish(topic.format(deviceId), message);
     }
 
     private void realPublish(String topic, String message) {
         MqttMessage mqttMsg = new MqttMessage(message.getBytes());
-        mqttMsg.setQos(0);
+        //mqttMsg.setQos(0); // TODO Hvis den sættes til 0, fryser noget efter publish
         mqttMsg.setRetained(true);
         try {
             client.publish(topic, mqttMsg);
@@ -35,16 +35,13 @@ class MqttServiceProvider implements IMqttService {
         }
     }
 
-    public void subscribe(StaticMqttTopic topic, BiConsumer<StaticMqttTopic, String> callback) {
-        this.realSubscribe(topic.getTopic(), (returnTopic, msg) -> {
-            callback.accept(StaticMqttTopic.fromString(returnTopic), msg);
-        });
+    public void subscribe(StaticMqttTopic topic, BiConsumer<String, String> callback) {
+        this.realSubscribe(topic.getTopic(), callback);
     }
 
-    public void subscribe(VariableMqttTopic topic, String deviceId, BiConsumer<VariableMqttTopic, String> callback) {
-        this.realSubscribe(topic.format(deviceId), (returnTopic, msg) -> {
-            callback.accept(VariableMqttTopic.fromString(returnTopic), msg);
-        });
+    public void subscribe(VariableMqttTopic topic, UUID deviceId, BiConsumer<VariableMqttTopic, String> callback) {
+        this.realSubscribe(topic.format(deviceId), (returnTopic, msg) ->
+                callback.accept(VariableMqttTopic.fromString(returnTopic), msg));
     }
 
     private void realSubscribe(String topic, BiConsumer<String, String> callback) {
@@ -56,6 +53,26 @@ class MqttServiceProvider implements IMqttService {
             e.printStackTrace();
         }
     }
+
+
+    @Override
+    public void unsubscribe(VariableMqttTopic topic, UUID deviceId) {
+        this.realUnsubscribe(topic.format(deviceId));
+    }
+
+    @Override
+    public void unsubscribe(StaticMqttTopic topic) {
+        this.realUnsubscribe(topic.getTopic());
+    }
+
+    private void realUnsubscribe(String topic) {
+        try {
+            client.unsubscribe(topic);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void disconnect() {
         try {

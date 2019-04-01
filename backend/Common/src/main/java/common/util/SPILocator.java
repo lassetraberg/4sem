@@ -15,4 +15,15 @@ public class SPILocator {
 
         return implementations;
     }
+
+    public static <T> T locateSpecific(Class<T> service) {
+        ServiceLoader<T> serviceLoader = ServiceLoader.load(service);
+        T impl = serviceLoader.iterator().next();
+
+        if (impl == null) {
+            throw new RuntimeException(String.format("Implementation of %s not found!", service.getName()));
+        }
+
+        return impl;
+    }
 }

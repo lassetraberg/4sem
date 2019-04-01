@@ -3,6 +3,7 @@ package common.spi;
 import common.data.mqtt.topics.StaticMqttTopic;
 import common.data.mqtt.topics.VariableMqttTopic;
 
+import java.util.UUID;
 import java.util.function.BiConsumer;
 
 public interface IMqttService {
@@ -21,7 +22,7 @@ public interface IMqttService {
      * @param deviceId the device id
      * @param message  message payload
      */
-    void publish(VariableMqttTopic topic, String deviceId, String message);
+    void publish(VariableMqttTopic topic, UUID deviceId, String message);
 
     /**
      * Subscribes to messages on a topic.
@@ -29,16 +30,32 @@ public interface IMqttService {
      * @param topic    a static topic, does not take any arguments
      * @param callback callback that takes two arguments: (topic, message)
      */
-    void subscribe(StaticMqttTopic topic, BiConsumer<StaticMqttTopic, String> callback);
+    void subscribe(StaticMqttTopic topic, BiConsumer<String, String> callback);
 
     /**
-     * Subscribe to messages on a variable topic, for a certian device.
+     * Subscribe to messages on a variable topic, for a certain device.
      *
      * @param topic    a topic
      * @param deviceId which device
      * @param callback callback that takes two arguments: (topic, message)
      */
-    void subscribe(VariableMqttTopic topic, String deviceId, BiConsumer<VariableMqttTopic, String> callback);
+    void subscribe(VariableMqttTopic topic, UUID deviceId, BiConsumer<VariableMqttTopic, String> callback);
+
+    /**
+     * Unsubscribe from a topic
+     *
+     * @param topic    a variable topic, that takes device id as argument
+     * @param deviceId the device id
+     */
+    void unsubscribe(VariableMqttTopic topic, UUID deviceId);
+
+
+    /**
+     * Unsubscribe from a topic
+     *
+     * @param topic a static topic, does not take any arguments
+     */
+    void unsubscribe(StaticMqttTopic topic);
 
     void disconnect();
 }

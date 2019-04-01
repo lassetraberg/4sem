@@ -1,7 +1,9 @@
 package simulation.hardware;
 
+import java.util.UUID;
+
 public class State {
-    private String deviceId = "2905d0e7-615c-455b-8807-ddd7665d3994";
+    private UUID deviceId = UUID.fromString("2905d0e7-615c-455b-8807-ddd7665d3994");
     private boolean shouldBrake = false;
 
     public boolean isShouldBrake() {
@@ -12,7 +14,7 @@ public class State {
         this.shouldBrake = shouldBrake;
     }
 
-    public String getDeviceId() {
+    public UUID getDeviceId() {
         return deviceId;
     }
 }
