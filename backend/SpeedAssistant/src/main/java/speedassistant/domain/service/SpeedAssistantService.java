@@ -1,10 +1,10 @@
 package speedassistant.domain.service;
 
-import speedassistant.domain.VehicleData;
+import speedassistant.domain.models.vehicledata.VehicleData;
 
 import java.util.UUID;
 
-public class SpeedAssistantService implements ISpeedAssistantService{
+public class SpeedAssistantService implements ISpeedAssistantService {
     private ISpeedLimitService speedLimitService;
 
     public SpeedAssistantService(ISpeedLimitService speedLimitService) {

@@ -1,4 +1,4 @@
-package speedassistant.domain.service;
+package speedassistant.domain.service.communicationservices;
 
 import java.util.UUID;
 

@@ -1,25 +1,24 @@
-package speedassistant.domain.service;
+package speedassistant.domain.service.communicationservices;
 
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.data.mqtt.topics.VariableMqttTopic;
 import common.spi.IMqttService;
-import speedassistant.domain.GpsCoordinates;
-import speedassistant.domain.Velocity;
+import speedassistant.domain.models.vehicledata.GpsCoordinates;
+import speedassistant.domain.models.vehicledata.Velocity;
+import speedassistant.domain.service.ISpeedLimitService;
 
 import java.io.IOException;
 import java.util.UUID;
 
-public class SpeedAssistantMqttCommunicationService implements ISpeedAssistantCommunication{
+public class MqttCommunicationService implements ISpeedAssistantCommunication {
     private ISpeedLimitService speedLimitService;
     private IMqttService mqttService;
     private ObjectMapper mapper;
 
     private GpsCoordinates lastSeenGpsCoord;
 
-    public SpeedAssistantMqttCommunicationService(ISpeedLimitService speedLimitService, IMqttService mqttService, ObjectMapper mapper) {
+    public MqttCommunicationService(ISpeedLimitService speedLimitService, IMqttService mqttService, ObjectMapper mapper) {
         this.speedLimitService = speedLimitService;
         this.mqttService = mqttService;
         this.mapper = mapper;
@@ -39,7 +38,6 @@ public class SpeedAssistantMqttCommunicationService implements ISpeedAssistantCo
             Velocity vel = mapper.readValue(msg, Velocity.class);
             if (vel.getVelocity() > speedLimit) {
                 mqttService.publish(VariableMqttTopic.VEHICLE_ALARM_SPEEDING, deviceId, "true");
-                //System.out.println("true");
             }
         } catch (IOException e) {
             e.printStackTrace();

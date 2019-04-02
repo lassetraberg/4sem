@@ -1,4 +1,6 @@
-package speedassistant.domain;
+package speedassistant.domain.models.vehicledata;
+
+import java.util.Objects;
 
 public class GpsCoordinates {
     private double lat;
@@ -9,7 +11,8 @@ public class GpsCoordinates {
         this.lon = lon;
     }
 
-    public GpsCoordinates() { }
+    public GpsCoordinates() {
+    }
 
     public double getLat() {
         return lat;
@@ -33,5 +36,19 @@ public class GpsCoordinates {
                 "lat=" + lat +
                 ", lon=" + lon +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GpsCoordinates that = (GpsCoordinates) o;
+        return Double.compare(that.lat, lat) == 0 &&
+                Double.compare(that.lon, lon) == 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(lat, lon);
     }
 }

@@ -1,6 +1,6 @@
 package speedassistant.domain.service;
 
-import speedassistant.domain.VehicleData;
+import speedassistant.domain.models.vehicledata.VehicleData;
 
 import java.util.UUID;
 

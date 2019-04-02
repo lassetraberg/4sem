@@ -1,11 +1,7 @@
 package speedassistant.web;
 
-import common.util.JavalinUtils;
 import io.javalin.Context;
-import speedassistant.domain.VehicleData;
 import speedassistant.domain.service.ISpeedAssistantService;
-
-import java.util.UUID;
 
 public class SpeedAssistantRestController {
     private ISpeedAssistantService speedAssistantService;

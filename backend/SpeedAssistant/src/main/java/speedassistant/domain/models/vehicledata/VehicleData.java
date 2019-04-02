@@ -1,7 +1,4 @@
-package speedassistant.domain;
-
-import speedassistant.domain.GpsCoordinates;
-import speedassistant.domain.Velocity;
+package speedassistant.domain.models.vehicledata;
 
 public class VehicleData {
     private GpsCoordinates gpsCoordinates;
@@ -12,7 +9,8 @@ public class VehicleData {
         this.velocity = velocity;
     }
 
-    public VehicleData() { }
+    public VehicleData() {
+    }
 
     public GpsCoordinates getGpsCoordinates() {
         return gpsCoordinates;

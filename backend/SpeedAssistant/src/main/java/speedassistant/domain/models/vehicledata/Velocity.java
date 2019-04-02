@@ -1,4 +1,4 @@
-package speedassistant.domain;
+package speedassistant.domain.models.vehicledata;
 
 public class Velocity {
     private int velocity;
@@ -7,7 +7,8 @@ public class Velocity {
         this.velocity = velocity;
     }
 
-    public Velocity() { }
+    public Velocity() {
+    }
 
     public int getVelocity() {
         return velocity;
