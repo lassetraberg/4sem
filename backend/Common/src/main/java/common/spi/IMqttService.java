@@ -2,10 +2,13 @@ package common.spi;
 
 import common.data.mqtt.topics.StaticMqttTopic;
 import common.data.mqtt.topics.VariableMqttTopic;
+import common.function.ThrowingBiConsumer;
 
 import java.util.UUID;
-import java.util.function.BiConsumer;
 
+/**
+ * Remember to call connect() before using other methods
+ */
 public interface IMqttService {
     /**
      * Publish the message on a topic.
@@ -30,7 +33,7 @@ public interface IMqttService {
      * @param topic    a static topic, does not take any arguments
      * @param callback callback that takes two arguments: (topic, message)
      */
-    void subscribe(StaticMqttTopic topic, BiConsumer<String, String> callback);
+    void subscribe(StaticMqttTopic topic, ThrowingBiConsumer<String, String> callback);
 
     /**
      * Subscribe to messages on a variable topic, for a certain device.
@@ -39,7 +42,7 @@ public interface IMqttService {
      * @param deviceId which device
      * @param callback callback that takes two arguments: (topic, message)
      */
-    void subscribe(VariableMqttTopic topic, UUID deviceId, BiConsumer<VariableMqttTopic, String> callback);
+    void subscribe(VariableMqttTopic topic, UUID deviceId, ThrowingBiConsumer<VariableMqttTopic, String> callback);
 
     /**
      * Unsubscribe from a topic
@@ -56,6 +59,8 @@ public interface IMqttService {
      * @param topic a static topic, does not take any arguments
      */
     void unsubscribe(StaticMqttTopic topic);
+
+    void connect();
 
     void disconnect();
 }

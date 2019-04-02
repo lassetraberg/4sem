@@ -18,6 +18,7 @@ public class SpeedAssistantWSController extends AbstractWebSocketController impl
         this.mqttService = mqttService;
         this.mqttCommunicationService = mqttCommunicationService;
 
+        mqttService.connect();
         establishSubscriptions();
     }
 
