@@ -3,10 +3,14 @@ package common.data.mqtt;
 import common.config.Config;
 import common.data.mqtt.topics.StaticMqttTopic;
 import common.data.mqtt.topics.VariableMqttTopic;
-import common.function.ThrowingBiConsumer;
+import common.lambda.ThrowingBiConsumer;
 import common.spi.IMqttService;
 import org.eclipse.paho.client.mqttv3.*;
+import org.eclipse.paho.client.mqttv3.persist.MqttDefaultFilePersistence;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 public class MqttServiceProvider implements IMqttService {
@@ -23,8 +27,8 @@ public class MqttServiceProvider implements IMqttService {
 
     private void realPublish(String topic, String message) {
         MqttMessage mqttMsg = new MqttMessage(message.getBytes());
-        mqttMsg.setQos(0);
-        mqttMsg.setRetained(true);
+        mqttMsg.setQos(1);
+//        mqttMsg.setRetained(true);
         try {
             client.publish(topic, mqttMsg);
         } catch (MqttException e) {
@@ -44,7 +48,11 @@ public class MqttServiceProvider implements IMqttService {
     private void realSubscribe(String topic, ThrowingBiConsumer<String, String> callback) {
         try {
             client.subscribe(topic, (mqttTopic, msg) -> {
-                callback.accept(mqttTopic, new String(msg.getPayload()));
+                try {
+                    callback.accept(mqttTopic, new String(msg.getPayload()));
+                } catch (Throwable ex) {
+                    ex.printStackTrace();
+                }
             });
         } catch (MqttException e) {
             e.printStackTrace();
@@ -73,6 +81,8 @@ public class MqttServiceProvider implements IMqttService {
     public void connect() {
         String clientId = UUID.randomUUID().toString();
         MqttConnectOptions options = new MqttConnectOptions();
+        Path tempDir = createTempDir("4semMqtt");
+        MqttClientPersistence persistence = new MqttDefaultFilePersistence(tempDir.toAbsolutePath().toString());
         options.setAutomaticReconnect(true);
         options.setCleanSession(true);
         options.setConnectionTimeout(10);
@@ -83,7 +93,7 @@ public class MqttServiceProvider implements IMqttService {
         }
         options.setPassword(Config.getInstance().getProperty("mqtt.password").toCharArray());
         try {
-            client = new MqttClient(Config.getInstance().getProperty("mqtt.url"), ".mqtt-client-" + clientId);
+            client = new MqttClient(Config.getInstance().getProperty("mqtt.url"), ".mqtt-client-" + clientId, persistence);
             client.connect(options);
         } catch (MqttException e) {
             e.printStackTrace();
@@ -96,6 +106,20 @@ public class MqttServiceProvider implements IMqttService {
         } catch (MqttException e) {
             e.printStackTrace();
         }
+    }
+
+    private Path createTempDir(String prefix) {
+        Path tempDir = null;
+        try {
+            tempDir = Files.createTempDirectory(prefix);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (tempDir == null) {
+            throw new RuntimeException(String.format("Could not create temp dir with prefix %s", prefix));
+        }
+
+        return tempDir;
     }
 
 

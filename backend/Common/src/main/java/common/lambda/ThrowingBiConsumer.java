@@ -1,4 +1,4 @@
-package common.function;
+package common.lambda;
 
 import java.util.function.BiConsumer;
 
@@ -9,7 +9,7 @@ public interface ThrowingBiConsumer<T, U> extends BiConsumer<T, U> {
         try {
             throwingAccept(t, u);
         } catch (Throwable ex) {
-            ex.printStackTrace();
+            Throwing.sneakyThrow(ex);
         }
     }
 

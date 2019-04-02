@@ -2,7 +2,7 @@ package common.spi;
 
 import common.data.mqtt.topics.StaticMqttTopic;
 import common.data.mqtt.topics.VariableMqttTopic;
-import common.function.ThrowingBiConsumer;
+import common.lambda.ThrowingBiConsumer;
 
 import java.util.UUID;
 
