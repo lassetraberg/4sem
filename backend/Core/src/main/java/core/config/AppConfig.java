@@ -23,7 +23,7 @@ public class AppConfig {
                 .port(port)
                 .enableRouteOverview("/routes", Collections.singleton(Roles.ANYONE));
         router.register(app);
-        ErrorExceptionMapper.register(app);
+        //ErrorExceptionMapper.register(app);
 
         return app;
     }
