@@ -80,7 +80,7 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
         wsController = new SpeedAssistantWSController();
         return Arrays.asList(
                 new MqttCommunicationService(speedLimitService, mqttService, mapper),
-                new DatabaseCommunicationService(vehicleRepository),
+                new DatabaseCommunicationService(),
                 wsController
         );
     }
@@ -110,7 +110,7 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
                     UUID deviceId = UUID.fromString(session.pathParam("device-id"));
 
 
-                    if (/*vehicleService.userOwnsVehicle(deviceId, username)*/ true) {// TODO check if user is the owner of that deviceId
+                    if (vehicleService.userOwnsVehicle(deviceId, username)) {
                         if (!wsController.hasSession(session)) {
                             wsController.addSession(deviceId, session);
                             session.send(String.valueOf(session.hashCode()));
@@ -126,7 +126,9 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
 
             @Override
             public void onClose(WsSession session, int statusCode, String reason) {
+                System.out.println("Connection closed: " + session.getRemoteAddress().toString());
                 wsController.removeSession(session);
+                session.close();
                 session.disconnect();
             }
 
