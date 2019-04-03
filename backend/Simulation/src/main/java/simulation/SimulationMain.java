@@ -19,12 +19,15 @@ public class SimulationMain {
         State state = new State();
         int howLong = 10;
 
-        for (AbstractDevice subscriber : getSubscribers(mqttConnection)) {
+        List<AbstractDevice> subscribers = getSubscribers(mqttConnection);
+        List<AbstractDevice> publishers = getPublishers(mqttConnection);
+
+        for (AbstractDevice subscriber : subscribers) {
             subscriber.call(state);
         }
 
         for (int i = 0; i < howLong * 60; i++) {
-            for (AbstractDevice publisher : getPublishers(mqttConnection)) {
+            for (AbstractDevice publisher : publishers) {
                 publisher.call(state);
             }
 
@@ -35,7 +38,7 @@ public class SimulationMain {
     }
 
     private static List<AbstractDevice> getPublishers(IMqttService mqttConnection) {
-        return Arrays.asList(new GPSSensor(mqttConnection), new VelocitySensor(mqttConnection));
+        return Arrays.asList(new GPSSensor(mqttConnection, "1.txt"), new VelocitySensor(mqttConnection));
     }
 
     private static List<AbstractDevice> getSubscribers(IMqttService mqttConnection) {
