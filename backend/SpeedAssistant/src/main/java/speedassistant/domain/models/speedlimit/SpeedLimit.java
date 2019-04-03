@@ -22,7 +22,7 @@ public class SpeedLimit {
     /**
      * @return null if no speed limit was found
      */
-    public Integer getMaxSpeed() {
+    public Short getMaxSpeed() {
         if (this.elements.size() == 0) {
             return null;
         }
@@ -32,6 +32,6 @@ public class SpeedLimit {
             return null;
         }
 
-        return Integer.parseInt(firstElement.getTags().get("maxspeed"));
+        return Short.parseShort(firstElement.getTags().get("maxspeed"));
     }
 }

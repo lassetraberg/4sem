@@ -2,8 +2,9 @@ package authentication;
 
 import authentication.config.authConfig.AuthConfig;
 import authentication.config.authConfig.WebSocketAuthenticationProvider;
-import authentication.domain.repository.AccountRepository;
-import authentication.domain.repository.IAccountRepository;
+import common.util.SPILocator;
+import commonAuthentication.domain.repository.AccountRepository;
+import commonAuthentication.domain.repository.IAccountRepository;
 import authentication.domain.service.AccountService;
 import authentication.domain.service.IAccountService;
 import authentication.util.Hasher;
@@ -31,9 +32,13 @@ public class AuthenticationProvider implements IRouterService, IAccessManagerSer
     private IWebSocketAuthenticationService webSocketAuthenticationService = new WebSocketAuthenticationProvider(jwtProvider);
     private IHasher hasher = new Hasher();
 
-    private IAccountRepository accountRepository = new AccountRepository();
-    private IAccountService accountService = new AccountService(accountRepository, jwtProvider, hasher);
-    private AccountController accountController = new AccountController(accountService);
+    private AccountController accountController;
+
+    public AuthenticationProvider() {
+        IAccountRepository accountRepository = SPILocator.locateSpecific(IAccountRepository.class);
+        IAccountService accountService = new AccountService(accountRepository, jwtProvider, hasher);
+        accountController = new AccountController(accountService);
+    }
 
     @Override
     public EndpointGroup getRoutes() {

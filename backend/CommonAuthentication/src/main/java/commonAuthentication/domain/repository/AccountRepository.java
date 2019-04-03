@@ -1,7 +1,7 @@
-package authentication.domain.repository;
+package commonAuthentication.domain.repository;
 
-import authentication.domain.Account;
 import common.data.database.DatabaseConnection;
+import commonAuthentication.domain.model.Account;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

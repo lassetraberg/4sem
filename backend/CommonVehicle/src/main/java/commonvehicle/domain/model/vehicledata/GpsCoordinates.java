@@ -1,4 +1,4 @@
-package speedassistant.domain.models.vehicledata;
+package commonvehicle.domain.model.vehicledata;
 
 import java.util.Objects;
 

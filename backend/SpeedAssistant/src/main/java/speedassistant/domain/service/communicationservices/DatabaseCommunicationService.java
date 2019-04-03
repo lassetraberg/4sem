@@ -1,6 +1,6 @@
 package speedassistant.domain.service.communicationservices;
 
-import speedassistant.domain.repository.IVehicleRepository;
+import commonvehicle.domain.repository.IVehicleRepository;
 
 import java.util.UUID;
 

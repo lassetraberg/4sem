@@ -1,6 +1,7 @@
-package authentication.domain.repository;
+package commonAuthentication.domain.repository;
 
-import authentication.domain.Account;
+
+import commonAuthentication.domain.model.Account;
 
 public interface IAccountRepository {
     /**

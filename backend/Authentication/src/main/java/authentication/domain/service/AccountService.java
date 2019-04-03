@@ -1,7 +1,7 @@
 package authentication.domain.service;
 
-import authentication.domain.Account;
-import authentication.domain.repository.IAccountRepository;
+import commonAuthentication.domain.model.Account;
+import commonAuthentication.domain.repository.IAccountRepository;
 import authentication.util.IHasher;
 import authentication.util.JwtProvider;
 import common.web.exceptions.ValidationException;

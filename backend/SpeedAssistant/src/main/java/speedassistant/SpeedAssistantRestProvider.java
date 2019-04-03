@@ -6,9 +6,7 @@ import common.spi.IRouterService;
 import common.util.SPILocator;
 import commonAuthentication.config.authConfig.Roles;
 import io.javalin.apibuilder.EndpointGroup;
-import speedassistant.domain.service.ISpeedAssistantService;
 import speedassistant.domain.service.ISpeedLimitService;
-import speedassistant.domain.service.SpeedAssistantService;
 import speedassistant.domain.service.SpeedLimitService;
 import speedassistant.web.SpeedAssistantRestController;
 
@@ -26,9 +24,8 @@ public class SpeedAssistantRestProvider implements IRouterService {
         IMqttService mqttService = SPILocator.locateSpecific(IMqttService.class);
 
         ISpeedLimitService speedLimitService = new SpeedLimitService();
-        ISpeedAssistantService speedAssistantService = new SpeedAssistantService(speedLimitService);
 
-        controller = new SpeedAssistantRestController(speedAssistantService);
+        controller = new SpeedAssistantRestController();
     }
 
     @Override

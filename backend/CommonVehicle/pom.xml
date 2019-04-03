@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>SpeedAssistant</artifactId>
+    <artifactId>CommonVehicle</artifactId>
 
     <dependencies>
         <dependency>
@@ -20,11 +20,6 @@
         <dependency>
             <groupId>sdu.grp4</groupId>
             <artifactId>CommonAuthentication</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>sdu.grp4</groupId>
-            <artifactId>CommonVehicle</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

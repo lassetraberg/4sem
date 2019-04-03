@@ -1,6 +1,6 @@
 package authentication.web;
 
-import authentication.domain.Account;
+import commonAuthentication.domain.model.Account;
 import authentication.domain.dto.AccountDTO;
 import authentication.domain.mapper.DomainMapper;
 import authentication.domain.service.IAccountService;

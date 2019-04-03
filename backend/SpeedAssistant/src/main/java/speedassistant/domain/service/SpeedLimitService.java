@@ -1,10 +1,7 @@
 package speedassistant.domain.service;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import speedassistant.domain.models.speedlimit.SpeedLimit;
-import speedassistant.domain.models.vehicledata.GpsCoordinates;
+import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,18 +9,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SpeedLimitService implements ISpeedLimitService {
-    private Map<GpsCoordinates, Integer> cache = new HashMap<>();
+    private Map<GpsCoordinates, Short> cache = new HashMap<>();
 
     public SpeedLimitService() {
     }
 
 
     @Override
-    public int getSpeedLimit(GpsCoordinates gpsCoordinates) {
+    public short getSpeedLimit(GpsCoordinates gpsCoordinates) {
         if (cache.containsKey(gpsCoordinates)) {
             return cache.get(gpsCoordinates);
         }
-        int returnValue = Integer.MAX_VALUE;
+        short returnValue = Short.MAX_VALUE;
 
         URL apiUrl = buildUrl(50, gpsCoordinates.getLat(), gpsCoordinates.getLon());
         SpeedLimit speedLimit = null;

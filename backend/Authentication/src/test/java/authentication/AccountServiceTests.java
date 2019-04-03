@@ -1,8 +1,8 @@
 package authentication;
 
 
-import authentication.domain.Account;
-import authentication.domain.repository.IAccountRepository;
+import commonAuthentication.domain.model.Account;
+import commonAuthentication.domain.repository.IAccountRepository;
 import authentication.domain.service.AccountService;
 import authentication.domain.service.IAccountService;
 import authentication.util.IHasher;
