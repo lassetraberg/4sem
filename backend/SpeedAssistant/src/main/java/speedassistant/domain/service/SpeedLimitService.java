@@ -1,7 +1,7 @@
 package speedassistant.domain.service;
 
-import speedassistant.domain.models.speedlimit.SpeedLimit;
 import commonvehicle.domain.model.vehicledata.GpsCoordinates;
+import speedassistant.domain.models.speedlimit.SpeedLimit;
 
 import java.net.MalformedURLException;
 import java.net.URL;

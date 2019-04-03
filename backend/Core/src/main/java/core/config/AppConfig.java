@@ -11,6 +11,8 @@ import io.javalin.Javalin;
 import java.io.IOException;
 import java.util.Collections;
 
+import static common.util.JavalinUtils.roles;
+
 public class AppConfig {
 
     private Router router;
@@ -25,7 +27,7 @@ public class AppConfig {
         Javalin app = Javalin.create()
                 .enableCorsForAllOrigins()
                 .port(port)
-                .enableRouteOverview("/routes", Collections.singleton(Roles.ANYONE));
+                .enableRouteOverview("/routes", roles(Roles.ANYONE, Roles.AUTHENTICATED));
         router.register(app);
         ErrorExceptionMapper.register(app);
         initObjectMapper();
