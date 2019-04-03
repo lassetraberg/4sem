@@ -1,10 +1,13 @@
 package core.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mashape.unirest.http.Unirest;
 import commonAuthentication.config.authConfig.Roles;
-import core.web.ErrorExceptionMapper;
 import core.web.Router;
 import io.javalin.Javalin;
 
+import java.io.IOException;
 import java.util.Collections;
 
 public class AppConfig {
@@ -24,7 +27,31 @@ public class AppConfig {
                 .enableRouteOverview("/routes", Collections.singleton(Roles.ANYONE));
         router.register(app);
         //ErrorExceptionMapper.register(app);
+        initObjectMapper();
 
         return app;
+    }
+
+    private void initObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        Unirest.setObjectMapper(new com.mashape.unirest.http.ObjectMapper() {
+            @Override
+            public <T> T readValue(String value, Class<T> valueType) {
+                try {
+                    return mapper.readValue(value, valueType);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public String writeValue(Object value) {
+                try {
+                    return mapper.writeValueAsString(value);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 }
