@@ -102,10 +102,15 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
                     String username = webSocketAuthenticationService.getUsername(message);
                     UUID deviceId = UUID.fromString(session.pathParam("device-id"));
 
-                    // TODO check if user is the owner of that deviceId
-                    wsController.addSession(deviceId, session);
+
+                    if (true) {// TODO check if user is the owner of that deviceId
+                        wsController.addSession(deviceId, session);
+                        session.send("200"); // OK
+                    } else {
+                        session.send("404"); // Device ID for that user not found
+                    }
                 } else {
-                    System.out.println("wtf");
+                    session.send("401"); // Invalid JWT token / not logged in
                 }
             }
 
