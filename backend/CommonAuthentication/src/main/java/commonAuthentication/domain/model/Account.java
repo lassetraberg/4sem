@@ -1,4 +1,4 @@
-package authentication.domain;
+package commonAuthentication.domain.model;
 
 import java.time.Instant;
 

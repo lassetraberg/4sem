@@ -1,8 +1,6 @@
 package speedassistant;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mashape.unirest.http.Unirest;
 import common.data.mqtt.topics.StaticMqttTopic;
 import common.spi.IMqttService;
 import common.spi.IWebSocketAuthenticationService;
@@ -11,9 +9,11 @@ import common.spi.IWebSocketService;
 import common.util.SPILocator;
 import common.util.StringUtils;
 import commonAuthentication.config.authConfig.Roles;
+import commonAuthentication.domain.repository.IAccountRepository;
+import commonvehicle.domain.repository.IVehicleRepository;
+import commonvehicle.domain.service.IVehicleService;
 import io.javalin.security.Role;
 import io.javalin.websocket.WsSession;
-import speedassistant.domain.repository.IVehicleRepository;
 import speedassistant.domain.service.ISpeedLimitService;
 import speedassistant.domain.service.SpeedLimitService;
 import speedassistant.domain.service.communicationservices.DatabaseCommunicationService;
@@ -21,25 +21,31 @@ import speedassistant.domain.service.communicationservices.ISpeedAssistantCommun
 import speedassistant.domain.service.communicationservices.MqttCommunicationService;
 import speedassistant.web.SpeedAssistantWSController;
 
-import java.io.EOFException;
-import java.io.IOException;
 import java.util.*;
 
 public class SpeedAssistantWebSocketProvider implements IWebSocketService {
-    private ObjectMapper mapper;
     private IWebSocketAuthenticationService webSocketAuthenticationService;
     private IMqttService mqttService;
-    private ISpeedLimitService speedLimitService;
 
+    private ISpeedLimitService speedLimitService;
+    private IVehicleService vehicleService;
     private IVehicleRepository vehicleRepository;
+
+    private ObjectMapper mapper;
 
     private List<ISpeedAssistantCommunication> communicationServices;
     private SpeedAssistantWSController wsController;
 
     public SpeedAssistantWebSocketProvider() {
-        mapper = new ObjectMapper();
         webSocketAuthenticationService = SPILocator.locateSpecific(IWebSocketAuthenticationService.class);
         mqttService = SPILocator.locateSpecific(IMqttService.class);
+        vehicleRepository = SPILocator.locateSpecific(IVehicleRepository.class);
+        vehicleService = SPILocator.locateSpecific(IVehicleService.class);
+        vehicleService.setAccountRepository(SPILocator.locateSpecific(IAccountRepository.class));
+        vehicleService.setVehicleRepository(vehicleRepository);
+
+
+        mapper = new ObjectMapper();
         speedLimitService = new SpeedLimitService();
 
 
@@ -104,7 +110,7 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
                     UUID deviceId = UUID.fromString(session.pathParam("device-id"));
 
 
-                    if (true) {// TODO check if user is the owner of that deviceId
+                    if (/*vehicleService.userOwnsVehicle(deviceId, username)*/ true) {// TODO check if user is the owner of that deviceId
                         if (!wsController.hasSession(session)) {
                             wsController.addSession(deviceId, session);
                             session.send(String.valueOf(session.hashCode()));

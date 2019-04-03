@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import commonAuthentication.config.authConfig.Roles;
+import core.web.ErrorExceptionMapper;
 import core.web.Router;
 import io.javalin.Javalin;
 
@@ -26,7 +27,7 @@ public class AppConfig {
                 .port(port)
                 .enableRouteOverview("/routes", Collections.singleton(Roles.ANYONE));
         router.register(app);
-        //ErrorExceptionMapper.register(app);
+        ErrorExceptionMapper.register(app);
         initObjectMapper();
 
         return app;

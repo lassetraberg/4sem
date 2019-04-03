@@ -1,6 +1,6 @@
 package authentication.domain.mapper;
 
-import authentication.domain.Account;
+import commonAuthentication.domain.model.Account;
 import authentication.domain.dto.AccountDTO;
 
 public class DomainMapper {

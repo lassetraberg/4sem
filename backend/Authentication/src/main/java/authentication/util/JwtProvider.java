@@ -1,6 +1,6 @@
 package authentication.util;
 
-import authentication.domain.Account;
+import commonAuthentication.domain.model.Account;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;

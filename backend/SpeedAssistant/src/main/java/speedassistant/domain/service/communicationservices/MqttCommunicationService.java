@@ -4,8 +4,8 @@ package speedassistant.domain.service.communicationservices;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.data.mqtt.topics.VariableMqttTopic;
 import common.spi.IMqttService;
-import speedassistant.domain.models.vehicledata.GpsCoordinates;
-import speedassistant.domain.models.vehicledata.Velocity;
+import commonvehicle.domain.model.vehicledata.GpsCoordinates;
+import commonvehicle.domain.model.vehicledata.Velocity;
 import speedassistant.domain.service.ISpeedLimitService;
 
 import java.io.IOException;
