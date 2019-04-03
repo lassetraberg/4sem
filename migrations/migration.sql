@@ -20,6 +20,7 @@ CREATE TABLE device (
 );
 
 CREATE TABLE vehicle (
+    device_id UUID REFERENCES device(device_id),
     speed SMALLINT NOT NULL,
     timestamp TIMESTAMP DEFAULT NOW(),
     acceleration REAL NOT NULL,
@@ -29,7 +30,7 @@ CREATE TABLE vehicle (
 );
 
 CREATE TABLE connects (
-    account_id BIGSERIAL NOT NULL REFERENCES account(account_id),
+    account_id BIGINT NOT NULL REFERENCES account(account_id),
     device_id UUID NOT NULL REFERENCES device(device_id),
     PRIMARY KEY(account_id, device_id)
 );

@@ -1,9 +1,9 @@
 package speedassistant.domain.service;
 
-import speedassistant.domain.models.vehicledata.VehicleData;
+import speedassistant.domain.models.vehicledata.Vehicle;
 
 import java.util.UUID;
 
 public interface ISpeedAssistantService {
-    VehicleData getVehicleData(UUID deviceId, String username);
+    Vehicle getVehicleData(UUID deviceId, String username);
 }
