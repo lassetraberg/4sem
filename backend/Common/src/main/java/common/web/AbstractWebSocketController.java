@@ -57,5 +57,16 @@ public abstract class AbstractWebSocketController {
         }
     }
 
+    public boolean hasSession(WsSession session) {
+        for (List<WsSession> value : sessionMap.values()) {
+            for (WsSession wsSession : value) {
+                if (wsSession.equals(session)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
 
 }
