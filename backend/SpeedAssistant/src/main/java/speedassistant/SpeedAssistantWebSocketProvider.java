@@ -48,8 +48,8 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
     }
 
     private void establishSubscriptions() {
-        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_GPS, ((topic, msg) -> this.subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_GPS)));
-        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_VELOCITY, (topic, msg) -> subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_VELOCITY));
+        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_GPS, ((topic, msg) -> subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_GPS)));
+        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_VELOCITY, ((topic, msg) -> subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_VELOCITY)));
     }
 
     private void subscriptionCallback(String topic, String msg, StaticMqttTopic definedTopic) {
@@ -116,6 +116,7 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
 
             @Override
             public void onClose(WsSession session, int statusCode, String reason) {
+                session.disconnect();
                 wsController.removeSession(session);
             }
 
