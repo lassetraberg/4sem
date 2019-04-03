@@ -14,6 +14,7 @@
         <module>Authentication</module>
         <module>CommonAuthentication</module>
         <module>Simulation</module>
+        <module>SpeedAssistant</module>
     </modules>
 
 

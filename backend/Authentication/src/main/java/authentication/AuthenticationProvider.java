@@ -1,6 +1,7 @@
 package authentication;
 
 import authentication.config.authConfig.AuthConfig;
+import authentication.config.authConfig.WebSocketAuthenticationProvider;
 import authentication.domain.repository.AccountRepository;
 import authentication.domain.repository.IAccountRepository;
 import authentication.domain.service.AccountService;
@@ -11,6 +12,7 @@ import authentication.util.JwtProvider;
 import authentication.web.AccountController;
 import common.spi.IAccessManagerService;
 import common.spi.IRouterService;
+import common.spi.IWebSocketAuthenticationService;
 import commonAuthentication.config.authConfig.Roles;
 import io.javalin.Context;
 import io.javalin.Handler;
@@ -23,9 +25,10 @@ import java.util.Set;
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
-public class AuthenticationProvider implements IRouterService, IAccessManagerService {
+public class AuthenticationProvider implements IRouterService, IAccessManagerService, IWebSocketAuthenticationService {
     private JwtProvider jwtProvider = new JwtProvider();
     private AuthConfig authConfig = new AuthConfig(jwtProvider);
+    private IWebSocketAuthenticationService webSocketAuthenticationService = new WebSocketAuthenticationProvider(jwtProvider);
     private IHasher hasher = new Hasher();
 
     private IAccountRepository accountRepository = new AccountRepository();
@@ -46,5 +49,15 @@ public class AuthenticationProvider implements IRouterService, IAccessManagerSer
     @Override
     public void configure(Handler handler, Context ctx, Set<Role> permittedRoles) throws Exception {
         authConfig.configure(handler, ctx, permittedRoles);
+    }
+
+    @Override
+    public boolean doesUserHaveRole(Set<Role> permittedRoles, String authMsg) {
+        return webSocketAuthenticationService.doesUserHaveRole(permittedRoles, authMsg);
+    }
+
+    @Override
+    public String getUsername(String authMsg) {
+        return webSocketAuthenticationService.getUsername(authMsg);
     }
 }
