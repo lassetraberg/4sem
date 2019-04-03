@@ -7,6 +7,7 @@ import { TitleService } from '../shared/services/title.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ThemeService } from '../shared/services/theme.service';
 import { NavComponent } from './layout/nav/nav.component';
+import { NavigationService } from '../shared/services/navigation.service';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,6 @@ import { NavComponent } from './layout/nav/nav.component';
     CoreRoutingModule,
     BrowserAnimationsModule
   ],
-  providers: [ScreenService, TitleService, ThemeService]
+  providers: [ScreenService, TitleService, ThemeService, NavigationService]
 })
 export class CoreModule { }

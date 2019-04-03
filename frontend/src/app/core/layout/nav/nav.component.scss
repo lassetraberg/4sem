@@ -1,12 +1,61 @@
 @import 'shared';
 
+:host{
+    user-select: none;
+}
+
 .nav{
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-around;
     height: 55px;
     width: 100%;
     padding: 0.375rem 0.75rem;
     background: var(--lightershade);
     border-top: 1px solid var(--shade);
+
+    .nav_item{
+        text-decoration: none;
+        opacity: 0.5;
+        color: var(--text-color);
+        &.active{
+            opacity: 1;  
+            color: var(--acc);
+        }
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        font-size: 1.25em;
+        
+        cursor: pointer;
+
+        .icon{
+            @include from($tablet){
+                display: none;
+            }
+            display: flex;
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
+            
+            i{
+                position: relative;
+                vertical-align: middle;
+                width: 24px;
+                height: 24px;
+            }
+    
+            .string--small{
+                font-size: 0.5em;
+            }
+        }
+
+        .string{
+            @include until($tablet){
+                display: none;
+            }
+        }
+    }
 }

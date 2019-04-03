@@ -1,3 +1,13 @@
 <div class="nav">
-  
+    <a class="nav_item" [routerLink]="node.url" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" [title]="node.tooltip || node.title" *ngFor="let node of nodes">
+        <div class="icon">
+            <i class="material-icons">{{node.icon}}</i>
+            <div class="string--small">
+                {{ node.title }}
+            </div>
+        </div>
+        <div class="string">
+            {{ node.title }}
+        </div>
+    </a>
 </div>

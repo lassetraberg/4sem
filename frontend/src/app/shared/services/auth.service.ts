@@ -17,9 +17,7 @@ export class AuthService {
      * @param password credentials
      */
     login(username:string, password:string): Observable<any> {
-        localStorage.setItem('id_token', 'token');
-        localStorage.setItem('username', 'lassetraberg');
-        return this.http.post<string>(`${environment.api}/accounts/login`, {
+        return this.http.post<string>(`http://${environment.api}/accounts/login`, {
             username,
             password
         }).pipe(

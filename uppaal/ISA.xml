@@ -2,7 +2,8 @@
 <!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
 <nta>
 	<declaration>// Place global declarations here.
-chan accelerate, brake, update;
+chan accelerate, brake;
+urgent chan update;
 int velocity := 0, maxVelocity := 10;
 clock x;
 bool speeding := 0;</declaration>
@@ -55,7 +56,6 @@ bool speeding := 0;</declaration>
 		<declaration>// Place local declarations here.</declaration>
 		<location id="id4" x="-926" y="-612">
 			<name x="-951" y="-646">standby</name>
-			<urgent/>
 		</location>
 		<location id="id5" x="-927" y="-442">
 			<name x="-910" y="-451">active</name>
@@ -65,6 +65,7 @@ bool speeding := 0;</declaration>
 		</location>
 		<location id="id7" x="-927" y="-527">
 			<name x="-986" y="-518">evaluate</name>
+			<committed/>
 		</location>
 		<location id="id8" x="-841" y="-569">
 			<name x="-824" y="-578">inactive</name>
@@ -121,6 +122,14 @@ bool speeding := 0;</declaration>
 		<transition>
 			<source ref="id9"/>
 			<target ref="id9"/>
+			<label kind="synchronisation" x="-238" y="-85">brake!</label>
+			<nail x="-187" y="-85"/>
+			<nail x="-204" y="-51"/>
+			<nail x="-187" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id9"/>
+			<target ref="id9"/>
 			<label kind="synchronisation" x="-68" y="-85">accelerate!</label>
 			<nail x="-85" y="-85"/>
 			<nail x="-68" y="-51"/>
@@ -134,10 +143,6 @@ system vehicle, driver, isa;</system>
 	<queries>
 		<query>
 			<formula>A[] not deadlock</formula>
-			<comment></comment>
-		</query>
-		<query>
-			<formula></formula>
 			<comment></comment>
 		</query>
 		<query>

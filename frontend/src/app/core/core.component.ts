@@ -4,6 +4,7 @@ import { ScreenService } from '../shared/services/screen.service';
 import { RouterOutlet } from '@angular/router';
 import { routerAnimation } from 'src/animations/router.animation';
 import { ThemeService } from '../shared/services/theme.service';
+import { NavigationService, NavigationNode } from '../shared/services/navigation.service';
 
 @Component({
   selector: 'app-core',
@@ -15,9 +16,14 @@ import { ThemeService } from '../shared/services/theme.service';
 })
 export class CoreComponent implements OnInit {
 
-  constructor(private titleService: TitleService, private screenService: ScreenService, private themeService: ThemeService) { }
+  public headerNodes: NavigationNode[];
+
+  constructor(private titleService: TitleService, private screenService: ScreenService, private themeService: ThemeService, private navigationService: NavigationService) { }
 
   ngOnInit() {
+    this.navigationService.navigationViews.subscribe(views => {
+      this.headerNodes = views['Header'] || [];
+    })
     this.titleService.init();
     this.screenService.init();
     this.themeService.init();

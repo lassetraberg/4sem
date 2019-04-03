@@ -2,17 +2,20 @@
     "Header": [{
         "url": "/",
         "title": "Home",
-        "tooltip": "Home"
+        "tooltip": "Home",
+        "icon": "home"
       },
       {
         "url": "/isa",
         "title": "Speed Assistance",
-        "tooltip": "Go to Speed Assistance"
+        "tooltip": "Go to Speed Assistance",
+        "icon": "av_timer"
       },
       {
         "url": "/user",
         "title": "User",
-        "tooltip": "Go to User Settings"
+        "tooltip": "Go to User Settings",
+        "icon": "account_box"
       }
     ]
   }

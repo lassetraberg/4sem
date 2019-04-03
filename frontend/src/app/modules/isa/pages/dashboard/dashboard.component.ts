@@ -6,6 +6,7 @@ import {
   animate,
   transition
 } from '@angular/animations';
+import { WebsocketService } from 'src/app/shared/services/websocket.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,10 +15,18 @@ import {
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  private velocity: number;
+
+  constructor(private socket: WebsocketService) { }
 
   ngOnInit() {
-    
+    this.velocity = 50;
+    this.socket.ngOnInit();
+    this.socket.getSubject().subscribe(
+      msg => this.velocity = msg.velocity,
+      err => console.log(err),
+      () => console.log('complete')
+    );
   }
 
 }

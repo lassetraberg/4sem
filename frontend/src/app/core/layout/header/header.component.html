@@ -1,10 +1,5 @@
 <div class="header">
   <div class="user">
-    <button *ngIf="!auth.isAuthenticated()" routerLink="/auth/signin" class="secondary">Sign In</button>
-    <div class="isAuthenticated" *ngIf="auth.isAuthenticated()">
-      {{username}}
-      <button (click)="signout()" class="cancel">Sign Out</button>
-    </div>
-    
+    <button *ngIf="!auth.isAuthenticated()" routerLink="/auth/signin" class="secondary">Sign In</button>    
   </div>
 </div>
