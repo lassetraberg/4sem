@@ -8,6 +8,7 @@ import io.javalin.Context;
 import org.eclipse.jetty.http.HttpStatus;
 import vehicle.domain.dto.VehicleRegistrationDto;
 
+import java.util.List;
 import java.util.UUID;
 
 public class VehicleController {
@@ -67,7 +68,7 @@ public class VehicleController {
         String username = JavalinUtils.getUsername(ctx);
         String deviceId = ctx.pathParam("device-id");
 
-        Vehicle vehicleData = vehicleService.getData(UUID.fromString(deviceId), username);
+        List<Vehicle> vehicleData = vehicleService.getData(UUID.fromString(deviceId), username);
 
         ctx.json(vehicleData);
     }

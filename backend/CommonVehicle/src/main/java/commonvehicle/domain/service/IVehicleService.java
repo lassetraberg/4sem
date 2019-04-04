@@ -12,7 +12,7 @@ import java.util.UUID;
 public interface IVehicleService {
     boolean addData(Vehicle vehicle);
 
-    Vehicle getData(UUID deviceId, String username);
+    List<Vehicle> getData(UUID deviceId, String username);
 
     boolean userOwnsVehicle(UUID vehicleId, String username);
 

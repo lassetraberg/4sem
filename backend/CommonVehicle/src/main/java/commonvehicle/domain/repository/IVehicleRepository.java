@@ -8,7 +8,7 @@ import java.util.List;
 public interface IVehicleRepository {
     boolean addData(String deviceId, short speed, double acceleration, short speedLimit, double latitude, double longitude);
 
-    Vehicle getData(String deviceId);
+    List<Vehicle> getData(String deviceId);
 
     Device getDevice(String deviceId);
 
