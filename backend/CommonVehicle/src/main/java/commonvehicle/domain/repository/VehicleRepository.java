@@ -44,7 +44,6 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
         String sql = "SELECT device_id, speed, timestamp, acceleration, speed_limit, latitude, longitude FROM vehicle WHERE device_id = ?";
 
         List<Vehicle> vehicleDataList = new ArrayList<>();
-
         this.executeQuery(conn -> {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setObject(1, deviceId, Types.OTHER);
