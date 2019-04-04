@@ -12,6 +12,10 @@ button{
     align-items: center;
     justify-content: center;
     position: relative;
+    &:disabled{
+        opacity: 0.4;
+        color: var(--shade);
+    }
 
     > i {
         position: absolute;

@@ -8,15 +8,22 @@ import { WebsocketService } from 'src/app/shared/services/websocket.service';
 })
 export class DashboardComponent implements OnInit {
 
+  connected: boolean = false;
+
   velocity: number;
 
   constructor(private socket: WebsocketService) { }
 
   ngOnInit() {
     this.socket.getSubject("2905d0e7-615c-455b-8807-ddd7665d3994", "velocity").subscribe(
-      msg => this.velocity = msg.velocity,
-      err => console.log(err),
-      () => console.log('complete')
+      msg => {
+        this.velocity = msg.velocity
+        this.connected = true;
+      },
+      err => {
+        console.log(err);
+        this.connected = false;
+      }
     );
   }
 

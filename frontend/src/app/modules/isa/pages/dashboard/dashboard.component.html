@@ -1,9 +1,17 @@
 <div class="dashboard">
 
     <div class="status_container">
-        <div class="status">
+        <div class="status" [ngClass]="connected ? 'active' : 'inactive'">
+            <div *ngIf="connected; else notConnected">
                 <i class="material-icons">wifi</i>
-            Connected to Toyota Aygo
+                Connected to Toyota Aygo
+            </div>
+            <ng-template #notConnected>
+                <div>
+                    <i class="material-icons"> wifi_off </i>
+                    Connecting to your vehicle...
+                </div>
+            </ng-template>
         </div>
     </div>
 
@@ -14,4 +22,6 @@
         </span>
         <span class="unit">KM/H</span>
     </div>
+
+
 </div>
