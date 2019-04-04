@@ -45,7 +45,7 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
         vehicleService.setVehicleRepository(vehicleRepository);
 
         ObjectMapper mapper = new ObjectMapper();
-        ISpeedLimitService speedLimitService = new SpeedLimitService();
+        ISpeedLimitService speedLimitService = new SpeedLimitService(10);
 
         speedAssistantService = new SpeedAssistantService(mqttService, speedLimitService, mapper, this::subscriptionCallback,
                 StaticMqttTopic.values());
