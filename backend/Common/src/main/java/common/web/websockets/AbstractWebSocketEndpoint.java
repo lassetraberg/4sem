@@ -91,6 +91,7 @@ public abstract class AbstractWebSocketEndpoint<T> {
             e.printStackTrace();
         }
     }
+
     public boolean hasSession(WsSession session) {
         for (List<WsSession> value : sessionMap.values()) {
             for (WsSession wsSession : value) {

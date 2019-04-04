@@ -3,7 +3,6 @@ package commonvehicle.domain.service;
 
 import commonAuthentication.domain.model.Account;
 import commonAuthentication.domain.repository.IAccountRepository;
-import commonvehicle.domain.dto.VehicleDto;
 import commonvehicle.domain.model.Device;
 import commonvehicle.domain.model.vehicledata.Vehicle;
 import commonvehicle.domain.repository.IVehicleRepository;

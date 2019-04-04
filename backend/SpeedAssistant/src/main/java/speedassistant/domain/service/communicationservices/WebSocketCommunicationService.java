@@ -10,6 +10,7 @@ import java.util.UUID;
 
 public class WebSocketCommunicationService extends AbstractWebSocketEndpoint<UUID> implements ISpeedAssistantCommunication {
     private ISpeedAssistantService speedAssistantService;
+
     public WebSocketCommunicationService(String variablePath, ObjectMapper mapper, ISpeedAssistantService speedAssistantService) {
         super(variablePath, mapper);
         this.speedAssistantService = speedAssistantService;
