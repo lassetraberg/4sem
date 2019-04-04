@@ -13,13 +13,11 @@ export class DashboardComponent implements OnInit {
   constructor(private socket: WebsocketService) { }
 
   ngOnInit() {
-    this.velocity = 50;
-    this.socket.ngOnInit();
-  /*   this.socket.getSubject().subscribe(
+    this.socket.getSubject("2905d0e7-615c-455b-8807-ddd7665d3994", "velocity").subscribe(
       msg => this.velocity = msg.velocity,
       err => console.log(err),
       () => console.log('complete')
-    ); */
+    );
   }
 
 }

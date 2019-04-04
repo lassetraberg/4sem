@@ -8,7 +8,10 @@
     </div>
 
     <div class="velocity">
-        <span class="value">{{ velocity }}</span>
+        <span class="value">
+            <span *ngIf="!velocity">...</span>
+            {{ velocity }}
+        </span>
         <span class="unit">KM/H</span>
     </div>
 </div>
