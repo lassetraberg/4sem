@@ -45,15 +45,15 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
         IVehicleService vehicleService = SPILocator.locateSpecific(IVehicleService.class);
         vehicleService.setAccountRepository(SPILocator.locateSpecific(IAccountRepository.class));
         vehicleService.setVehicleRepository(vehicleRepository);
+        mapper = new ObjectMapper();
+        speedLimitService = new SpeedLimitService();
 
-        webSocketCommunicationService = new WebSocketCommunicationService("data");
+
+        webSocketCommunicationService = new WebSocketCommunicationService("data", mapper);
 
         webSocketHandler = new SpeedAssistantWebSocketHandler("/ws/speed-assistant/:device-id/:data",
                 roles(Roles.AUTHENTICATED), webSocketAuthenticationService, vehicleService, webSocketCommunicationService);
 
-
-        mapper = new ObjectMapper();
-        speedLimitService = new SpeedLimitService();
 
 
         communicationServices = setupCommunicationServices();

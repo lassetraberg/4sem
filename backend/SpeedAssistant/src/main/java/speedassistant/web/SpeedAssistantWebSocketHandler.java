@@ -1,11 +1,13 @@
 package speedassistant.web;
 
+import common.domain.model.Response;
 import common.spi.IWebSocketAuthenticationService;
 import common.spi.IWebSocketHandler;
 import common.web.websockets.AbstractWebSocketEndpoint;
 import commonvehicle.domain.service.IVehicleService;
 import io.javalin.security.Role;
 import io.javalin.websocket.WsSession;
+import org.eclipse.jetty.http.HttpStatus;
 
 import java.util.Set;
 import java.util.UUID;
@@ -43,22 +45,21 @@ public class SpeedAssistantWebSocketHandler implements IWebSocketHandler {
 
     @Override
     public void onMessage(WsSession session, String message) {
-        if (webSocketAuthenticationService.doesUserHaveRole(getPermittedRoles(), message)) {
-            String username = webSocketAuthenticationService.getUsername(message);
-            UUID deviceId = UUID.fromString(session.pathParam("device-id"));
+        if (!webSocketAuthenticationService.doesUserHaveRole(getPermittedRoles(), message)) {
+            webSocketEndpoint.send(new Response(HttpStatus.UNAUTHORIZED_401, "Not permitted"), session);
+            return;
+        }
 
+        String username = webSocketAuthenticationService.getUsername(message);
+        UUID deviceId = UUID.fromString(session.pathParam("device-id"));
+        if (!vehicleService.userOwnsVehicle(deviceId, username)) {
+            webSocketEndpoint.send(new Response(HttpStatus.NOT_FOUND_404, "Not Found"), session);
+            return;
+        }
 
-            if (vehicleService.userOwnsVehicle(deviceId, username)) {
-                if (!webSocketEndpoint.hasSession(session)) {
-                    webSocketEndpoint.addSession(deviceId, session);
-                    session.send(String.valueOf(session.hashCode()));
-                    session.send("200"); // OK
-                }
-            } else {
-                session.send("404"); // Device ID for that user not found
-            }
-        } else {
-            session.send("401"); // Invalid JWT token / not logged in
+        if (!webSocketEndpoint.hasSession(session)) {
+            webSocketEndpoint.addSession(deviceId, session);
+            webSocketEndpoint.send(new Response(HttpStatus.OK_200, String.valueOf(session.hashCode())), session);
         }
     }
 

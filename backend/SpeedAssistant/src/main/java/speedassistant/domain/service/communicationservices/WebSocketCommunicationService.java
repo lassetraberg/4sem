@@ -1,12 +1,13 @@
 package speedassistant.domain.service.communicationservices;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import common.web.websockets.AbstractWebSocketEndpoint;
 
 import java.util.UUID;
 
 public class WebSocketCommunicationService extends AbstractWebSocketEndpoint<UUID> implements ISpeedAssistantCommunication {
-    public WebSocketCommunicationService(String variablePath) {
-        super(variablePath);
+    public WebSocketCommunicationService(String variablePath, ObjectMapper mapper) {
+        super(variablePath, mapper);
     }
 
     @Override
