@@ -21,6 +21,7 @@ import speedassistant.domain.service.communicationservices.ISpeedAssistantCommun
 import speedassistant.domain.service.communicationservices.MqttCommunicationService;
 import speedassistant.web.SpeedAssistantWSController;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.*;
 
@@ -48,8 +49,8 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
     }
 
     private void establishSubscriptions() {
-        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_GPS, ((topic, msg) -> this.subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_GPS)));
-        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_VELOCITY, (topic, msg) -> subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_VELOCITY));
+        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_GPS, ((topic, msg) -> subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_GPS)));
+        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_VELOCITY, ((topic, msg) -> subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_VELOCITY)));
     }
 
     private void subscriptionCallback(String topic, String msg, StaticMqttTopic definedTopic) {
@@ -93,7 +94,7 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
 
             @Override
             public void onConnect(WsSession session) {
-
+                System.out.println("New connection: " + session.getRemoteAddress().toString());
             }
 
             @Override
@@ -104,8 +105,11 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
 
 
                     if (true) {// TODO check if user is the owner of that deviceId
-                        wsController.addSession(deviceId, session);
-                        session.send("200"); // OK
+                        if (!wsController.hasSession(session)) {
+                            wsController.addSession(deviceId, session);
+                            session.send(String.valueOf(session.hashCode()));
+                            session.send("200"); // OK
+                        }
                     } else {
                         session.send("404"); // Device ID for that user not found
                     }
@@ -117,6 +121,7 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
             @Override
             public void onClose(WsSession session, int statusCode, String reason) {
                 wsController.removeSession(session);
+                session.disconnect();
             }
 
             @Override
