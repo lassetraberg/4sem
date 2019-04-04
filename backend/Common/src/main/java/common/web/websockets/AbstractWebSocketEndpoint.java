@@ -74,6 +74,15 @@ public abstract class AbstractWebSocketEndpoint<T> {
         }
     }
 
+    protected void sendTo(T key, Object msgObject, String pathParam) {
+        try {
+            String msg = mapper.writeValueAsString(msgObject);
+            this.sendTo(key, msg, pathParam);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void send(Response response, WsSession session) {
         try {
             String responseSerialized = mapper.writeValueAsString(response);

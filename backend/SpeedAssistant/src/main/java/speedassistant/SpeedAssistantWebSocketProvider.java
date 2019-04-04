@@ -12,7 +12,9 @@ import commonAuthentication.config.authConfig.Roles;
 import commonAuthentication.domain.repository.IAccountRepository;
 import commonvehicle.domain.repository.IVehicleRepository;
 import commonvehicle.domain.service.IVehicleService;
+import speedassistant.domain.service.ISpeedAssistantService;
 import speedassistant.domain.service.ISpeedLimitService;
+import speedassistant.domain.service.SpeedAssistantService;
 import speedassistant.domain.service.SpeedLimitService;
 import speedassistant.domain.service.communicationservices.DatabaseCommunicationService;
 import speedassistant.domain.service.communicationservices.ISpeedAssistantCommunication;
@@ -27,11 +29,9 @@ import java.util.UUID;
 import static common.util.JavalinUtils.roles;
 
 public class SpeedAssistantWebSocketProvider implements IWebSocketService {
-    private IMqttService mqttService;
 
-    private ISpeedLimitService speedLimitService;
-
-    private ObjectMapper mapper;
+    private IVehicleService vehicleService;
+    private ISpeedAssistantService speedAssistantService;
 
     private List<ISpeedAssistantCommunication> communicationServices;
     private WebSocketCommunicationService webSocketCommunicationService;
@@ -39,17 +39,20 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
     private IWebSocketHandler webSocketHandler;
 
     public SpeedAssistantWebSocketProvider() {
-        mqttService = SPILocator.locateSpecific(IMqttService.class);
+        IMqttService mqttService = SPILocator.locateSpecific(IMqttService.class);
         IWebSocketAuthenticationService webSocketAuthenticationService = SPILocator.locateSpecific(IWebSocketAuthenticationService.class);
         IVehicleRepository vehicleRepository = SPILocator.locateSpecific(IVehicleRepository.class);
-        IVehicleService vehicleService = SPILocator.locateSpecific(IVehicleService.class);
+        vehicleService = SPILocator.locateSpecific(IVehicleService.class);
         vehicleService.setAccountRepository(SPILocator.locateSpecific(IAccountRepository.class));
         vehicleService.setVehicleRepository(vehicleRepository);
-        mapper = new ObjectMapper();
-        speedLimitService = new SpeedLimitService();
 
+        ObjectMapper mapper = new ObjectMapper();
+        ISpeedLimitService speedLimitService = new SpeedLimitService();
 
-        webSocketCommunicationService = new WebSocketCommunicationService("data", mapper);
+        speedAssistantService = new SpeedAssistantService(mqttService, speedLimitService, mapper, this::subscriptionCallback,
+                StaticMqttTopic.values());
+
+        webSocketCommunicationService = new WebSocketCommunicationService("data", mapper, speedAssistantService);
 
         webSocketHandler = new SpeedAssistantWebSocketHandler("/ws/speed-assistant/:device-id/:data",
                 roles(Roles.AUTHENTICATED), webSocketAuthenticationService, vehicleService, webSocketCommunicationService);
@@ -57,36 +60,24 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
 
 
         communicationServices = setupCommunicationServices();
-        mqttService.connect();
-        establishSubscriptions();
     }
 
-    private void establishSubscriptions() {
-        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_GPS, ((topic, msg) -> subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_GPS)));
-        mqttService.subscribe(StaticMqttTopic.ALL_VEHICLES_VELOCITY, ((topic, msg) -> subscriptionCallback(topic, msg, StaticMqttTopic.ALL_VEHICLES_VELOCITY)));
-    }
-
-    private void subscriptionCallback(String topic, String msg, StaticMqttTopic definedTopic) {
-        System.out.println(msg);
-        UUID deviceId = StringUtils.getUUIDFromTopic(topic);
-        for (ISpeedAssistantCommunication communicationService : communicationServices) {
+    private void subscriptionCallback(UUID deviceId, StaticMqttTopic definedTopic) {
+        for (ISpeedAssistantCommunication communicationService : communicationServices)
             switch (definedTopic) {
-                case ALL_VEHICLES:
-                    break;
                 case ALL_VEHICLES_GPS:
-                    communicationService.onGpsMessage(deviceId, msg);
+                    communicationService.onGpsMessage(deviceId);
                     break;
                 case ALL_VEHICLES_VELOCITY:
-                    communicationService.onVelocityMessage(deviceId, msg);
+                    communicationService.onVelocityMessage(deviceId);
                     break;
             }
-        }
     }
 
     private List<ISpeedAssistantCommunication> setupCommunicationServices() {
         return Arrays.asList(
-                new MqttCommunicationService(speedLimitService, mqttService, mapper),
-                new DatabaseCommunicationService(),
+                new MqttCommunicationService(speedAssistantService),
+                new DatabaseCommunicationService(speedAssistantService, vehicleService),
                 webSocketCommunicationService
         );
     }

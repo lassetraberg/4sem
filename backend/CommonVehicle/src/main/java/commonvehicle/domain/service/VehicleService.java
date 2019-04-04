@@ -3,7 +3,6 @@ package commonvehicle.domain.service;
 
 import commonAuthentication.domain.model.Account;
 import commonAuthentication.domain.repository.IAccountRepository;
-import commonvehicle.domain.dto.VehicleDto;
 import commonvehicle.domain.model.Device;
 import commonvehicle.domain.model.vehicledata.Vehicle;
 import commonvehicle.domain.repository.IVehicleRepository;
@@ -25,9 +24,9 @@ public class VehicleService implements IVehicleService {
     }
 
     @Override
-    public boolean addData(VehicleDto vehicleDto) {
-        return vehicleRepository.addData(vehicleDto.getDeviceId().toString(), vehicleDto.getSpeed(), vehicleDto.getAcceleration(),
-                vehicleDto.getSpeedLimit(), vehicleDto.getGpsCoordinates().getLat(), vehicleDto.getGpsCoordinates().getLon());
+    public boolean addData(Vehicle vehicle) {
+        return vehicleRepository.addData(vehicle.getDeviceId().toString(), vehicle.getVelocity().getVelocity(),
+                vehicle.getAcceleration(), vehicle.getSpeedLimit(), vehicle.getGpsCoordinates().getLat(), vehicle.getGpsCoordinates().getLon());
     }
 
     @Override
