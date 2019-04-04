@@ -1,13 +1,13 @@
 package authentication;
 
 
-import commonAuthentication.domain.model.Account;
-import commonAuthentication.domain.repository.IAccountRepository;
 import authentication.domain.service.AccountService;
 import authentication.domain.service.IAccountService;
 import authentication.util.IHasher;
 import authentication.util.JwtProvider;
 import common.web.exceptions.ValidationException;
+import commonAuthentication.domain.model.Account;
+import commonAuthentication.domain.repository.IAccountRepository;
 import io.javalin.UnauthorizedResponse;
 import org.eclipse.jetty.http.HttpStatus;
 import org.junit.Assert;

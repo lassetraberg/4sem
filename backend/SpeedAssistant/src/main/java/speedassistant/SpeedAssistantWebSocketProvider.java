@@ -12,37 +12,44 @@ import commonAuthentication.config.authConfig.Roles;
 import commonAuthentication.domain.repository.IAccountRepository;
 import commonvehicle.domain.repository.IVehicleRepository;
 import commonvehicle.domain.service.IVehicleService;
-import io.javalin.security.Role;
-import io.javalin.websocket.WsSession;
 import speedassistant.domain.service.ISpeedLimitService;
 import speedassistant.domain.service.SpeedLimitService;
 import speedassistant.domain.service.communicationservices.DatabaseCommunicationService;
 import speedassistant.domain.service.communicationservices.ISpeedAssistantCommunication;
 import speedassistant.domain.service.communicationservices.MqttCommunicationService;
-import speedassistant.web.SpeedAssistantWSController;
+import speedassistant.domain.service.communicationservices.WebSocketCommunicationService;
+import speedassistant.web.SpeedAssistantWebSocketHandler;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
+import static common.util.JavalinUtils.roles;
 
 public class SpeedAssistantWebSocketProvider implements IWebSocketService {
-    private IWebSocketAuthenticationService webSocketAuthenticationService;
     private IMqttService mqttService;
 
     private ISpeedLimitService speedLimitService;
-    private IVehicleService vehicleService;
-    private IVehicleRepository vehicleRepository;
 
     private ObjectMapper mapper;
 
     private List<ISpeedAssistantCommunication> communicationServices;
-    private SpeedAssistantWSController wsController;
+    private WebSocketCommunicationService webSocketCommunicationService;
+
+    private IWebSocketHandler webSocketHandler;
 
     public SpeedAssistantWebSocketProvider() {
-        webSocketAuthenticationService = SPILocator.locateSpecific(IWebSocketAuthenticationService.class);
         mqttService = SPILocator.locateSpecific(IMqttService.class);
-        vehicleRepository = SPILocator.locateSpecific(IVehicleRepository.class);
-        vehicleService = SPILocator.locateSpecific(IVehicleService.class);
+        IWebSocketAuthenticationService webSocketAuthenticationService = SPILocator.locateSpecific(IWebSocketAuthenticationService.class);
+        IVehicleRepository vehicleRepository = SPILocator.locateSpecific(IVehicleRepository.class);
+        IVehicleService vehicleService = SPILocator.locateSpecific(IVehicleService.class);
         vehicleService.setAccountRepository(SPILocator.locateSpecific(IAccountRepository.class));
         vehicleService.setVehicleRepository(vehicleRepository);
+
+        webSocketCommunicationService = new WebSocketCommunicationService("data");
+
+        webSocketHandler = new SpeedAssistantWebSocketHandler("/ws/speed-assistant/:device-id/:data",
+                roles(Roles.AUTHENTICATED), webSocketAuthenticationService, vehicleService, webSocketCommunicationService);
 
 
         mapper = new ObjectMapper();
@@ -77,65 +84,15 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
     }
 
     private List<ISpeedAssistantCommunication> setupCommunicationServices() {
-        wsController = new SpeedAssistantWSController();
         return Arrays.asList(
                 new MqttCommunicationService(speedLimitService, mqttService, mapper),
                 new DatabaseCommunicationService(),
-                wsController
+                webSocketCommunicationService
         );
     }
 
     @Override
     public IWebSocketHandler getWebSocketHandler() {
-        return new IWebSocketHandler() {
-            @Override
-            public String getPath() {
-                return "/ws/speed-assistant/:device-id/:data";
-            }
-
-            @Override
-            public Set<Role> getPermittedRoles() {
-                return Collections.singleton(Roles.AUTHENTICATED);
-            }
-
-            @Override
-            public void onConnect(WsSession session) {
-                System.out.println("New connection: " + session.getRemoteAddress().toString());
-            }
-
-            @Override
-            public void onMessage(WsSession session, String message) {
-                if (webSocketAuthenticationService.doesUserHaveRole(getPermittedRoles(), message)) {
-                    String username = webSocketAuthenticationService.getUsername(message);
-                    UUID deviceId = UUID.fromString(session.pathParam("device-id"));
-
-
-                    if (vehicleService.userOwnsVehicle(deviceId, username)) {
-                        if (!wsController.hasSession(session)) {
-                            wsController.addSession(deviceId, session);
-                            session.send(String.valueOf(session.hashCode()));
-                            session.send("200"); // OK
-                        }
-                    } else {
-                        session.send("404"); // Device ID for that user not found
-                    }
-                } else {
-                    session.send("401"); // Invalid JWT token / not logged in
-                }
-            }
-
-            @Override
-            public void onClose(WsSession session, int statusCode, String reason) {
-                System.out.println("Connection closed: " + session.getRemoteAddress().toString());
-                wsController.removeSession(session);
-                session.close();
-                session.disconnect();
-            }
-
-            @Override
-            public void onError(WsSession session, Throwable throwable) {
-                throwable.printStackTrace();
-            }
-        };
+        return webSocketHandler;
     }
 }

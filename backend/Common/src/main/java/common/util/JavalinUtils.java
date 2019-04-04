@@ -11,6 +11,7 @@ public class JavalinUtils {
     public static String getUsername(Context ctx) {
         return ctx.attribute("username");
     }
+
     public static Set<Role> roles(Role... roles) {
         return new HashSet<>(Arrays.asList(roles));
     }

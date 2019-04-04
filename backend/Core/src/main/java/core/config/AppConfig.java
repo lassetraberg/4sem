@@ -9,7 +9,6 @@ import core.web.Router;
 import io.javalin.Javalin;
 
 import java.io.IOException;
-import java.util.Collections;
 
 import static common.util.JavalinUtils.roles;
 

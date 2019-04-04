@@ -1,7 +1,7 @@
 package authentication.domain.mapper;
 
-import commonAuthentication.domain.model.Account;
 import authentication.domain.dto.AccountDTO;
+import commonAuthentication.domain.model.Account;
 
 public class DomainMapper {
     public static Account toAccount(AccountDTO dto) {

@@ -1,39 +1,51 @@
-package common.web;
+package common.web.websockets;
 
 import io.javalin.websocket.WsSession;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public abstract class AbstractWebSocketController {
-    protected Map<UUID, List<WsSession>> sessionMap = new HashMap<>();
+public abstract class AbstractWebSocketEndpoint<T> {
+    private Map<T, List<WsSession>> sessionMap = new HashMap<>();
+    private String variablePath;
 
-    public void addSession(UUID deviceId, WsSession session) {
-        if (sessionMap.containsKey(deviceId)) {
-            List<WsSession> sessionList = sessionMap.get(deviceId);
+    public AbstractWebSocketEndpoint(String variablePath) {
+        this.variablePath = variablePath;
+    }
+
+    public AbstractWebSocketEndpoint() {
+        this("data");
+    }
+
+    public void addSession(T key, WsSession session) {
+        if (sessionMap.containsKey(key)) {
+            List<WsSession> sessionList = sessionMap.get(key);
             sessionList.add(session);
-            sessionMap.put(deviceId, sessionList);
+            sessionMap.put(key, sessionList);
         } else {
             List<WsSession> sessionList = new ArrayList<>();
             sessionList.add(session);
-            sessionMap.put(deviceId, sessionList);
+            sessionMap.put(key, sessionList);
         }
     }
 
     public void removeSession(WsSession session) {
-        UUID deviceId = null;
-        for (Map.Entry<UUID, List<WsSession>> entry : sessionMap.entrySet()) {
+        T key = null;
+        for (Map.Entry<T, List<WsSession>> entry : sessionMap.entrySet()) {
             for (WsSession s : entry.getValue()) {
                 if (s.equals(session)) {
-                    deviceId = entry.getKey();
+                    key = entry.getKey();
                     break;
                 }
             }
         }
 
-        List<WsSession> sessionList = sessionMap.get(deviceId);
+        List<WsSession> sessionList = sessionMap.get(key);
         if (sessionList != null) {
             sessionList.remove(session);
-            sessionMap.put(deviceId, sessionList);
+            sessionMap.put(key, sessionList);
         }
     }
 
@@ -45,12 +57,12 @@ public abstract class AbstractWebSocketController {
                 .forEach(s -> s.send(msg));
     }
 
-    protected void sendTo(UUID deviceId, String msg, String data) {
-        List<WsSession> sessionList = sessionMap.get(deviceId);
+    protected void sendTo(T key, String msg, String data) {
+        List<WsSession> sessionList = sessionMap.get(key);
 
         if (sessionList != null && sessionList.size() > 0) {
             for (WsSession session : sessionList) {
-                if (session.pathParam("data").equalsIgnoreCase(data)) {
+                if (session.pathParam(variablePath).equalsIgnoreCase(data)) {
                     session.send(msg);
                 }
             }
