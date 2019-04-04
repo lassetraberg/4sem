@@ -5,13 +5,13 @@ import java.util.UUID;
 
 public class Vehicle {
     private UUID deviceId;
-    private Velocity velocity;
+    private Short velocity;
     private Instant timestamp;
     private Double acceleration;
     private Short speedLimit;
     private GpsCoordinates gpsCoordinates;
 
-    public Vehicle(UUID deviceId, Velocity velocity, Instant timestamp, Double acceleration, Short speedLimit, GpsCoordinates gpsCoordinates) {
+    public Vehicle(UUID deviceId, Short velocity, Instant timestamp, Double acceleration, Short speedLimit, GpsCoordinates gpsCoordinates) {
         this.deviceId = deviceId;
         this.velocity = velocity;
         this.timestamp = timestamp;
@@ -31,11 +31,11 @@ public class Vehicle {
         this.deviceId = deviceId;
     }
 
-    public Velocity getVelocity() {
+    public Short getVelocity() {
         return velocity;
     }
 
-    public void setVelocity(Velocity velocity) {
+    public void setVelocity(Short velocity) {
         this.velocity = velocity;
     }
 

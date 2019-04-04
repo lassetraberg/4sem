@@ -2,12 +2,11 @@ package speedassistant.domain.service;
 
 import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 import commonvehicle.domain.model.vehicledata.Vehicle;
-import commonvehicle.domain.model.vehicledata.Velocity;
 
 import java.util.UUID;
 
 public interface ISpeedAssistantService {
-    Velocity getLatestVelocity(UUID vehicleId);
+    Short getLatestVelocity(UUID vehicleId);
 
     double getLatestAcceleration(UUID vehicleId);
 

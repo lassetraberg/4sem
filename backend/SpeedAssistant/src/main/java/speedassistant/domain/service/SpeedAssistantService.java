@@ -5,6 +5,7 @@ import common.data.mqtt.topics.StaticMqttTopic;
 import common.data.mqtt.topics.VariableMqttTopic;
 import common.spi.IMqttService;
 import common.util.StringUtils;
+import commonvehicle.domain.model.vehicledata.Acceleration;
 import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 import commonvehicle.domain.model.vehicledata.Vehicle;
 import commonvehicle.domain.model.vehicledata.Velocity;
@@ -36,7 +37,7 @@ public class SpeedAssistantService implements ISpeedAssistantService {
 
 
     @Override
-    public Velocity getLatestVelocity(UUID vehicleId) {
+    public Short getLatestVelocity(UUID vehicleId) {
         return latestValues.get(vehicleId).getVelocity();
     }
 
@@ -73,7 +74,7 @@ public class SpeedAssistantService implements ISpeedAssistantService {
     public boolean isSpeeding(UUID vehicleId) {
         Vehicle v = latestValues.get(vehicleId);
         if (v.getSpeedLimit() != null && v.getVelocity() != null) {
-            return v.getVelocity().getVelocity() > v.getSpeedLimit();
+            return v.getVelocity() > v.getSpeedLimit();
         } else {
             return false;
         }
@@ -108,6 +109,10 @@ public class SpeedAssistantService implements ISpeedAssistantService {
                 Velocity velocity = mapper.readValue(message, Velocity.class);
                 updateVelocity(vehicleId, velocity);
                 break;
+            case ALL_VEHICLES_ACCELERATION:
+                Acceleration acceleration = mapper.readValue(message, Acceleration.class);
+                updateAcceleration(vehicleId, acceleration);
+                break;
         }
         subscriptionCallback.accept(vehicleId, definedTopic);
     }
@@ -121,7 +126,13 @@ public class SpeedAssistantService implements ISpeedAssistantService {
 
     private void updateVelocity(UUID vehicleId, Velocity velocity) {
         Vehicle v = latestValues.getOrDefault(vehicleId, new Vehicle());
-        v.setVelocity(velocity);
+        v.setVelocity(velocity.getVelocity());
+        latestValues.put(vehicleId, v);
+    }
+
+    private void updateAcceleration(UUID vehicleId, Acceleration acceleration) {
+        Vehicle v = latestValues.getOrDefault(vehicleId, new Vehicle());
+        v.setAcceleration(acceleration.getAcceleration());
         latestValues.put(vehicleId, v);
     }
 

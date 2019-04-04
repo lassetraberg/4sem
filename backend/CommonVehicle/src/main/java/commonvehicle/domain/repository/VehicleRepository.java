@@ -231,7 +231,7 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
     private Vehicle vehicleFromResultSet(ResultSet rs) throws SQLException {
         Vehicle v = new Vehicle(
                 UUID.fromString(rs.getString("device_id")),
-                new Velocity(rs.getShort("speed")),
+                rs.getShort("speed"),
                 rs.getTimestamp("timestamp").toInstant(),
                 rs.getDouble("acceleration"),
                 rs.getShort("speed_limit"),

@@ -24,8 +24,9 @@ public class WebSocketCommunicationService extends AbstractWebSocketEndpoint<UUI
 
     @Override
     public void onVelocityMessage(UUID deviceId) {
-        Velocity velocity = speedAssistantService.getLatestVelocity(deviceId);
-        sendTo(deviceId, velocity, "velocity");
+        Short velocity = speedAssistantService.getLatestVelocity(deviceId);
+        Velocity velocityObject = new Velocity(velocity);
+        sendTo(deviceId, velocityObject, "velocity");
     }
 
 }
