@@ -52,7 +52,7 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-               Vehicle v = vehicleFromResultSet(rs);
+                Vehicle v = vehicleFromResultSet(rs);
 
                 vehicle.set(v);
             }
@@ -110,7 +110,7 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
         List<Device> deviceList = new ArrayList<>();
 
         this.executeQuery(conn -> {
-            PreparedStatement stmt  = conn.prepareStatement(sql);
+            PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setLong(1, accountId);
 
             ResultSet rs = stmt.executeQuery();
@@ -232,14 +232,14 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
 
     private Vehicle vehicleFromResultSet(ResultSet rs) throws SQLException {
         Vehicle v = new Vehicle(
-            UUID.fromString(rs.getString("device_id")),
-            new Velocity(rs.getShort("speed")),
-            rs.getTimestamp("timestamp").toInstant(),
-            rs.getDouble("acceleration"),
-            rs.getShort("speed_limit"),
-            new GpsCoordinates(
-                    rs.getDouble("latitude"), rs.getDouble("longitude")
-            )
+                UUID.fromString(rs.getString("device_id")),
+                new Velocity(rs.getShort("speed")),
+                rs.getTimestamp("timestamp").toInstant(),
+                rs.getDouble("acceleration"),
+                rs.getShort("speed_limit"),
+                new GpsCoordinates(
+                        rs.getDouble("latitude"), rs.getDouble("longitude")
+                )
         );
 
         return v;

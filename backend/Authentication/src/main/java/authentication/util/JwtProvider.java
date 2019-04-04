@@ -1,9 +1,9 @@
 package authentication.util;
 
-import commonAuthentication.domain.model.Account;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import commonAuthentication.domain.model.Account;
 import io.javalin.security.Role;
 
 import java.util.Date;

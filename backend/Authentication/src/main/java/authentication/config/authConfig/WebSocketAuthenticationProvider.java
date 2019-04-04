@@ -1,7 +1,6 @@
 package authentication.config.authConfig;
 
 import authentication.util.JwtProvider;
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import common.spi.IWebSocketAuthenticationService;

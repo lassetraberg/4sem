@@ -1,11 +1,11 @@
 package authentication.domain.service;
 
-import commonAuthentication.domain.model.Account;
-import commonAuthentication.domain.repository.IAccountRepository;
 import authentication.util.IHasher;
 import authentication.util.JwtProvider;
 import common.web.exceptions.ValidationException;
 import commonAuthentication.config.authConfig.Roles;
+import commonAuthentication.domain.model.Account;
+import commonAuthentication.domain.repository.IAccountRepository;
 import io.javalin.UnauthorizedResponse;
 
 public class AccountService implements IAccountService {

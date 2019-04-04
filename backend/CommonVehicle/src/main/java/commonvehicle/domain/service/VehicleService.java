@@ -7,10 +7,8 @@ import commonvehicle.domain.dto.VehicleDto;
 import commonvehicle.domain.model.Device;
 import commonvehicle.domain.model.vehicledata.Vehicle;
 import commonvehicle.domain.repository.IVehicleRepository;
-import io.javalin.HttpResponseException;
 import io.javalin.NotFoundResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +21,8 @@ public class VehicleService implements IVehicleService {
         this.accountRepository = accountRepository;
     }
 
-    public VehicleService() {}
+    public VehicleService() {
+    }
 
     @Override
     public boolean addData(VehicleDto vehicleDto) {

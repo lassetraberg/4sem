@@ -1,5 +1,8 @@
 package speedassistant.domain.service;
 
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 import speedassistant.domain.models.speedlimit.SpeedLimit;
 
@@ -25,12 +28,12 @@ public class SpeedLimitService implements ISpeedLimitService {
         URL apiUrl = buildUrl(50, gpsCoordinates.getLat(), gpsCoordinates.getLon());
         SpeedLimit speedLimit = null;
 
-        //try {
-        //    HttpResponse<SpeedLimit> speedLimitResponse = Unirest.get(apiUrl.toString()).asObject(SpeedLimit.class);
-        //    speedLimit = speedLimitResponse.getBody();
-        //} catch (UnirestException e) {
-        //    e.printStackTrace();
-        //}
+        try {
+            HttpResponse<SpeedLimit> speedLimitResponse = Unirest.get(apiUrl.toString()).asObject(SpeedLimit.class);
+            speedLimit = speedLimitResponse.getBody();
+        } catch (UnirestException e) {
+            e.printStackTrace();
+        }
 
         if (speedLimit != null && speedLimit.getMaxSpeed() != null) {
             returnValue = speedLimit.getMaxSpeed();
