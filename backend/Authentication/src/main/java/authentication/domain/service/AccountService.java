@@ -34,7 +34,8 @@ public class AccountService implements IAccountService {
         String hashedPassword = hasher.hashPassword(account.getPassword());
         account.setPassword(hashedPassword);
         account.setToken(generateJwtToken(account));
-        accountRepository.createUser(account);
+        Long id = accountRepository.createUser(account);
+        account.setId(id);
         return account;
     }
 
