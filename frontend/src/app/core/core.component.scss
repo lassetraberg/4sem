@@ -18,7 +18,15 @@
     header{
         grid-area: header;
         z-index: 99;
+        display: block;
         height: 60px;
+        position: relative;
+        @include from($tablet){
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
     }
 
     main{
@@ -26,6 +34,7 @@
         grid-area: main;
         overflow-y: auto;
         overflow-x: hidden;
+        position: relative;
     }
 
     nav{
@@ -36,9 +45,13 @@
     // Absolute positioning for router outlet.
     /deep/ router-outlet ~ * {
         position: absolute;
-        width: calc(100vw - 32px);
-        margin-left: 16px;
-        margin-right: 16px;
+        width: calc(100vw);
+        top: 0;
+        bottom: 0;
+        > * {
+            width: 100%;
+            height: 100%;
+        }
     }
 
 }

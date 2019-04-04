@@ -2,31 +2,56 @@
 
 :host{
     user-select: none;
+    flex: 1;
 }
 
 .nav{
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
     height: 55px;
     width: 100%;
     padding: 0.375rem 0.75rem;
     background: var(--lightershade);
     border-top: 1px solid var(--shade);
-
+    justify-content: space-around;
+    @include from($tablet){
+        width: auto;
+        height: 70px;
+        padding-right: 30px;
+        padding-left: 30px;
+        justify-content: flex-start;
+        background: var(--bg);
+        border-top: none;
+    }
+    @include theme(".dark"){
+        .nav{
+           background: var(--darkshade);
+           @include from($tablet){
+               border-bottom: none;
+           }
+        }
+    }
     .nav_item{
         text-decoration: none;
         opacity: 0.5;
         color: var(--text-color);
         &.active{
             opacity: 1;  
-            color: var(--acc);
+            color: var(--text-color);
         }
         display: inline-flex;
         align-items: center;
         justify-content: center;
         flex: 1;
+        @include from($tablet){
+            font-weight: 800;
+            flex: unset;
+            padding-left: 1.325rem;
+            &:first-child{
+                padding-left: 0;
+            }
+        }
         font-size: 1.25em;
         
         cursor: pointer;
@@ -39,6 +64,7 @@
             flex-direction: column;
             align-content: center;
             align-items: center;
+            text-align: center;
             
             i{
                 position: relative;
@@ -53,6 +79,7 @@
         }
 
         .string{
+            font-size: 1.125rem;
             @include until($tablet){
                 display: none;
             }

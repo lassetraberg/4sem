@@ -1,8 +1,14 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { tap, delay } from "rxjs/operators";
 import { Observable, empty, of } from 'rxjs';
+
+const httpOptions = {
+    headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+    })
+};
 
 @Injectable()
 export class AuthService {
@@ -12,12 +18,23 @@ export class AuthService {
     }
 
     /**
+     * Register / sign up method.
+     * @param username entered username
+     * @param password entered password
+     */
+    register(username: string, password: string): Observable<any> {
+        const credentials = {username, password};
+        console.log(credentials);
+        return this.http.post<string>(`${environment.restapi}/accounts`, credentials, httpOptions);
+    }
+
+    /**
      * JWT authentication signin method.
      * @param username credentials 
      * @param password credentials
      */
     login(username:string, password:string): Observable<any> {
-        return this.http.post<string>(`http://${environment.api}/accounts/login`, {
+        return this.http.post<string>(`${environment.restapi}/accounts/login`, {
             username,
             password
         }).pipe(

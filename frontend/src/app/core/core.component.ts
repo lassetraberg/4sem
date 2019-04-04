@@ -5,6 +5,7 @@ import { RouterOutlet } from '@angular/router';
 import { routerAnimation } from 'src/animations/router.animation';
 import { ThemeService } from '../shared/services/theme.service';
 import { NavigationService, NavigationNode } from '../shared/services/navigation.service';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'app-core',
@@ -16,16 +17,19 @@ import { NavigationService, NavigationNode } from '../shared/services/navigation
 })
 export class CoreComponent implements OnInit {
 
+  /**
+   * Navigation nodes.
+   */
   public headerNodes: NavigationNode[];
 
-  constructor(private titleService: TitleService, private screenService: ScreenService, private themeService: ThemeService, private navigationService: NavigationService) { }
+  constructor(private auth: AuthService, private titleService: TitleService, private screen: ScreenService, private themeService: ThemeService, private navigationService: NavigationService) { }
 
   ngOnInit() {
     this.navigationService.navigationViews.subscribe(views => {
       this.headerNodes = views['Header'] || [];
     })
     this.titleService.init();
-    this.screenService.init();
+    this.screen.init();
     this.themeService.init();
   }
 

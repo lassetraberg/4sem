@@ -9,7 +9,7 @@ form{
         margin: 5px 0;
         &.form-group--actions{
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
         }
 
         input{

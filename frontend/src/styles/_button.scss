@@ -1,11 +1,23 @@
 button{
     outline: none;
-    background: var(--acc);
-    color: #fff;
     border: none;
-    padding: 0.6rem 1.6rem;
-    border-radius: 4px;
+    padding: .25rem 2.25rem;
+    border-radius: .25rem;
+    min-height: 2.75rem;
+    font-size: .9375rem;
+    background: var(--text-color);
     cursor: pointer;
+    color: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    > i {
+        position: absolute;
+        left: 0.5rem;
+    }
+
     &:hover{
         opacity: 0.8;
     }

@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { Router } from '@angular/router';
+import { TitleService } from 'src/app/shared/services/title.service';
+import { ScreenService } from 'src/app/shared/services/screen.service';
 
 @Component({
   selector: 'app-header',
@@ -9,9 +11,12 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor(private auth: AuthService, private router: Router) { }
+  title: String = "";
+
+  constructor(private auth: AuthService, private router: Router, private titleService: TitleService, private screen: ScreenService) { }
 
   ngOnInit() {
+    this.titleService.titleUpdated.subscribe((title) => this.title = title);
   }
   
   public signout(){

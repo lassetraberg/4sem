@@ -1,10 +1,12 @@
-<header>
-    <app-header></app-header>
-</header>
+
+    <header>
+        <app-header></app-header>
+        <app-nav *ngIf="!screen.isMobile()" [nodes]="headerNodes"></app-nav>
+    </header>
 
 
-<main [@routerAnimation]="outlet.isActivated ? outlet.activatedRoute : ''">
-    <router-outlet #outlet="outlet"></router-outlet>
-</main>
+    <main [@routerAnimation]="outlet.isActivated ? outlet.activatedRoute : ''">
+        <router-outlet #outlet="outlet"></router-outlet>
+    </main>
 
-<app-nav [nodes]="headerNodes"></app-nav>
+    <app-nav *ngIf="screen.isMobile()" [nodes]="headerNodes"></app-nav>

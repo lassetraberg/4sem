@@ -1,10 +1,10 @@
 import { Injectable, HostListener } from "@angular/core";
-import { Observable, of as observableOf, Subject } from "rxjs";
+import { Observable, of as observableOf, Subject, BehaviorSubject } from "rxjs";
 
 @Injectable()
 export class ScreenService {
 
-    public readonly isMobile: Subject<boolean> = new Subject<boolean>(); 
+    public readonly mobile: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null); 
     
     public readonly scrollPosition: Subject<number> = new Subject<number>();
     public readonly windowWidth: Subject<number> = new Subject<number>();
@@ -14,9 +14,9 @@ export class ScreenService {
         window.addEventListener("resize", (event) => {
             this.windowWidth.next(window.innerWidth);
             if(window.innerWidth <= 769){
-                this.isMobile.next(true);
+                this.mobile.next(true);
             } else{
-                this.isMobile.next(false);
+                this.mobile.next(false);
             }
         });
 
@@ -27,6 +27,10 @@ export class ScreenService {
     }
 
     init() {
-        
+        window.dispatchEvent(new Event('resize'));
+    }
+
+    public isMobile(): boolean{
+        return this.mobile.value;
     }
 }

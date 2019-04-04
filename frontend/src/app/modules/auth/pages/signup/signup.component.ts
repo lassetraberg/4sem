@@ -39,7 +39,7 @@ export class SignupComponent implements OnInit {
   get confirm_password() { return this.form.get('confirm_password'); }
 
   public async submit() {
-    // Register
+    await this.auth.register(this.form.controls.username.value, this.form.controls.password.value).toPromise();
   }
 
 }

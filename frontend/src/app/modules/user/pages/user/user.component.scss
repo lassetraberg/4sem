@@ -1,0 +1,28 @@
+.user{
+    margin-top: 30px;
+    padding: 0 1rem;
+    max-width: 1032px;
+    margin:  auto auto;
+
+    .group{
+        margin: 15px 0;
+        border-bottom: 1px solid var(--shade);
+        padding-bottom: 15px;
+    }
+
+    .group_label{
+        display: block;
+        color: var(--text-color);
+        font-weight: 800;
+        font-size: .875rem;
+        margin-bottom: 12px;
+    }
+
+    .vehicles{
+
+    }
+
+    button {
+        width: 100%;
+    }
+}

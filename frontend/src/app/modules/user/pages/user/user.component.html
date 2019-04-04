@@ -1,5 +1,22 @@
-<p>
-  user works!
-</p>
+<div class="user">
 
-<button (click)="signOut()">Sign out</button>
+  <h2>My Account</h2>
+  <div class="vehicles group">
+    <span class="group_label">Vehicles</span>
+
+
+    <button (click)="addVehicle()"><i class="material-icons"> add </i>Add New Vehicle</button>
+
+  </div>
+
+  <div class="account group">
+    <span class="group_label">Account</span>
+    <button *ngIf="!auth.isAuthenticated()" routerLink="/auth/signin">Sign In</button>
+    <button *ngIf="auth.isAuthenticated()" (click)="signOut()">
+      <i class="material-icons">
+        exit_to_app
+      </i>
+      Sign Out</button>
+  </div>
+
+</div>

@@ -1,5 +1,4 @@
 <div class="header">
-  <div class="user">
-    <button *ngIf="!auth.isAuthenticated()" routerLink="/auth/signin" class="secondary">Sign In</button>    
-  </div>
+  <span *ngIf="screen.isMobile()">{{ title }}</span>
+  <span class="apptitle" *ngIf="!screen.isMobile()">Speed Assistant</span>
 </div>
