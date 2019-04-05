@@ -68,6 +68,9 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
                 case ALL_VEHICLES_VELOCITY:
                     communicationService.onVelocityMessage(deviceId);
                     break;
+                case ALL_VEHICLES_ACCELERATION:
+                    communicationService.onAccelerationMessage(deviceId);
+                    break;
             }
     }
 

@@ -26,6 +26,11 @@ public class DatabaseCommunicationService implements ISpeedAssistantCommunicatio
         tryAddData(deviceId);
     }
 
+    @Override
+    public void onAccelerationMessage(UUID deviceId) {
+        tryAddData(deviceId);
+    }
+
     private void tryAddData(UUID deviceId) {
         // TODO only update database every n seconds
         Vehicle vehicle = speedAssistantService.getLatestVehicleData(deviceId);

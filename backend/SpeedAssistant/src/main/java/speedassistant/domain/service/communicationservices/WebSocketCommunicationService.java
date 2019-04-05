@@ -2,6 +2,7 @@ package speedassistant.domain.service.communicationservices;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.web.websockets.AbstractWebSocketEndpoint;
+import commonvehicle.domain.model.vehicledata.Acceleration;
 import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 import commonvehicle.domain.model.vehicledata.Velocity;
 import speedassistant.domain.service.ISpeedAssistantService;
@@ -27,6 +28,13 @@ public class WebSocketCommunicationService extends AbstractWebSocketEndpoint<UUI
         Short velocity = speedAssistantService.getLatestVelocity(deviceId);
         Velocity velocityObject = new Velocity(velocity);
         sendTo(deviceId, velocityObject, "velocity");
+    }
+
+    @Override
+    public void onAccelerationMessage(UUID deviceId) {
+        Double acceleration = speedAssistantService.getLatestAcceleration(deviceId);
+        Acceleration accelerationObject = new Acceleration(acceleration);
+        sendTo(deviceId, accelerationObject, "acceleration");
     }
 
 }
