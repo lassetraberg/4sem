@@ -10,6 +10,9 @@ public class Config {
     private Properties properties;
     private static Config ourInstance;
 
+    private final static String ENVIRONMENT_PRODUCTION = "prod";
+    private final static String ENVIRONMENT_DEVELOPMENT = "dev";
+
     public static Config getInstance() {
         if (ourInstance == null) {
             ourInstance = new Config();
@@ -31,7 +34,14 @@ public class Config {
 
 
     public String getProperty(String key) {
-        return properties.getProperty(key);
+        String env = getEnv("env") == null ? ENVIRONMENT_DEVELOPMENT : getEnv("env");
+
+        String property = properties.getProperty(env + "." + key);
+        if (property == null) {
+            property = properties.getProperty(key);
+        }
+
+        return property;
     }
 
     public String getEnv(String key) {
