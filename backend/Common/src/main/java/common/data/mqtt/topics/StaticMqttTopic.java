@@ -2,7 +2,8 @@ package common.data.mqtt.topics;
 
 
 public enum StaticMqttTopic {
-    ALL_VEHICLES("/vehicle/#"), ALL_VEHICLES_GPS("/vehicle/+/gps"), ALL_VEHICLES_VELOCITY("/vehicle/+/velocity");
+    ALL_VEHICLES_GPS("/vehicle/+/gps"), ALL_VEHICLES_VELOCITY("/vehicle/+/velocity"),
+    ALL_VEHICLES_ACCELERATION("/vehicle/+/acceleration");
 
     private String topic;
 

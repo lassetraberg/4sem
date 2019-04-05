@@ -1,11 +1,11 @@
 package authentication.domain.service;
 
-import authentication.domain.Account;
-import authentication.domain.repository.IAccountRepository;
 import authentication.util.IHasher;
 import authentication.util.JwtProvider;
 import common.web.exceptions.ValidationException;
 import commonAuthentication.config.authConfig.Roles;
+import commonAuthentication.domain.model.Account;
+import commonAuthentication.domain.repository.IAccountRepository;
 import io.javalin.UnauthorizedResponse;
 
 public class AccountService implements IAccountService {
@@ -34,7 +34,8 @@ public class AccountService implements IAccountService {
         String hashedPassword = hasher.hashPassword(account.getPassword());
         account.setPassword(hashedPassword);
         account.setToken(generateJwtToken(account));
-        accountRepository.createUser(account);
+        Long id = accountRepository.createUser(account);
+        account.setId(id);
         return account;
     }
 

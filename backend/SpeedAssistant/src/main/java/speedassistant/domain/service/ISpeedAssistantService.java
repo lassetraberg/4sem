@@ -1,9 +1,23 @@
 package speedassistant.domain.service;
 
-import speedassistant.domain.models.vehicledata.Vehicle;
+import commonvehicle.domain.model.vehicledata.GpsCoordinates;
+import commonvehicle.domain.model.vehicledata.Vehicle;
 
 import java.util.UUID;
 
 public interface ISpeedAssistantService {
-    Vehicle getVehicleData(UUID deviceId, String username);
+    Short getLatestVelocity(UUID vehicleId);
+
+    double getLatestAcceleration(UUID vehicleId);
+
+    short getLatestSpeedLimit(UUID vehicleId);
+
+    GpsCoordinates getLatestGpsCoordinate(UUID vehicleId);
+
+    Vehicle getLatestVehicleData(UUID vehicleId);
+
+    boolean isSpeeding(UUID vehicleId);
+
+    void publishSpeedingAlarm(UUID vehicleId);
+
 }

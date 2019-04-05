@@ -1,6 +1,6 @@
 package authentication.domain.service;
 
-import authentication.domain.Account;
+import commonAuthentication.domain.model.Account;
 
 public interface IAccountService {
     /**

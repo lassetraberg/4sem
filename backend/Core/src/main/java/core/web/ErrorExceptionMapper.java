@@ -6,26 +6,12 @@ import org.eclipse.jetty.http.HttpStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Collections;
 
 public class ErrorExceptionMapper {
     private static Logger log = LoggerFactory.getLogger(ErrorExceptionMapper.class);
 
     public static void register(Javalin app) {
-        app.exception(Exception.class, (e, ctx) -> {
-            log.error(String.format("Exception occurred for req -> %s", e));
-            e.printStackTrace();
-            ErrorResponse err = new ErrorResponse(Collections.singletonMap("Unknown error", Collections.singletonList(e.toString())));
-            ctx.json(err).status(HttpStatus.INTERNAL_SERVER_ERROR_500);
-        });
-
-        app.exception(SQLException.class, (e, ctx) -> {
-            log.error(String.format("SQL Exception occurred for req -> %s", e));
-            ErrorResponse err = new ErrorResponse(Collections.singletonMap("Unknown error", Collections.singletonList(e.toString())));
-            ctx.json(err).status(HttpStatus.INTERNAL_SERVER_ERROR_500);
-        });
-
         app.exception(BadRequestResponse.class, (e, ctx) -> {
             log.error(String.format("BadRequestResponse occurred for req -> %s", e));
             ErrorResponse err = new ErrorResponse(Collections.singletonMap("body", Collections.singletonList("can't be empty or invalid")));
@@ -52,7 +38,8 @@ public class ErrorExceptionMapper {
 
         app.exception(NotFoundResponse.class, (e, ctx) -> {
             log.error(String.format("NotFoundResponse occurred for req -> %s", e));
-            ErrorResponse err = new ErrorResponse(Collections.singletonMap("body", Collections.singletonList("404 Not Found")));
+            String msg = !e.getMessage().isEmpty() ? e.getMessage() : "404 Not Found";
+            ErrorResponse err = new ErrorResponse(Collections.singletonMap("body", Collections.singletonList(msg)));
             ctx.json(err).status(HttpStatus.NOT_FOUND_404);
         });
 

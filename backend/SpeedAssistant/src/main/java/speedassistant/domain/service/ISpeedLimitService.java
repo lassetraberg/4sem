@@ -1,6 +1,6 @@
 package speedassistant.domain.service;
 
-import speedassistant.domain.models.vehicledata.GpsCoordinates;
+import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 
 public interface ISpeedLimitService {
     /**
@@ -9,5 +9,5 @@ public interface ISpeedLimitService {
      * @param gpsCoordinates gps coordinates
      * @return returns the speed limit if one was found, otherwise Integer.MAX_VALUE
      */
-    int getSpeedLimit(GpsCoordinates gpsCoordinates);
+    short getSpeedLimit(GpsCoordinates gpsCoordinates);
 }

@@ -5,6 +5,7 @@ import common.util.SPILocator;
 import simulation.hardware.AbstractDevice;
 import simulation.hardware.State;
 import simulation.hardware.actuators.SpeedingAlarmActuator;
+import simulation.hardware.sensors.AccelerationSensor;
 import simulation.hardware.sensors.GPSSensor;
 import simulation.hardware.sensors.VelocitySensor;
 
@@ -38,7 +39,11 @@ public class SimulationMain {
     }
 
     private static List<AbstractDevice> getPublishers(IMqttService mqttConnection) {
-        return Arrays.asList(new GPSSensor(mqttConnection, "1.txt"), new VelocitySensor(mqttConnection));
+        return Arrays.asList(
+                new GPSSensor(mqttConnection, "1.txt"),
+                new VelocitySensor(mqttConnection),
+                new AccelerationSensor(mqttConnection)
+        );
     }
 
     private static List<AbstractDevice> getSubscribers(IMqttService mqttConnection) {
