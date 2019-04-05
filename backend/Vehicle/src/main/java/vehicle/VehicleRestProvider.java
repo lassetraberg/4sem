@@ -7,14 +7,15 @@ import commonAuthentication.domain.repository.IAccountRepository;
 import commonvehicle.domain.repository.IVehicleRepository;
 import commonvehicle.domain.service.IVehicleService;
 import io.javalin.apibuilder.EndpointGroup;
+import vehicle.domain.service.LicensePlateService;
 import vehicle.web.VehicleController;
 
 import static common.util.JavalinUtils.roles;
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class VehicleRestProvider implements IRouterService {
-
     private VehicleController controller;
+    private LicensePlateService licensePlateService;
 
     public VehicleRestProvider() {
         IVehicleService vehicleService = SPILocator.locateSpecific(IVehicleService.class);
@@ -24,7 +25,8 @@ public class VehicleRestProvider implements IRouterService {
         vehicleService.setVehicleRepository(vehicleRepository);
         vehicleService.setAccountRepository(accountRepository);
 
-        controller = new VehicleController(vehicleService);
+        licensePlateService = new LicensePlateService();
+        controller = new VehicleController(licensePlateService, vehicleService);
     }
 
     @Override
@@ -32,6 +34,7 @@ public class VehicleRestProvider implements IRouterService {
         return (() -> path("vehicle", () -> {
             post(controller::registerVehicle, roles(Roles.AUTHENTICATED));
             get(controller::getVehicles, roles(Roles.AUTHENTICATED));
+            get("licenseplate/:license-plate", controller::getVehicleLicensePlateData, roles(Roles.AUTHENTICATED));
             path(":device-id", () -> {
                 get(controller::getVehicle, roles(Roles.AUTHENTICATED));
                 delete(controller::deleteVehicle, roles(Roles.AUTHENTICATED));
