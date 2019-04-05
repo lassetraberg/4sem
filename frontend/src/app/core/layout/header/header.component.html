@@ -1,4 +1,5 @@
 <div class="header">
   <span class="breadcrumb" *ngIf="screen.isMobile()">{{ title }}</span>
   <span class="apptitle" *ngIf="!screen.isMobile()">Speed Assistant</span>
+  <button *ngIf="!auth.isAuthenticated() && !screen.isMobile()" class="login" routerLink="auth/signin">Sign In</button>
 </div>
