@@ -25,6 +25,9 @@ public class VehicleService implements IVehicleService {
 
     @Override
     public boolean addData(Vehicle vehicle) {
+        if (vehicleRepository.getDevice(vehicle.getDeviceId().toString()) == null) {
+            return false;
+        }
         return vehicleRepository.addData(vehicle.getDeviceId().toString(), vehicle.getVelocity(),
                 vehicle.getAcceleration(), vehicle.getSpeedLimit(), vehicle.getGpsCoordinates().getLat(), vehicle.getGpsCoordinates().getLon());
     }
