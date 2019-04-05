@@ -11,12 +11,14 @@ import simulation.hardware.sensors.VelocitySensor;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class SimulationMain {
     public static void main(String[] args) {
         IMqttService mqttConnection = SPILocator.locateAll(IMqttService.class).get(0);
         mqttConnection.connect();
+        Locale.setDefault(Locale.US);
         State state = new State();
         int howLong = 10;
 
