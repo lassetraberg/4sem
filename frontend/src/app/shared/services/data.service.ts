@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 const httpOptions = {
     headers: new HttpHeaders({
@@ -12,7 +13,9 @@ export class DataService {
 
     constructor(private http: HttpClient) { }
 
-    public 
+    public getVehicles(){
+        return this.http.get(`${environment.restapi}/vehicle/`, httpOptions);
+    } 
 
 
 }
