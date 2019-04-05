@@ -2,7 +2,6 @@ package core.web;
 
 import common.spi.IAccessManagerService;
 import common.spi.IRouterService;
-import common.spi.IWebSocketHandler;
 import common.spi.IWebSocketService;
 import common.util.SPILocator;
 import io.javalin.Javalin;

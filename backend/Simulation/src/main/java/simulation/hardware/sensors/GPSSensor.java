@@ -5,7 +5,9 @@ import common.spi.IMqttService;
 import simulation.hardware.AbstractDevice;
 import simulation.hardware.State;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +59,7 @@ public class GPSSensor extends AbstractDevice {
 
     private double[] getPredefinedGpsLatLon() {
         Double[] latlon = fileData.get(dataIndex);
-        if (dataIndex == fileData.size()-1) {
+        if (dataIndex == fileData.size() - 1) {
             reverse = true;
         } else if (dataIndex == 0) {
             reverse = false;
@@ -73,7 +75,7 @@ public class GPSSensor extends AbstractDevice {
 
     private List<Double[]> readFileData(String gpsRouteFileName) {
         List<Double[]> list = new ArrayList<>();
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/simulation/gpsroutes/"+gpsRouteFileName), StandardCharsets.UTF_8))) {
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream("/simulation/gpsroutes/" + gpsRouteFileName), StandardCharsets.UTF_8))) {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("#")) continue;

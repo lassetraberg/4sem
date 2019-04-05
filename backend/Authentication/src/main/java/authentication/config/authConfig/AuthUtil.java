@@ -7,6 +7,7 @@ import io.javalin.security.Role;
 
 class AuthUtil {
     static final String headerTokenName = "Authorization";
+
     static DecodedJWT getJwtTokenHeader(String authHeader, JwtProvider jwtProvider) {
         if (authHeader == null || !authHeader.contains("Bearer ")) {
             return null;
