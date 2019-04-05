@@ -18,7 +18,7 @@ public class AccelerationSensor extends AbstractDevice {
     }
 
     private String toJson(double acceleration) {
-        return String.format(String.format("{ \"acceleration\": %f }", acceleration));
+        return (String.format("{ \"acceleration\": %f }", acceleration));
     }
 
     private double generateAcceleration() {
