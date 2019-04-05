@@ -5,6 +5,7 @@ import common.web.websockets.AbstractWebSocketEndpoint;
 import commonvehicle.domain.model.vehicledata.Acceleration;
 import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 import commonvehicle.domain.model.vehicledata.Velocity;
+import speedassistant.domain.dto.GpsDto;
 import speedassistant.domain.service.ISpeedAssistantService;
 
 import java.util.UUID;
@@ -20,7 +21,8 @@ public class WebSocketCommunicationService extends AbstractWebSocketEndpoint<UUI
     @Override
     public void onGpsMessage(UUID deviceId) {
         GpsCoordinates gps = speedAssistantService.getLatestGpsCoordinate(deviceId);
-        sendTo(deviceId, gps, "gps");
+        GpsDto gpsDto = new GpsDto(gps);
+        sendTo(deviceId, gpsDto, "gps");
     }
 
     @Override
