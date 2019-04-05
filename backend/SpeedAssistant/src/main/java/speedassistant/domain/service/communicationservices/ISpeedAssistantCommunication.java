@@ -5,6 +5,8 @@ import java.util.UUID;
 public interface ISpeedAssistantCommunication {
     void onGpsMessage(UUID deviceId);
 
-    void onVelocityMessage(UUID deviceI);
+    void onVelocityMessage(UUID deviceId);
+
+    void onAccelerationMessage(UUID deviceId);
 
 }

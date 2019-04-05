@@ -7,15 +7,17 @@ import commonvehicle.domain.service.IVehicleService;
 import io.javalin.Context;
 import org.eclipse.jetty.http.HttpStatus;
 import vehicle.domain.dto.VehicleRegistrationDto;
+import vehicle.domain.service.ILicensePlateService;
 
 import java.util.List;
 import java.util.UUID;
 
 public class VehicleController {
-
     private IVehicleService vehicleService;
+    private ILicensePlateService licensePlateService;
 
-    public VehicleController(IVehicleService vehicleService) {
+    public VehicleController(ILicensePlateService licensePlateService, IVehicleService vehicleService) {
+        this.licensePlateService = licensePlateService;
         this.vehicleService = vehicleService;
     }
 
@@ -71,5 +73,11 @@ public class VehicleController {
         List<Vehicle> vehicleData = vehicleService.getData(UUID.fromString(deviceId), username);
 
         ctx.json(vehicleData);
+    }
+
+    public void getVehicleLicensePlateData(Context ctx) {
+        String licensePlate = ctx.pathParam("license-plate");
+        ctx.contentType("application/json");
+        ctx.result(licensePlateService.getData(licensePlate));
     }
 }

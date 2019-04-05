@@ -41,7 +41,7 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
 
     @Override
     public List<Vehicle> getData(String deviceId) {
-        String sql = "SELECT device_id, speed, timestamp, acceleration, speed_limit, latitude, longitude FROM vehicle WHERE device_id = ?";
+        String sql = "SELECT device_id, speed, timestamp, acceleration, speed_limit, latitude, longitude FROM vehicle WHERE device_id = ? ORDER BY timestamp";
 
         List<Vehicle> vehicleDataList = new ArrayList<>();
         this.executeQuery(conn -> {
