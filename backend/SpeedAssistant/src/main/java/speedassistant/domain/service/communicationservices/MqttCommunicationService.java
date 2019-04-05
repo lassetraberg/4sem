@@ -21,4 +21,9 @@ public class MqttCommunicationService implements ISpeedAssistantCommunication {
             speedAssistantService.publishSpeedingAlarm(deviceId);
         }
     }
+
+    @Override
+    public void onAccelerationMessage(UUID deviceId) {
+
+    }
 }

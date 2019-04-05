@@ -11,9 +11,17 @@ public class DatabaseCommunicationService implements ISpeedAssistantCommunicatio
     private ISpeedAssistantService speedAssistantService;
     private IVehicleService vehicleService;
 
-    public DatabaseCommunicationService(ISpeedAssistantService speedAssistantService, IVehicleService vehicleService) {
+    private int requestAllowedEveryNSeconds;
+    private long lastRequestTime;
+
+    public DatabaseCommunicationService(ISpeedAssistantService speedAssistantService, IVehicleService vehicleService, int rateLimit) {
         this.speedAssistantService = speedAssistantService;
         this.vehicleService = vehicleService;
+        this.requestAllowedEveryNSeconds = rateLimit;
+    }
+
+    public DatabaseCommunicationService(ISpeedAssistantService speedAssistantService, IVehicleService vehicleService) {
+        this(speedAssistantService, vehicleService, 2);
     }
 
     @Override
@@ -26,15 +34,24 @@ public class DatabaseCommunicationService implements ISpeedAssistantCommunicatio
         tryAddData(deviceId);
     }
 
-    private void tryAddData(UUID deviceId) {
-        // TODO only update database every n seconds
-        Vehicle vehicle = speedAssistantService.getLatestVehicleData(deviceId);
-        if (vehicle == null) {
-            return;
-        }
+    @Override
+    public void onAccelerationMessage(UUID deviceId) {
+        tryAddData(deviceId);
+    }
 
-        if (!vehicleService.addData(vehicle)) {
-            System.out.println(String.format("Failed to log vehicle data for deviceId: %s", deviceId.toString()));
+    private void tryAddData(UUID deviceId) {
+        double secondDifference = (System.currentTimeMillis() - lastRequestTime) / 1000.0;
+
+        if (secondDifference >= requestAllowedEveryNSeconds) {
+            lastRequestTime = System.currentTimeMillis();
+            Vehicle vehicle = speedAssistantService.getLatestVehicleData(deviceId);
+            if (vehicle == null) {
+                return;
+            }
+
+            if (!vehicleService.addData(vehicle)) {
+                System.out.println(String.format("Failed to log vehicle data for deviceId: %s", deviceId.toString()));
+            }
         }
     }
 }
