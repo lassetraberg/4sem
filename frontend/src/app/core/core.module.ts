@@ -9,6 +9,8 @@ import { NavigationService } from '../shared/services/navigation.service';
 import { AuthService } from '../shared/services/auth.service';
 import { SharedModule } from '../shared/components/shared.module';
 import { DataService } from '../shared/services/data.service';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../shared/interceptors/AuthInterceptor';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,14 @@ import { DataService } from '../shared/services/data.service';
   imports: [
     SharedModule
   ],
-  providers: [ScreenService, TitleService, ThemeService, NavigationService, AuthService, DataService]
+  providers: [
+    ScreenService, 
+    TitleService, 
+    ThemeService, 
+    NavigationService, 
+    AuthService, 
+    DataService,
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ]
 })
 export class CoreModule { }
