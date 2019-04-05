@@ -2,13 +2,17 @@ package core.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mashape.unirest.http.Unirest;
 import commonAuthentication.config.authConfig.Roles;
 import core.web.ErrorExceptionMapper;
 import core.web.Router;
+import core.web.serializers.InstantSerializer;
 import io.javalin.Javalin;
+import io.javalin.json.JavalinJackson;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import static common.util.JavalinUtils.roles;
 
@@ -30,6 +34,7 @@ public class AppConfig {
         router.register(app);
         ErrorExceptionMapper.register(app);
         initObjectMapper();
+        enableCustomSerializers();
 
         return app;
     }
@@ -55,5 +60,12 @@ public class AppConfig {
                 }
             }
         });
+    }
+
+    private void enableCustomSerializers() {
+        ObjectMapper javalinMapper = JavalinJackson.getObjectMapper();
+        JavaTimeModule timeModule = new JavaTimeModule();
+        timeModule.addSerializer(Instant.class, new InstantSerializer());
+        javalinMapper.registerModule(timeModule);
     }
 }
