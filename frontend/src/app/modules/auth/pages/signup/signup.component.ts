@@ -40,6 +40,7 @@ export class SignupComponent implements OnInit {
 
   public async submit() {
     await this.auth.register(this.form.controls.username.value, this.form.controls.password.value).toPromise();
+    this.router.navigate(['user/add-vehicle']);
   }
 
 }
