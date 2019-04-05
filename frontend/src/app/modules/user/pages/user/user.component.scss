@@ -1,3 +1,5 @@
+@import 'shared';
+
 .user{
     margin-top: 30px;
     padding: 0 1rem;
@@ -75,6 +77,9 @@
             .list{
                 padding: 0.25rem;
                 height: calc(350px - 44px);
+                @include until($tablet){
+                    height: calc(350px - calc(2*44px+5px));
+                }
                 overflow: hidden;
                 overflow-y: auto;
                 
@@ -145,20 +150,30 @@
 
             .button_group{
                 display: flex;
+                @include until($tablet){
+                    flex-direction: column;
+                }
                 button{
                     flex: 1;
-                     &:first-of-type{
-                        border-top-left-radius: 0;
-                        border-top-right-radius: 0;
-                        border-bottom-right-radius: 0;
-                        margin-right: 2px;
-                     }
-                     &:last-child{
-                        border-top-right-radius: 0;
-                        border-top-left-radius: 0;
-                        border-bottom-left-radius: 0;
-                        margin-left: 2px;
-                     }
+                    @include until($tablet){
+                        &:first-of-type{
+                            margin-bottom: 5px;
+                        }
+                    }
+                    @include from($tablet){
+                        &:first-of-type{
+                            border-top-left-radius: 0;
+                            border-top-right-radius: 0;
+                            border-bottom-right-radius: 0;
+                            margin-right: 2px;
+                        }
+                        &:last-child{
+                            border-top-right-radius: 0;
+                            border-top-left-radius: 0;
+                            border-bottom-left-radius: 0;
+                            margin-left: 2px;
+                        }
+                    }
                 }
             }
         }

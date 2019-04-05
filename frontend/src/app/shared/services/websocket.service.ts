@@ -8,7 +8,7 @@ import { environment } from 'src/environments/environment';
 export class WebsocketService {
 
     /**
-     * Get WebSocketSubject for a given device-id and data.
+     * Get WebSocketSubject for a given device-id and data point.
      * @param device id.
      * @param data type of data.
      */
