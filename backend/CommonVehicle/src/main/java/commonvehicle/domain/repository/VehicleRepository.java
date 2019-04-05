@@ -83,7 +83,13 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
     @Override
     public boolean deleteDevice(String deviceId, Long accountId) {
         boolean succesfullyDisconnected = disconnect(deviceId, accountId);
-        if (!succesfullyDisconnected) return false;
+        if (!succesfullyDisconnected) {
+            return false;
+        }
+        boolean succfessfullyDeletedData = deleteVehicleData(deviceId);
+        if (!succfessfullyDeletedData) {
+            return false;
+        }
         String sql = "DELETE FROM device WHERE device_id = ?";
 
         AtomicBoolean success = new AtomicBoolean(false);
@@ -205,6 +211,23 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setObject(1, deviceId, Types.OTHER);
             stmt.setLong(2, accountId);
+
+            int res = stmt.executeUpdate();
+            if (res != 0) {
+                success.set(true);
+            }
+        });
+
+        return success.get();
+    }
+
+    private boolean deleteVehicleData(String deviceId) {
+        String sql = "DELETE FROM vehicle WHERE device_id = ?";
+        AtomicBoolean success = new AtomicBoolean(false);
+
+        this.executeQuery(conn -> {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setObject(1, deviceId, Types.OTHER);
 
             int res = stmt.executeUpdate();
             if (res != 0) {
