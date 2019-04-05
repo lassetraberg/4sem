@@ -23,6 +23,18 @@
         <span class="unit">KM/H</span>
     </div>
 
+    <span *ngIf="vehicleData.gps">
+        {{ vehicleData.gps.lat }}
+        {{ vehicleData.gps.lon }}
+    </span>
+    
+    <span *ngIf="vehicleData.acceleration">
+        {{ vehicleData.acceleration }}
+    </span>
+
+    <app-map></app-map>
+    
+
  
 
 

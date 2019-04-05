@@ -35,6 +35,7 @@ export class DashboardComponent implements OnInit {
   ngOnDestroy(){
     console.log(this.vehicleData.velocity);
     console.log(this.vehicleData.acceleration);
+    console.log(this.vehicleData.gps);
     // Disconnect from every WebSocket.
     Object.keys(this.sockets).forEach(property => {
       var subject = this.sockets[property] as WebSocketSubject<any>;
