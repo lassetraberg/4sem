@@ -7,7 +7,7 @@ import common.spi.IWebSocketAuthenticationService;
 import common.spi.IWebSocketHandler;
 import common.spi.IWebSocketService;
 import common.util.SPILocator;
-import commonAuthentication.config.authConfig.Roles;
+import commonAuthentication.config.authConfig.Role;
 import commonAuthentication.domain.repository.IAccountRepository;
 import commonvehicle.domain.repository.IVehicleRepository;
 import commonvehicle.domain.service.IVehicleService;
@@ -53,7 +53,7 @@ public class SpeedAssistantWebSocketProvider implements IWebSocketService {
         webSocketCommunicationService = new WebSocketCommunicationService("data", mapper, speedAssistantService);
 
         webSocketHandler = new SpeedAssistantWebSocketHandler("/ws/speed-assistant/:device-id/:data",
-                roles(Roles.AUTHENTICATED), webSocketAuthenticationService, vehicleService, webSocketCommunicationService);
+                roles(Role.AUTHENTICATED), webSocketAuthenticationService, vehicleService, webSocketCommunicationService);
 
 
         communicationServices = setupCommunicationServices();

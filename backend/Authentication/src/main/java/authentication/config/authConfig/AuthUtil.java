@@ -2,8 +2,7 @@ package authentication.config.authConfig;
 
 import authentication.util.JwtProvider;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import commonAuthentication.config.authConfig.Roles;
-import io.javalin.security.Role;
+import commonAuthentication.config.authConfig.Role;
 
 class AuthUtil {
     static final String headerTokenName = "Authorization";
@@ -29,7 +28,7 @@ class AuthUtil {
         return jwtToken.getSubject();
     }
 
-    static Role getUserRole(DecodedJWT jwtToken) {
+    static io.javalin.security.Role getUserRole(DecodedJWT jwtToken) {
         if (jwtToken == null) {
             return null;
         }
@@ -38,6 +37,6 @@ class AuthUtil {
             return null;
         }
 
-        return Roles.valueOf(role);
+        return Role.valueOf(role);
     }
 }

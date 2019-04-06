@@ -1,5 +1,7 @@
 package commonAuthentication.domain.model;
 
+import commonAuthentication.config.authConfig.Role;
+
 import java.time.Instant;
 
 public class Account {
@@ -11,8 +13,9 @@ public class Account {
     private Instant last_login;
     private int loginAttempts;
     private Instant lastLoginAttempt;
+    private Role role;
 
-    public Account(Long id, String username, String password, Instant created, Instant last_login, int loginAttempts, Instant lastLoginAttempt) {
+    public Account(Long id, String username, String password, Instant created, Instant last_login, int loginAttempts, Instant lastLoginAttempt, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -20,6 +23,7 @@ public class Account {
         this.last_login = last_login;
         this.loginAttempts = loginAttempts;
         this.lastLoginAttempt = lastLoginAttempt;
+        this.role = role;
     }
 
     public Long getId() {
@@ -84,5 +88,13 @@ public class Account {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

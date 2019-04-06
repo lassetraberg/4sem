@@ -10,7 +10,8 @@ CREATE TABLE account (
     created TIMESTAMP DEFAULT NOW(),
     last_login TIMESTAMP,
     login_attempts INT DEFAULT 0,
-    last_login_attempt TIMESTAMP
+    last_login_attempt TIMESTAMP,
+    role TEXT
 );
 
 CREATE TABLE device (

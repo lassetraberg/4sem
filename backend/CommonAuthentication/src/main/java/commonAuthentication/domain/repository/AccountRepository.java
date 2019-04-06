@@ -1,6 +1,7 @@
 package commonAuthentication.domain.repository;
 
 import common.data.database.DatabaseConnection;
+import commonAuthentication.config.authConfig.Role;
 import commonAuthentication.domain.model.Account;
 
 import java.sql.PreparedStatement;
@@ -12,7 +13,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class AccountRepository extends DatabaseConnection implements IAccountRepository {
     public Long createUser(Account account) {
-        String sql = "INSERT INTO account (username, password) VALUES (?, ?) RETURNING account_id;";
+        String sql = "INSERT INTO account (username, password, role) VALUES (?, ?, ?) RETURNING account_id;";
         AtomicLong createdId = new AtomicLong(-1);
 
         this.executeQuery(conn -> {
@@ -20,6 +21,7 @@ public class AccountRepository extends DatabaseConnection implements IAccountRep
 
             stmt.setString(1, account.getUsername());
             stmt.setString(2, account.getPassword());
+            stmt.setString(3, account.getRole().name());
 
             ResultSet result = stmt.executeQuery();
 
@@ -32,7 +34,7 @@ public class AccountRepository extends DatabaseConnection implements IAccountRep
     }
 
     public Account findByUsername(String username) {
-        String sql = "SELECT account_id, username, password, created, last_login, login_attempts, last_login_attempt FROM account WHERE username = ?;";
+        String sql = "SELECT account_id, username, password, created, last_login, login_attempts, last_login_attempt, role FROM account WHERE username = ?;";
         AtomicReference<Account> user = new AtomicReference<>();
         this.executeQuery(conn -> {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -57,6 +59,7 @@ public class AccountRepository extends DatabaseConnection implements IAccountRep
         if (rs.getTimestamp("last_login_attempt") != null) {
             lastLoginAttempt = rs.getTimestamp("last_login_attempt").toInstant();
         }
+        String roleStr = rs.getString("role");
         return new Account(
                 rs.getLong("account_id"),
                 rs.getString("username"),
@@ -64,7 +67,8 @@ public class AccountRepository extends DatabaseConnection implements IAccountRep
                 rs.getTimestamp("created").toInstant(),
                 lastLogin,
                 rs.getInt("login_attempts"),
-                lastLoginAttempt
+                lastLoginAttempt,
+                Role.valueOf(roleStr)
         );
     }
 }

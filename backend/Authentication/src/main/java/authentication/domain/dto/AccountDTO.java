@@ -1,12 +1,16 @@
 package authentication.domain.dto;
 
+import commonAuthentication.config.authConfig.Role;
+
 public class AccountDTO {
     private String username;
     private String password;
+    private Role role = Role.AUTHENTICATED;
 
-    public AccountDTO(String username, String password) {
+    public AccountDTO(String username, String password, Role role) {
         this.username = username;
         this.password = password;
+        this.role = role;
     }
 
     public AccountDTO() {
@@ -26,5 +30,13 @@ public class AccountDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

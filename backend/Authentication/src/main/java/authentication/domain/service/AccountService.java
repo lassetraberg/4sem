@@ -3,10 +3,12 @@ package authentication.domain.service;
 import authentication.util.IHasher;
 import authentication.util.JwtProvider;
 import common.web.exceptions.ValidationException;
-import commonAuthentication.config.authConfig.Roles;
+import commonAuthentication.config.authConfig.Role;
 import commonAuthentication.domain.model.Account;
 import commonAuthentication.domain.repository.IAccountRepository;
 import io.javalin.UnauthorizedResponse;
+
+import java.util.Arrays;
 
 public class AccountService implements IAccountService {
     private IAccountRepository accountRepository;
@@ -29,6 +31,9 @@ public class AccountService implements IAccountService {
         }
         if (account.getUsername().length() < 2) {
             throw new ValidationException("Username must be at least 2 characters");
+        }
+        if (account.getRole() == Role.ANYONE) {
+            throw new ValidationException("You cannot create a user with that role");
         }
 
         String hashedPassword = hasher.hashPassword(account.getPassword());
@@ -54,6 +59,6 @@ public class AccountService implements IAccountService {
     }
 
     private String generateJwtToken(Account account) {
-        return jwtProvider.createJWT(account, Roles.AUTHENTICATED);
+        return jwtProvider.createJWT(account, Role.AUTHENTICATED);
     }
 }

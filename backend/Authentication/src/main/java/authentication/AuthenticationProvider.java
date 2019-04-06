@@ -12,12 +12,11 @@ import common.spi.IAccessManagerService;
 import common.spi.IRouterService;
 import common.spi.IWebSocketAuthenticationService;
 import common.util.SPILocator;
-import commonAuthentication.config.authConfig.Roles;
+import commonAuthentication.config.authConfig.Role;
 import commonAuthentication.domain.repository.IAccountRepository;
 import io.javalin.Context;
 import io.javalin.Handler;
 import io.javalin.apibuilder.EndpointGroup;
-import io.javalin.security.Role;
 
 import java.util.Collections;
 import java.util.Set;
@@ -43,20 +42,20 @@ public class AuthenticationProvider implements IRouterService, IAccessManagerSer
     public EndpointGroup getRoutes() {
         return (() -> {
             path("/accounts", () -> {
-                post(accountController::register, Collections.singleton(Roles.ANYONE));
-                post("/login", accountController::login, Collections.singleton(Roles.ANYONE));
+                post(accountController::register, Collections.singleton(Role.ANYONE));
+                post("/login", accountController::login, Collections.singleton(Role.ANYONE));
             });
 
         });
     }
 
     @Override
-    public void configure(Handler handler, Context ctx, Set<Role> permittedRoles) throws Exception {
+    public void configure(Handler handler, Context ctx, Set<io.javalin.security.Role> permittedRoles) throws Exception {
         authConfig.configure(handler, ctx, permittedRoles);
     }
 
     @Override
-    public boolean doesUserHaveRole(Set<Role> permittedRoles, String authMsg) {
+    public boolean doesUserHaveRole(Set<io.javalin.security.Role> permittedRoles, String authMsg) {
         return webSocketAuthenticationService.doesUserHaveRole(permittedRoles, authMsg);
     }
 

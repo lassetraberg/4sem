@@ -12,7 +12,8 @@ public class DomainMapper {
                 null,
                 null,
                 -1,
-                null
+                null,
+                dto.getRole()
         );
     }
 }

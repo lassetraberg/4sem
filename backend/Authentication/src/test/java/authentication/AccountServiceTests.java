@@ -38,7 +38,7 @@ public class AccountServiceTests {
     @Test
     public void createAccount_UsernameAlreadyRegistered_ShouldThrowException() {
         // Arrange
-        Account fakeAccount = new Account(null, "bob", "password", null, null, -1, null);
+        Account fakeAccount = new Account(null, "bob", "password", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(fakeAccount);
         ValidationException ex = null;
 
@@ -58,7 +58,7 @@ public class AccountServiceTests {
     @Test
     public void createAccount_BadPassword_ShouldThrowException() {
         // Arrange
-        Account badAccount = new Account(null, "bob", "12345", null, null, -1, null);
+        Account badAccount = new Account(null, "bob", "12345", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(null);
         ValidationException ex = null;
 
@@ -78,7 +78,7 @@ public class AccountServiceTests {
     @Test
     public void createAccount_BadUsername_ShouldThrowException() {
         // Arrange
-        Account badAccount = new Account(null, "b", "123456", null, null, -1, null);
+        Account badAccount = new Account(null, "b", "123456", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(null);
         ValidationException ex = null;
 
@@ -98,7 +98,7 @@ public class AccountServiceTests {
     @Test
     public void authenticate_GoodAccount_ShouldHaveToken() {
         // Arrange
-        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null);
+        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(goodAccount);
         Mockito.when(hasher.isPasswordCorrect(anyString(), anyString())).thenReturn(true);
 
@@ -112,7 +112,7 @@ public class AccountServiceTests {
     @Test
     public void authenticate_BadPassword_ShouldThrowException() {
         // Arrange
-        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null);
+        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(goodAccount);
         Mockito.when(hasher.isPasswordCorrect(anyString(), anyString())).thenReturn(false);
         UnauthorizedResponse unauthorizedResponse = null;
@@ -132,7 +132,7 @@ public class AccountServiceTests {
     @Test
     public void authenticate_NonExistentAccount_ShouldThrowException() {
         // Arrange
-        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null);
+        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(null);
         UnauthorizedResponse unauthorizedResponse = null;
 
