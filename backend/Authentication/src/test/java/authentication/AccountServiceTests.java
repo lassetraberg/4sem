@@ -6,6 +6,7 @@ import authentication.domain.service.IAccountService;
 import authentication.util.IHasher;
 import authentication.util.JwtProvider;
 import common.web.exceptions.ValidationException;
+import commonAuthentication.config.authConfig.Role;
 import commonAuthentication.domain.model.Account;
 import commonAuthentication.domain.repository.IAccountRepository;
 import io.javalin.UnauthorizedResponse;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 
 public class AccountServiceTests {
@@ -27,12 +29,14 @@ public class AccountServiceTests {
 
     private IAccountService service;
 
+    private int maxLoginAttempts = 6;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         JwtProvider jwtProvider = new JwtProvider();
-        service = new AccountService(repository, jwtProvider, hasher, 6);
+        service = new AccountService(repository, jwtProvider, hasher, maxLoginAttempts);
     }
 
     @Test
@@ -146,5 +150,25 @@ public class AccountServiceTests {
         // Assert
         Assert.assertNotNull(unauthorizedResponse);
         Assert.assertEquals(unauthorizedResponse.getMessage(), "Invalid username or password!");
+    }
+
+    @Test
+    public void authenticate_AccountShouldBeLockedAfterFailedAttempts() {
+        // Arrange
+        Account account = new Account(null, "bob", "123456", null, null, 6, null, null);
+        Mockito.when(hasher.isPasswordCorrect(anyString(), anyString())).thenReturn(false);
+        Mockito.when(repository.findByUsername(anyString())).thenReturn(account);
+        UnauthorizedResponse unauthorizedResponse = null;
+
+        // Act
+        try {
+            service.authenticate(account);
+        } catch (UnauthorizedResponse response) {
+            unauthorizedResponse = response;
+        }
+
+        // Assert
+        Assert.assertNotNull(unauthorizedResponse);
+        Assert.assertTrue(unauthorizedResponse.getMessage().contains("locked"));
     }
 }

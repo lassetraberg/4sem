@@ -21,7 +21,16 @@ public interface IAccountService {
      */
     Account authenticate(Account account);
 
+    /**
+     * Unlock an account
+     * @param accountId id of account
+     * @return true if the account was unlocked successfully
+     */
     boolean unlockAccount(Long accountId);
 
+    /**
+     * Get all accounts in the system
+     * @return List of accounts
+     */
     List<Account> getAllAccounts();
 }
