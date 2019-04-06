@@ -8,13 +8,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class AccountRepository extends DatabaseConnection implements IAccountRepository {
-    public Long createUser(Account account) {
-        String sql = "INSERT INTO account (username, password, role) VALUES (?, ?, ?) RETURNING account_id;";
-        AtomicLong createdId = new AtomicLong(-1);
+    public Account createUser(Account account) {
+        String sql = "INSERT INTO account (username, password, role) VALUES (?, ?, ?) RETURNING account_id, username, password, created, last_login, login_attempts, last_login_attempt, role;";
+        AtomicReference<Account> createdAccount = new AtomicReference<>();
 
         this.executeQuery(conn -> {
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -26,19 +26,82 @@ public class AccountRepository extends DatabaseConnection implements IAccountRep
             ResultSet result = stmt.executeQuery();
 
             if (result.next()) {
-                createdId.set(result.getLong("account_id"));
+                createdAccount.set(fromResultSet(result));
             }
         });
 
-        return createdId.get();
+        return createdAccount.get();
     }
 
+    @Override
     public Account findByUsername(String username) {
-        String sql = "SELECT account_id, username, password, created, last_login, login_attempts, last_login_attempt, role FROM account WHERE username = ?;";
+        return findBy("username", username);
+    }
+
+    @Override
+    public Account findById(Long id) {
+        return findBy("account_id", id);
+    }
+
+    @Override
+    public Instant updateLastLogin(Account account) {
+        String sql = "UPDATE account SET last_login = now(), login_attempts = 0, last_login_attempt = null WHERE account_id = ? RETURNING last_login";
+        AtomicReference<Instant> instantAtomicReference = new AtomicReference<>();
+        this.executeQuery(conn -> {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setLong(1, account.getId());
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                instantAtomicReference.set(rs.getTimestamp("last_login").toInstant());
+            }
+        });
+
+        return instantAtomicReference.get();
+    }
+
+    @Override
+    public int updateLoginAttempts(Account account) {
+        String sql = "UPDATE account SET login_attempts = login_attempts + 1, last_login_attempt = now() WHERE account_id = ? RETURNING login_attempts";
+        AtomicReference<Integer> loginAttemptsReference = new AtomicReference<>();
+        this.executeQuery(conn -> {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setLong(1, account.getId());
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                loginAttemptsReference.set(rs.getInt("login_attempts"));
+            }
+        });
+
+        return loginAttemptsReference.get();
+    }
+
+    @Override
+    public boolean unlockAccount(Account account) {
+        String sql = "UPDATE account SET login_attempts = 0, last_login_attempt = null WHERE account_id = ?";
+        AtomicBoolean success = new AtomicBoolean(false);
+        this.executeQuery(conn -> {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setLong(1, account.getId());
+
+            int res = stmt.executeUpdate();
+            if (res != 0) {
+                success.set(true);
+            }
+        });
+
+        return success.get();
+    }
+
+    private Account findBy(String field, Object value) {
+        String sql = "SELECT account_id, username, password, created, last_login, login_attempts, last_login_attempt, role FROM account WHERE " + field + " = ?;";
         AtomicReference<Account> user = new AtomicReference<>();
         this.executeQuery(conn -> {
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, username);
+            switch (value.getClass().getSimpleName()) {
+                case "String": stmt.setString(1, (String) value); break;
+                case "Long": stmt.setLong(1, (Long) value); break;
+            }
 
             ResultSet result = stmt.executeQuery();
 

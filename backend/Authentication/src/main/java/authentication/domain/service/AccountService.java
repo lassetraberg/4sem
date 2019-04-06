@@ -6,14 +6,17 @@ import common.web.exceptions.ValidationException;
 import commonAuthentication.config.authConfig.Role;
 import commonAuthentication.domain.model.Account;
 import commonAuthentication.domain.repository.IAccountRepository;
+import io.javalin.NotFoundResponse;
 import io.javalin.UnauthorizedResponse;
 
-import java.util.Arrays;
+import java.time.Instant;
 
 public class AccountService implements IAccountService {
     private IAccountRepository accountRepository;
     private JwtProvider jwtProvider;
     private IHasher hasher;
+
+    private int maxLoginAttempts = 6;
 
     public AccountService(IAccountRepository accountRepository, JwtProvider jwtProvider, IHasher hasher) {
         this.accountRepository = accountRepository;
@@ -38,10 +41,9 @@ public class AccountService implements IAccountService {
 
         String hashedPassword = hasher.hashPassword(account.getPassword());
         account.setPassword(hashedPassword);
-        account.setToken(generateJwtToken(account));
-        Long id = accountRepository.createUser(account);
-        account.setId(id);
-        return account;
+        Account createdAccount = accountRepository.createUser(account);
+        createdAccount.setToken(generateJwtToken(account));
+        return createdAccount;
     }
 
     public Account authenticate(Account account) {
@@ -50,15 +52,32 @@ public class AccountService implements IAccountService {
             throw new UnauthorizedResponse("Invalid username or password!");
         }
 
+        if (existingAccount.getLoginAttempts() >= maxLoginAttempts) {
+            throw new UnauthorizedResponse("This account has been locked. Contact an administrator to unlock it.");
+        }
+
         if (!hasher.isPasswordCorrect(account.getPassword(), existingAccount.getPassword())) {
+            Integer loginAttempts = accountRepository.updateLoginAttempts(existingAccount);
             throw new UnauthorizedResponse("Invalid username or password!");
         }
 
-        existingAccount.setToken(generateJwtToken(account));
+        Instant lastLogin = accountRepository.updateLastLogin(existingAccount);
+        existingAccount.setLastLogin(lastLogin);
+        existingAccount.setToken(generateJwtToken(existingAccount));
         return existingAccount;
     }
 
+    @Override
+    public boolean unlockAccount(Long accountId) {
+        Account lockedAccount = accountRepository.findById(accountId);
+        if (lockedAccount == null) {
+            throw new NotFoundResponse("Account not found");
+        }
+
+        return accountRepository.unlockAccount(lockedAccount);
+    }
+
     private String generateJwtToken(Account account) {
-        return jwtProvider.createJWT(account, Role.AUTHENTICATED);
+        return jwtProvider.createJWT(account, account.getRole());
     }
 }

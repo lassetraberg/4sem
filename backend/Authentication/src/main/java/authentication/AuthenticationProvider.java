@@ -21,6 +21,7 @@ import io.javalin.apibuilder.EndpointGroup;
 import java.util.Collections;
 import java.util.Set;
 
+import static common.util.JavalinUtils.roles;
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
@@ -42,8 +43,9 @@ public class AuthenticationProvider implements IRouterService, IAccessManagerSer
     public EndpointGroup getRoutes() {
         return (() -> {
             path("/accounts", () -> {
-                post(accountController::register, Collections.singleton(Role.ANYONE));
-                post("/login", accountController::login, Collections.singleton(Role.ANYONE));
+                post(accountController::register, roles(Role.ANYONE));
+                post("/login", accountController::login, roles(Role.ANYONE));
+                post("/unlock/:account-id", accountController::unlock, roles(Role.ADMIN));
             });
 
         });

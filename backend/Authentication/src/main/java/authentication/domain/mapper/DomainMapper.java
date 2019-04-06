@@ -11,7 +11,7 @@ public class DomainMapper {
                 dto.getPassword(),
                 null,
                 null,
-                -1,
+                0,
                 null,
                 dto.getRole()
         );

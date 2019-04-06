@@ -18,4 +18,6 @@ public interface IAccountService {
      * @return an account object, with the token value set
      */
     Account authenticate(Account account);
+
+    boolean unlockAccount(Long accountId);
 }
