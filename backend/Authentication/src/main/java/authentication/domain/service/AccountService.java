@@ -10,18 +10,20 @@ import io.javalin.NotFoundResponse;
 import io.javalin.UnauthorizedResponse;
 
 import java.time.Instant;
+import java.util.List;
 
 public class AccountService implements IAccountService {
     private IAccountRepository accountRepository;
     private JwtProvider jwtProvider;
     private IHasher hasher;
 
-    private int maxLoginAttempts = 6;
+    private int maxLoginAttempts;
 
-    public AccountService(IAccountRepository accountRepository, JwtProvider jwtProvider, IHasher hasher) {
+    public AccountService(IAccountRepository accountRepository, JwtProvider jwtProvider, IHasher hasher, int maxLoginAttempts) {
         this.accountRepository = accountRepository;
         this.jwtProvider = jwtProvider;
         this.hasher = hasher;
+        this.maxLoginAttempts = maxLoginAttempts;
     }
 
     public Account create(Account account) {
@@ -75,6 +77,11 @@ public class AccountService implements IAccountService {
         }
 
         return accountRepository.unlockAccount(lockedAccount);
+    }
+
+    @Override
+    public List<Account> getAllAccounts() {
+        return accountRepository.findAll();
     }
 
     private String generateJwtToken(Account account) {

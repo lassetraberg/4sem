@@ -4,6 +4,7 @@ package commonAuthentication.domain.repository;
 import commonAuthentication.domain.model.Account;
 
 import java.time.Instant;
+import java.util.List;
 
 public interface IAccountRepository {
     /**
@@ -29,4 +30,6 @@ public interface IAccountRepository {
     int updateLoginAttempts(Account account);
 
     boolean unlockAccount(Account account);
+
+    List<Account> findAll();
 }

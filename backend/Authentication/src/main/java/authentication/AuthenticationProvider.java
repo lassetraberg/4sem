@@ -22,8 +22,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static common.util.JavalinUtils.roles;
-import static io.javalin.apibuilder.ApiBuilder.path;
-import static io.javalin.apibuilder.ApiBuilder.post;
+import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class AuthenticationProvider implements IRouterService, IAccessManagerService, IWebSocketAuthenticationService {
     private JwtProvider jwtProvider = new JwtProvider();
@@ -35,7 +34,7 @@ public class AuthenticationProvider implements IRouterService, IAccessManagerSer
 
     public AuthenticationProvider() {
         IAccountRepository accountRepository = SPILocator.locateSpecific(IAccountRepository.class);
-        IAccountService accountService = new AccountService(accountRepository, jwtProvider, hasher);
+        IAccountService accountService = new AccountService(accountRepository, jwtProvider, hasher, 6);
         accountController = new AccountController(accountService);
     }
 
@@ -45,9 +44,10 @@ public class AuthenticationProvider implements IRouterService, IAccessManagerSer
             path("/accounts", () -> {
                 post(accountController::register, roles(Role.ANYONE));
                 post("/login", accountController::login, roles(Role.ANYONE));
+
+                get(accountController::getAllAccounts, roles(Role.ADMIN));
                 post("/unlock/:account-id", accountController::unlock, roles(Role.ADMIN));
             });
-
         });
     }
 

@@ -32,7 +32,7 @@ public class AccountServiceTests {
         MockitoAnnotations.initMocks(this);
 
         JwtProvider jwtProvider = new JwtProvider();
-        service = new AccountService(repository, jwtProvider, hasher);
+        service = new AccountService(repository, jwtProvider, hasher, 6);
     }
 
     @Test

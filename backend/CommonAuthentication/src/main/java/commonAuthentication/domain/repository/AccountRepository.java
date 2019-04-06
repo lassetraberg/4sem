@@ -8,6 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -93,6 +95,22 @@ public class AccountRepository extends DatabaseConnection implements IAccountRep
         return success.get();
     }
 
+    @Override
+    public List<Account> findAll() {
+        String sql = "SELECT account_id, username, password, created, last_login, login_attempts, last_login_attempt, role FROM account";
+        List<Account> accountList = new ArrayList<>();
+        this.executeQuery(conn -> {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                accountList.add(fromResultSet(rs));
+            }
+        });
+
+        return accountList;
+    }
+
     private Account findBy(String field, Object value) {
         String sql = "SELECT account_id, username, password, created, last_login, login_attempts, last_login_attempt, role FROM account WHERE " + field + " = ?;";
         AtomicReference<Account> user = new AtomicReference<>();
@@ -101,6 +119,7 @@ public class AccountRepository extends DatabaseConnection implements IAccountRep
             switch (value.getClass().getSimpleName()) {
                 case "String": stmt.setString(1, (String) value); break;
                 case "Long": stmt.setLong(1, (Long) value); break;
+                default: throw new RuntimeException(String.format("%s is not a supported type of value", value.getClass().getSimpleName()));
             }
 
             ResultSet result = stmt.executeQuery();

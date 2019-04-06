@@ -2,6 +2,8 @@ package authentication.domain.service;
 
 import commonAuthentication.domain.model.Account;
 
+import java.util.List;
+
 public interface IAccountService {
     /**
      * Create an account, returning the newly created account.
@@ -20,4 +22,6 @@ public interface IAccountService {
     Account authenticate(Account account);
 
     boolean unlockAccount(Long accountId);
+
+    List<Account> getAllAccounts();
 }

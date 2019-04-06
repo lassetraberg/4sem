@@ -41,6 +41,10 @@ public class AccountController {
         ctx.json(res);
     }
 
+    public void getAllAccounts(Context ctx) {
+        ctx.json(accountService.getAllAccounts());
+    }
+
     private AccountDTO getOrThrow(Context ctx) {
         return ctx.validatedBodyAsClass(AccountDTO.class)
                 .check(u -> u.getUsername() != null && !u.getUsername().isEmpty())
