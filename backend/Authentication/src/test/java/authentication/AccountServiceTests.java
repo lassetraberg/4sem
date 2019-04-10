@@ -6,6 +6,7 @@ import authentication.domain.service.IAccountService;
 import authentication.util.IHasher;
 import authentication.util.JwtProvider;
 import common.web.exceptions.ValidationException;
+import commonAuthentication.config.authConfig.Role;
 import commonAuthentication.domain.model.Account;
 import commonAuthentication.domain.repository.IAccountRepository;
 import io.javalin.UnauthorizedResponse;
@@ -17,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 
 public class AccountServiceTests {
@@ -27,24 +29,26 @@ public class AccountServiceTests {
 
     private IAccountService service;
 
+    private int maxLoginAttempts = 6;
+
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         JwtProvider jwtProvider = new JwtProvider();
-        service = new AccountService(repository, jwtProvider, hasher);
+        service = new AccountService(repository, jwtProvider, hasher, maxLoginAttempts, "192.168.0.1,192.168.0.2");
     }
 
     @Test
     public void createAccount_UsernameAlreadyRegistered_ShouldThrowException() {
         // Arrange
-        Account fakeAccount = new Account(null, "bob", "password", null, null, -1, null);
+        Account fakeAccount = new Account(null, "bob", "password", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(fakeAccount);
         ValidationException ex = null;
 
         // Act
         try {
-            service.create(fakeAccount);
+            service.create(fakeAccount, "");
         } catch (ValidationException vex) {
             ex = vex;
         }
@@ -58,13 +62,13 @@ public class AccountServiceTests {
     @Test
     public void createAccount_BadPassword_ShouldThrowException() {
         // Arrange
-        Account badAccount = new Account(null, "bob", "12345", null, null, -1, null);
+        Account badAccount = new Account(null, "bob", "12345", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(null);
         ValidationException ex = null;
 
         // Act
         try {
-            service.create(badAccount);
+            service.create(badAccount, "");
         } catch (ValidationException vex) {
             ex = vex;
         }
@@ -78,13 +82,13 @@ public class AccountServiceTests {
     @Test
     public void createAccount_BadUsername_ShouldThrowException() {
         // Arrange
-        Account badAccount = new Account(null, "b", "123456", null, null, -1, null);
+        Account badAccount = new Account(null, "b", "123456", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(null);
         ValidationException ex = null;
 
         // Act
         try {
-            service.create(badAccount);
+            service.create(badAccount, "");
         } catch (ValidationException vex) {
             ex = vex;
         }
@@ -98,7 +102,7 @@ public class AccountServiceTests {
     @Test
     public void authenticate_GoodAccount_ShouldHaveToken() {
         // Arrange
-        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null);
+        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null, Role.AUTHENTICATED);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(goodAccount);
         Mockito.when(hasher.isPasswordCorrect(anyString(), anyString())).thenReturn(true);
 
@@ -112,7 +116,7 @@ public class AccountServiceTests {
     @Test
     public void authenticate_BadPassword_ShouldThrowException() {
         // Arrange
-        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null);
+        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(goodAccount);
         Mockito.when(hasher.isPasswordCorrect(anyString(), anyString())).thenReturn(false);
         UnauthorizedResponse unauthorizedResponse = null;
@@ -132,7 +136,7 @@ public class AccountServiceTests {
     @Test
     public void authenticate_NonExistentAccount_ShouldThrowException() {
         // Arrange
-        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null);
+        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null, null);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(null);
         UnauthorizedResponse unauthorizedResponse = null;
 
@@ -146,5 +150,44 @@ public class AccountServiceTests {
         // Assert
         Assert.assertNotNull(unauthorizedResponse);
         Assert.assertEquals(unauthorizedResponse.getMessage(), "Invalid username or password!");
+    }
+
+    @Test
+    public void authenticate_AccountShouldBeLockedAfterFailedAttempts() {
+        // Arrange
+        Account account = new Account(null, "bob", "123456", null, null, 6, null, null);
+        Mockito.when(hasher.isPasswordCorrect(anyString(), anyString())).thenReturn(false);
+        Mockito.when(repository.findByUsername(anyString())).thenReturn(account);
+        UnauthorizedResponse unauthorizedResponse = null;
+
+        // Act
+        try {
+            service.authenticate(account);
+        } catch (UnauthorizedResponse response) {
+            unauthorizedResponse = response;
+        }
+
+        // Assert
+        Assert.assertNotNull(unauthorizedResponse);
+        Assert.assertTrue(unauthorizedResponse.getMessage().contains("locked"));
+    }
+
+    @Test
+    public void create_AdminAccountNotApprovedIP_ShouldThrowException() {
+        // Arrange
+        Account account = new Account(null, "bob", "123456", null, null, 0, null, Role.ADMIN);
+        Mockito.when(repository.findByUsername(anyString())).thenReturn(null);
+        ValidationException ex = null;
+
+        // Act
+        try {
+            service.create(account, "192.168.0.3"); // valid IP's are set in setUp()
+        } catch (ValidationException vex) {
+            ex = vex;
+        }
+
+        // Assert
+        Assert.assertNotNull(ex);
+        Assert.assertTrue(ex.getMessage().contains("role"));
     }
 }

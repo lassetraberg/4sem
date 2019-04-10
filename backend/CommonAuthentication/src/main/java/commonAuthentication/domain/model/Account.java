@@ -1,25 +1,32 @@
 package commonAuthentication.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import commonAuthentication.config.authConfig.Role;
+
 import java.time.Instant;
 
 public class Account {
     private Long id;
     private String username;
+
+    @JsonIgnore
     private String password;
     private String token;
     private Instant created;
-    private Instant last_login;
+    private Instant lastLogin;
     private int loginAttempts;
     private Instant lastLoginAttempt;
+    private Role role;
 
-    public Account(Long id, String username, String password, Instant created, Instant last_login, int loginAttempts, Instant lastLoginAttempt) {
+    public Account(Long id, String username, String password, Instant created, Instant lastLogin, int loginAttempts, Instant lastLoginAttempt, Role role) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.created = created;
-        this.last_login = last_login;
+        this.lastLogin = lastLogin;
         this.loginAttempts = loginAttempts;
         this.lastLoginAttempt = lastLoginAttempt;
+        this.role = role;
     }
 
     public Long getId() {
@@ -54,12 +61,12 @@ public class Account {
         this.created = created;
     }
 
-    public Instant getLast_login() {
-        return last_login;
+    public Instant getLastLogin() {
+        return lastLogin;
     }
 
-    public void setLast_login(Instant last_login) {
-        this.last_login = last_login;
+    public void setLastLogin(Instant lastLogin) {
+        this.lastLogin = lastLogin;
     }
 
     public int getLoginAttempts() {
@@ -84,5 +91,13 @@ public class Account {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

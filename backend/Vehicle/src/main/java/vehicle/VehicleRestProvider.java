@@ -2,7 +2,7 @@ package vehicle;
 
 import common.spi.IRouterService;
 import common.util.SPILocator;
-import commonAuthentication.config.authConfig.Roles;
+import commonAuthentication.config.authConfig.Role;
 import commonAuthentication.domain.repository.IAccountRepository;
 import commonvehicle.domain.repository.IVehicleRepository;
 import commonvehicle.domain.service.IVehicleService;
@@ -32,14 +32,14 @@ public class VehicleRestProvider implements IRouterService {
     @Override
     public EndpointGroup getRoutes() {
         return (() -> path("vehicle", () -> {
-            post(controller::registerVehicle, roles(Roles.AUTHENTICATED));
-            get(controller::getVehicles, roles(Roles.AUTHENTICATED));
-            get("licenseplate/:license-plate", controller::getVehicleLicensePlateData, roles(Roles.AUTHENTICATED));
+            post(controller::registerVehicle, roles(Role.AUTHENTICATED));
+            get(controller::getVehicles, roles(Role.AUTHENTICATED));
+            get("licenseplate/:license-plate", controller::getVehicleLicensePlateData, roles(Role.AUTHENTICATED));
             path(":device-id", () -> {
-                get(controller::getVehicle, roles(Roles.AUTHENTICATED));
-                delete(controller::deleteVehicle, roles(Roles.AUTHENTICATED));
+                get(controller::getVehicle, roles(Role.AUTHENTICATED));
+                delete(controller::deleteVehicle, roles(Role.AUTHENTICATED));
                 path("data", () -> {
-                    get(controller::getVehicleData, roles(Roles.AUTHENTICATED));
+                    get(controller::getVehicleData, roles(Role.AUTHENTICATED));
                 });
             });
         }));

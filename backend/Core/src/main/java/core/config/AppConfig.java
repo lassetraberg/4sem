@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.mashape.unirest.http.Unirest;
-import commonAuthentication.config.authConfig.Roles;
+import commonAuthentication.config.authConfig.Role;
 import core.web.ErrorExceptionMapper;
 import core.web.Router;
 import core.web.serializers.InstantSerializer;
@@ -30,7 +30,7 @@ public class AppConfig {
         Javalin app = Javalin.create()
                 .enableCorsForAllOrigins()
                 .port(port)
-                .enableRouteOverview("/routes", roles(Roles.ANYONE, Roles.AUTHENTICATED));
+                .enableRouteOverview("/routes", roles(Role.ANYONE, Role.AUTHENTICATED));
         router.register(app);
         ErrorExceptionMapper.register(app);
         initObjectMapper();

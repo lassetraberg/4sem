@@ -12,6 +12,13 @@ public class ErrorExceptionMapper {
     private static Logger log = LoggerFactory.getLogger(ErrorExceptionMapper.class);
 
     public static void register(Javalin app) {
+        app.exception(Exception.class, (e, ctx) -> {
+            e.printStackTrace();
+            log.error(String.format("Exception occurred for req -> %s", e));
+            ErrorResponse err = new ErrorResponse(Collections.singletonMap("unknown", Collections.singletonList("Unknown error occured")));
+            ctx.json(err).status(HttpStatus.INTERNAL_SERVER_ERROR_500);
+        });
+
         app.exception(BadRequestResponse.class, (e, ctx) -> {
             log.error(String.format("BadRequestResponse occurred for req -> %s", e));
             ErrorResponse err = new ErrorResponse(Collections.singletonMap("body", Collections.singletonList("can't be empty or invalid")));
