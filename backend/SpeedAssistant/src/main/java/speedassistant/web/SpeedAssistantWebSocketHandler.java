@@ -58,6 +58,7 @@ public class SpeedAssistantWebSocketHandler implements IWebSocketHandler {
         }
 
         if (!webSocketEndpoint.hasSession(session)) {
+            session.setIdleTimeout(86400000); // 24 hours in milliseconds
             webSocketEndpoint.addSession(deviceId, session);
             webSocketEndpoint.send(new Response(HttpStatus.OK_200, String.valueOf(session.hashCode())), session);
         }
