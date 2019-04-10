@@ -42,7 +42,7 @@ public class SimulationMain {
 
     private static List<AbstractDevice> getPublishers(IMqttService mqttConnection) {
         return Arrays.asList(
-                new GPSSensor(mqttConnection, "1.txt"),
+                new GPSSensor(mqttConnection, GPSSensor.Route.SDU_Munkebjergvej_Motorvej_SDU),
                 new VelocitySensor(mqttConnection),
                 new AccelerationSensor(mqttConnection)
         );
