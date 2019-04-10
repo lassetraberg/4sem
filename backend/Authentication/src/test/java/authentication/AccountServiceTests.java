@@ -102,7 +102,7 @@ public class AccountServiceTests {
     @Test
     public void authenticate_GoodAccount_ShouldHaveToken() {
         // Arrange
-        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null, null);
+        Account goodAccount = new Account(null, "bob", "123456", null, null, -1, null, Role.AUTHENTICATED);
         Mockito.when(repository.findByUsername(anyString())).thenReturn(goodAccount);
         Mockito.when(hasher.isPasswordCorrect(anyString(), anyString())).thenReturn(true);
 
