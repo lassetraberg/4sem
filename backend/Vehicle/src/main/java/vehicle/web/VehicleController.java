@@ -71,7 +71,7 @@ public class VehicleController {
         String username = JavalinUtils.getUsername(ctx);
         String deviceId = ctx.pathParam("device-id");
 
-        List<Vehicle> vehicleData = vehicleService.getData(UUID.fromString(deviceId), username);
+        List<Vehicle> vehicleData = vehicleService.getData(UUID.fromString(deviceId), username, null, null);
 
         ctx.json(vehicleData);
     }

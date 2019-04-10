@@ -12,8 +12,6 @@ import java.util.UUID;
 public interface IVehicleService {
     boolean addData(Vehicle vehicle);
 
-    List<Vehicle> getData(UUID deviceId, String username);
-
     List<Vehicle> getData(UUID deviceId, String username, String fromDateTime, String toDateTime);
 
     boolean userOwnsVehicle(UUID deviceId, String username);

@@ -45,11 +45,6 @@ public class VehicleService implements IVehicleService {
     }
 
     @Override
-    public List<Vehicle> getData(UUID deviceId, String username) {
-        return this.getData(deviceId, username, null, null);
-    }
-
-    @Override
     public List<Vehicle> getData(UUID deviceId, String username, String fromDateTime, String toDateTime) {
         if (!userOwnsVehicle(deviceId, username)) {
             throw new NotFoundResponse("Vehicle not found");
