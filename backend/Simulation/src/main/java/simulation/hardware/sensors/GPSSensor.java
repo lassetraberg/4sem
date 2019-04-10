@@ -23,17 +23,22 @@ public class GPSSensor extends AbstractDevice {
     private int dataIndex = 0;
     private boolean reverse = false;
 
-    public GPSSensor(IMqttService client, String gpsRouteFileName) {
-        super(client);
-        if (gpsRouteFileName != null) {
-            this.fileData = readFileData(gpsRouteFileName);
-        } else {
-            this.fileData = null;
+    public enum Route {
+        SDU_Munkebjergvej_Motorvej_SDU("1.txt"), SDU_OdenseNord_SDU("2.txt"), SDU_Nyborg("3.txt"), Random(null);
+
+        private String file;
+        Route(String s) {
+            this.file = s;
         }
     }
 
-    public GPSSensor(IMqttService client) {
-        this(client, null);
+    public GPSSensor(IMqttService client, Route route) {
+        super(client);
+        if (route.file != null) {
+            this.fileData = readFileData(route.file);
+        } else {
+            this.fileData = null;
+        }
     }
 
     public void call(State state) {
