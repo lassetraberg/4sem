@@ -17,7 +17,7 @@ public class AccountController {
 
     public void register(Context ctx) {
         AccountDTO user = getOrThrow(ctx);
-        Account createdAccount = accountService.create(DomainMapper.toAccount(user));
+        Account createdAccount = accountService.create(DomainMapper.toAccount(user), ctx.ip());
         ctx.json(createdAccount);
     }
 

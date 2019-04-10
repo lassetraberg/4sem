@@ -8,6 +8,7 @@ import authentication.util.Hasher;
 import authentication.util.IHasher;
 import authentication.util.JwtProvider;
 import authentication.web.AccountController;
+import common.config.Config;
 import common.spi.IAccessManagerService;
 import common.spi.IRouterService;
 import common.spi.IWebSocketAuthenticationService;
@@ -18,7 +19,6 @@ import io.javalin.Context;
 import io.javalin.Handler;
 import io.javalin.apibuilder.EndpointGroup;
 
-import java.util.Collections;
 import java.util.Set;
 
 import static common.util.JavalinUtils.roles;
@@ -34,7 +34,8 @@ public class AuthenticationProvider implements IRouterService, IAccessManagerSer
 
     public AuthenticationProvider() {
         IAccountRepository accountRepository = SPILocator.locateSpecific(IAccountRepository.class);
-        IAccountService accountService = new AccountService(accountRepository, jwtProvider, hasher, 6);
+        IAccountService accountService = new AccountService(accountRepository, jwtProvider, hasher,
+                6, Config.getInstance().getProperty("auth.allowedAdminIPs"));
         accountController = new AccountController(accountService);
     }
 

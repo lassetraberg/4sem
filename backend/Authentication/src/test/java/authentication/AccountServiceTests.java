@@ -36,7 +36,7 @@ public class AccountServiceTests {
         MockitoAnnotations.initMocks(this);
 
         JwtProvider jwtProvider = new JwtProvider();
-        service = new AccountService(repository, jwtProvider, hasher, maxLoginAttempts);
+        service = new AccountService(repository, jwtProvider, hasher, maxLoginAttempts, "");
     }
 
     @Test
@@ -48,7 +48,7 @@ public class AccountServiceTests {
 
         // Act
         try {
-            service.create(fakeAccount);
+            service.create(fakeAccount, "");
         } catch (ValidationException vex) {
             ex = vex;
         }
@@ -68,7 +68,7 @@ public class AccountServiceTests {
 
         // Act
         try {
-            service.create(badAccount);
+            service.create(badAccount, "");
         } catch (ValidationException vex) {
             ex = vex;
         }
@@ -88,7 +88,7 @@ public class AccountServiceTests {
 
         // Act
         try {
-            service.create(badAccount);
+            service.create(badAccount, "");
         } catch (ValidationException vex) {
             ex = vex;
         }

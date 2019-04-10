@@ -9,8 +9,12 @@ import commonAuthentication.domain.repository.IAccountRepository;
 import io.javalin.NotFoundResponse;
 import io.javalin.UnauthorizedResponse;
 
+import java.net.Inet4Address;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AccountService implements IAccountService {
     private IAccountRepository accountRepository;
@@ -18,15 +22,17 @@ public class AccountService implements IAccountService {
     private IHasher hasher;
 
     private int maxLoginAttempts;
+    private List<String> allowedAdminIPs;
 
-    public AccountService(IAccountRepository accountRepository, JwtProvider jwtProvider, IHasher hasher, int maxLoginAttempts) {
+    public AccountService(IAccountRepository accountRepository, JwtProvider jwtProvider, IHasher hasher, int maxLoginAttempts, String allowedAdminIPs) {
         this.accountRepository = accountRepository;
         this.jwtProvider = jwtProvider;
         this.hasher = hasher;
         this.maxLoginAttempts = maxLoginAttempts;
+        this.allowedAdminIPs = parseAdminIPs(allowedAdminIPs);
     }
 
-    public Account create(Account account) {
+    public Account create(Account account, String sourceIp) {
         Account existingAccount = accountRepository.findByUsername(account.getUsername());
         if (existingAccount != null) {
             throw new ValidationException("Username already registered");
@@ -37,7 +43,7 @@ public class AccountService implements IAccountService {
         if (account.getUsername().length() < 2) {
             throw new ValidationException("Username must be at least 2 characters");
         }
-        if (account.getRole() == Role.ANYONE) {
+        if (account.getRole() == Role.ANYONE || (account.getRole() == Role.ADMIN && !isIpAllowed(sourceIp))) {
             throw new ValidationException("You cannot create a user with that role");
         }
 
@@ -86,5 +92,13 @@ public class AccountService implements IAccountService {
 
     private String generateJwtToken(Account account) {
         return jwtProvider.createJWT(account, account.getRole());
+    }
+
+    private boolean isIpAllowed(String ip) {
+        return allowedAdminIPs.contains(ip);
+    }
+
+    private List<String> parseAdminIPs(String allowedAdminIPs) {
+        return Arrays.stream(allowedAdminIPs.split(",")).collect(Collectors.toList());
     }
 }
