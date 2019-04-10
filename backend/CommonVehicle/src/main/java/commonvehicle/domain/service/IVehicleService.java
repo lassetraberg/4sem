@@ -13,7 +13,7 @@ public interface IVehicleService {
 
     List<Vehicle> getData(UUID deviceId, String username);
 
-    boolean userOwnsVehicle(UUID vehicleId, String username);
+    boolean userOwnsVehicle(UUID deviceId, String username);
 
     boolean registerDevice(UUID deviceId, String username, String licensePlate);
 

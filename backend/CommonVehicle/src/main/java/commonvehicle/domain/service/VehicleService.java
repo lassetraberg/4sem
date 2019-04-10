@@ -42,8 +42,8 @@ public class VehicleService implements IVehicleService {
     }
 
     @Override
-    public boolean userOwnsVehicle(UUID vehicleId, String username) {
-        return vehicleRepository.doesUserOwnDevice(vehicleId.toString(), username);
+    public boolean userOwnsVehicle(UUID deviceId, String username) {
+        return vehicleRepository.doesUserOwnDevice(deviceId.toString(), username);
     }
 
     @Override

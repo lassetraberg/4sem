@@ -6,18 +6,18 @@ import commonvehicle.domain.model.vehicledata.Vehicle;
 import java.util.UUID;
 
 public interface ISpeedAssistantService {
-    Short getLatestVelocity(UUID vehicleId);
+    Short getLatestVelocity(UUID deviceId);
 
-    double getLatestAcceleration(UUID vehicleId);
+    double getLatestAcceleration(UUID deviceId);
 
-    short getLatestSpeedLimit(UUID vehicleId);
+    short getLatestSpeedLimit(UUID deviceId);
 
-    GpsCoordinates getLatestGpsCoordinate(UUID vehicleId);
+    GpsCoordinates getLatestGpsCoordinate(UUID deviceId);
 
-    Vehicle getLatestVehicleData(UUID vehicleId);
+    Vehicle getLatestVehicleData(UUID deviceId);
 
-    boolean isSpeeding(UUID vehicleId);
+    boolean isSpeeding(UUID deviceId);
 
-    void publishSpeedingAlarm(UUID vehicleId);
+    void publishSpeedingAlarm(UUID deviceId);
 
 }
