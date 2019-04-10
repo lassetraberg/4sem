@@ -1,6 +1,8 @@
 package commonAuthentication.domain.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import common.config.Config;
 import commonAuthentication.config.authConfig.Role;
 
 import java.time.Instant;
@@ -27,6 +29,11 @@ public class Account {
         this.loginAttempts = loginAttempts;
         this.lastLoginAttempt = lastLoginAttempt;
         this.role = role;
+    }
+
+    @JsonProperty("locked")
+    public boolean isLocked() {
+       return loginAttempts >= Integer.parseInt(Config.getInstance().getProperty("auth.maxLoginAttempts"));
     }
 
     public Long getId() {
