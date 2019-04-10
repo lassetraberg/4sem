@@ -40,6 +40,7 @@ public class VehicleRestProvider implements IRouterService {
                 delete(controller::deleteVehicle, roles(Role.AUTHENTICATED));
                 path("data", () -> {
                     get(controller::getVehicleData, roles(Role.AUTHENTICATED));
+                    get(":from/:to", controller::getVehicleDataFromTo, roles(Role.AUTHENTICATED));
                 });
             });
         }));
