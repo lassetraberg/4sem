@@ -35,7 +35,8 @@ public class AuthenticationProvider implements IRouterService, IAccessManagerSer
     public AuthenticationProvider() {
         IAccountRepository accountRepository = SPILocator.locateSpecific(IAccountRepository.class);
         IAccountService accountService = new AccountService(accountRepository, jwtProvider, hasher,
-                6, Config.getInstance().getProperty("auth.allowedAdminIPs"));
+                Integer.parseInt(Config.getInstance().getProperty("auth.maxLoginAttempts")),
+                Config.getInstance().getProperty("auth.allowedAdminIPs"));
         accountController = new AccountController(accountService);
     }
 
