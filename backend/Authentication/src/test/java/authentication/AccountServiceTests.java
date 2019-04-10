@@ -36,7 +36,7 @@ public class AccountServiceTests {
         MockitoAnnotations.initMocks(this);
 
         JwtProvider jwtProvider = new JwtProvider();
-        service = new AccountService(repository, jwtProvider, hasher, maxLoginAttempts, "");
+        service = new AccountService(repository, jwtProvider, hasher, maxLoginAttempts, "192.168.0.1,192.168.0.2");
     }
 
     @Test
@@ -170,5 +170,24 @@ public class AccountServiceTests {
         // Assert
         Assert.assertNotNull(unauthorizedResponse);
         Assert.assertTrue(unauthorizedResponse.getMessage().contains("locked"));
+    }
+
+    @Test
+    public void create_AdminAccountNotApprovedIP_ShouldThrowException() {
+        // Arrange
+        Account account = new Account(null, "bob", "123456", null, null, 0, null, Role.ADMIN);
+        Mockito.when(repository.findByUsername(anyString())).thenReturn(null);
+        ValidationException ex = null;
+
+        // Act
+        try {
+            service.create(account, "192.168.0.3"); // valid IP's are set in setUp()
+        } catch (ValidationException vex) {
+            ex = vex;
+        }
+
+        // Assert
+        Assert.assertNotNull(ex);
+        Assert.assertTrue(ex.getMessage().contains("role"));
     }
 }
