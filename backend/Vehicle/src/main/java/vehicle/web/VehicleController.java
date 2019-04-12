@@ -9,6 +9,7 @@ import org.eclipse.jetty.http.HttpStatus;
 import vehicle.domain.dto.VehicleRegistrationDto;
 import vehicle.domain.service.ILicensePlateService;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,8 +71,19 @@ public class VehicleController {
         String username = JavalinUtils.getUsername(ctx);
         String deviceId = ctx.pathParam("device-id");
 
-        List<Vehicle> vehicleData = vehicleService.getData(UUID.fromString(deviceId), username);
+        List<Vehicle> vehicleData = vehicleService.getData(UUID.fromString(deviceId), username, null, null);
 
+        ctx.json(vehicleData);
+    }
+
+    public void getVehicleDataFromTo(Context ctx) {
+        String username = JavalinUtils.getUsername(ctx);
+        String deviceId = ctx.pathParam("device-id");
+
+        String fromStr = ctx.pathParam("from");
+        String toStr = ctx.pathParam("to");
+
+        List<Vehicle> vehicleData = vehicleService.getData(UUID.fromString(deviceId), username, fromStr, toStr);
         ctx.json(vehicleData);
     }
 
@@ -80,4 +92,5 @@ public class VehicleController {
         ctx.contentType("application/json");
         ctx.result(licensePlateService.getData(licensePlate));
     }
+
 }

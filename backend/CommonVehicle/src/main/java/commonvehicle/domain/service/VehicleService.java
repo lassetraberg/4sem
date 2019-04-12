@@ -8,12 +8,24 @@ import commonvehicle.domain.model.vehicledata.Vehicle;
 import commonvehicle.domain.repository.IVehicleRepository;
 import io.javalin.NotFoundResponse;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.UUID;
 
 public class VehicleService implements IVehicleService {
     private IVehicleRepository vehicleRepository;
     private IAccountRepository accountRepository;
+
+    private DateTimeFormatter dateTimeFormatter = new DateTimeFormatterBuilder()
+            .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+            .parseDefaulting(ChronoField.NANO_OF_SECOND, 0)
+            .toFormatter()
+            .withZone(ZoneId.of("UTC"));
 
     public VehicleService(IVehicleRepository vehicleRepository, IAccountRepository accountRepository) {
         this.vehicleRepository = vehicleRepository;
@@ -33,12 +45,29 @@ public class VehicleService implements IVehicleService {
     }
 
     @Override
-    public List<Vehicle> getData(UUID deviceId, String username) {
+    public List<Vehicle> getData(UUID deviceId, String username, String fromDateTime, String toDateTime) {
         if (!userOwnsVehicle(deviceId, username)) {
             throw new NotFoundResponse("Vehicle not found");
         }
 
-        return vehicleRepository.getData(deviceId.toString());
+        Instant from = null;
+        Instant to = null;
+        try {
+            if (fromDateTime != null && toDateTime != null) {
+                from = dateTimeFormatter.parse(fromDateTime, Instant::from);
+                to = dateTimeFormatter.parse(toDateTime, Instant::from);
+            }
+        } catch (DateTimeParseException ex) {
+            ex.printStackTrace();
+            from = null;
+            to = null;
+        }
+
+        if (from == null || to == null) {
+            return vehicleRepository.getData(deviceId.toString());
+        } else {
+            return vehicleRepository.getData(deviceId.toString(), from, to);
+        }
     }
 
     @Override
