@@ -6,6 +6,7 @@
    - WiFi101            by Arduino
    - pubsubclient       by knolleary
    - ArduinoJson        by Benoit Jackson
+   - TinyGPS++          by mikalhart (Github)
 
    All three libraries are available on Arduino Manager.
 */
@@ -27,6 +28,8 @@ const String id = "cc9d7c9b-fb0f-40d7-bd83-ba4d4e97e48b";
 #include <ArduinoJson.h>
 #include <PubSubClient.h>
 #include <WiFi101.h> // for MKR1000 change to: #include <WiFi101.h>
+#include <TinyGPS++.h>
+#include <SoftwareSerial.h>
 
 #include "arduino_secrets.h"
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
@@ -39,29 +42,41 @@ char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as k
 // 3) Change broker value to a server with a known SSL/TLS root certificate
 //    flashed in the WiFi module.
 
-WiFiClient wifiClient;
-PubSubClient mqttClient(wifiClient);
+// Callback function header
+void callback(char* topic, byte* payload, unsigned int length);
 
-const char broker[] = "test.mosquitto.org";
+const char broker[] = "192.168.43.40";
 int        port     = 1883;
 
 const long interval = 2000;
 unsigned long previousMillis = 0;
 
-int count = 0;
+static const int RXPin = 11, TXPin = 10;
+static const uint32_t GPSBaud = 9600;
+
+// The TinyGPS++ object
+TinyGPSPlus gps;
+
+// The serial connection to the GPS device
+SoftwareSerial ss(RXPin, TXPin);
+
+WiFiClient wifiClient;
+PubSubClient mqttClient(wifiClient);
 
 void setupWifi() {
   Serial.print("Attemping to connect to SSID: ");
   Serial.println(ssid);
 
   // try to connect until successful
-  while(WiFi.begin(ssid, pass) != WL_CONNECTED) {
-    Serial.print(".");
+  while(WiFi.begin(ssid) != WL_CONNECTED) {
+    Serial.println(".");
     delay(5000);
   }
 
   Serial.println("You are connected to the network!");
   Serial.println("");
+
+  delay(5000);
 }
 
 void setupMQTT() {
@@ -69,21 +84,35 @@ void setupMQTT() {
   Serial.println(broker);
 
   mqttClient.setServer(broker, port);
+  mqttClient.setCallback(callback);
 }
 
-void reconnect() {
+void reconnect() {  
   while(!mqttClient.connected()) {
-    if(mqttClient.connect("")) {
+    String clientId = id;
+    clientId += ":";
+    clientId += String(random(0xffff), HEX);
+
+    Serial.println(WiFi.status() == WL_CONNECTED);
+    Serial.println(clientId);
+   
+    if(mqttClient.connect(clientId.c_str(), "sdugrp4", "password")) {
+//       mqttClient.subscribe("/vehicle/" + id + "/alarms/speeding");
+//      mqttClient.subscribe("/test");
+      
       Serial.print("Connection Established to: ");
       Serial.println(broker);
       Serial.println("");
     } else {
-      Serial.print(".");
+      Serial.println(".");
+      delay(5000);
     }
   }
 }
 
 void sendMQTT(String topic, String json) {
+  topic = "/" + topic;
+  
   char charTopic[topic.length() + 1];
   topic.toCharArray(charTopic, topic.length() + 1);
 
@@ -98,13 +127,24 @@ void sendGPS() {
   StaticJsonDocument<500> doc;
 
   doc["id"] = id;
+  doc["satelites"] = gps.satellites.value();
+
+  // used for time and date
+  char sz[32]; 
   
-  JsonObject gps = doc.createNestedObject("gps");
-  gps["latitude"] = 55.396230;
-  gps["longitude"] = 10.390600;
+  sprintf(sz, "%02d/%02d/%02d", gps.date.month(), gps.date.day(), gps.date.year());
+  doc["date"] = sz;
+  sprintf(sz, "%02d:%02d:%02d", gps.time.hour(), gps.time.minute(), gps.time.second());
+  doc["time"] = sz;
+  
+  JsonObject gpsJson = doc.createNestedObject("coordinates");
+  gpsJson["lat"] = gps.location.lat();
+  gpsJson["lon"] = gps.location.lng();
 
   String json;
   serializeJsonPretty(doc, json);
+  Serial.println(gps.location.lat(), 8);
+  Serial.println(gps.location.lng(), 8);
   
   sendMQTT(id + "/gps", json);
 }
@@ -133,9 +173,54 @@ void sendMessage() {
   sendMQTT(id + "/message", json);
 }
 
+// Callback function
+void callback(char* topic, byte* payload, unsigned int length) {
+  // In order to republish this payload, a copy must be made
+  // as the orignal payload buffer will be overwritten whilst
+  // constructing the PUBLISH packet.
+
+  // Allocate the correct amount of memory for the payload copy
+  //byte* p = (byte*)malloc(length);
+  // Copy the payload to the new buffer
+  //memcpy(p,payload,length);
+  //client.publish("outTopic", p, length);
+  // Free the memory
+  // free(p);
+
+//   Allocate the correct amount of memory for the payload copy
+  byte* p = (byte*)malloc(length);
+//   Copy the payload to the new buffer
+  memcpy(p,payload,length);
+  mqttClient.publish("/testo", p, length);
+
+  String s = String((char*) p);
+
+  Serial.println(topic);
+  Serial.println(s);
+
+  //   Free the memory
+   free(p);
+  
+  //Serial.println("Callback on " + topic);
+  //Serial.println(payload);
+  //Serial.println();
+}
+
+// This custom version of delay() ensures that the gps object
+// is being "fed".
+static void smartDelay(unsigned long ms) {
+  unsigned long start = millis();
+  do {
+    while (ss.available())
+      gps.encode(ss.read());
+  } while (millis() - start < ms);
+}
+
 void setup() {
   // Serial Monitor
+//  Serial.begin(9600);
   Serial.begin(9600);
+  ss.begin(GPSBaud);
   
   setupWifi();
   setupMQTT();
@@ -145,7 +230,7 @@ void setup() {
 void loop() {
   reconnect();
   mqttClient.loop();
- 
+  
   unsigned long currentMillis = millis();
 
   if (currentMillis - previousMillis >= interval) {
@@ -155,5 +240,7 @@ void loop() {
     sendGPS();
     sendVelocity();
     sendMessage();
+
+    smartDelay(1000);
   }
 }
