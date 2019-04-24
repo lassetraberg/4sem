@@ -1,7 +1,7 @@
 <div class="dashboard">
 
     <div class="try_again" *ngIf="!connected">
-        <button (click)="subscribeToWebSockets()">Connect to your vehicle.</button>
+        <button [disabled]="connecting" (click)="subscribeToWebSockets()">Connect to your vehicle.</button>
     </div>
 
     <div class="status_container">

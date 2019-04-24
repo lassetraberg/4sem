@@ -16,6 +16,8 @@ export class DashboardComponent implements OnInit {
 
   connected: boolean = false;
 
+  connecting: boolean = false;
+
   vehicleData: VehicleData;
 
   sockets = {};
@@ -34,6 +36,7 @@ export class DashboardComponent implements OnInit {
   }
 
   subscribeToWebSockets(){
+    this.connecting = true;
     this.unsubscribeWebSockets();
     Object.keys(this.vehicleData).forEach(key => {  
       this.sockets[key] = this.socket.getSubject("2905d0e7-615c-455b-8807-ddd7665d3994", key);
@@ -48,6 +51,7 @@ export class DashboardComponent implements OnInit {
         }
       )
     });
+    this.connecting = false;
   }
 
   unsubscribeWebSockets(){
