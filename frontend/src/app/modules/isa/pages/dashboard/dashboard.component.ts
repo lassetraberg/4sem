@@ -16,6 +16,8 @@ export class DashboardComponent implements OnInit {
 
   connected: boolean = false;
 
+  connecting: boolean = false;
+
   vehicleData: VehicleData;
 
   sockets = {};
@@ -26,6 +28,16 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     // Connect to WebSockets for the properties of VehicleData.   
+    this.subscribeToWebSockets();
+  }
+
+  ngAfterViewInit(){
+
+  }
+
+  subscribeToWebSockets(){
+    this.connecting = true;
+    this.unsubscribeWebSockets();
     Object.keys(this.vehicleData).forEach(key => {  
       this.sockets[key] = this.socket.getSubject("2905d0e7-615c-455b-8807-ddd7665d3994", key);
       this.sockets[key].subscribe(
@@ -39,10 +51,15 @@ export class DashboardComponent implements OnInit {
         }
       )
     });
+    this.connecting = false;
   }
 
-  ngAfterViewInit(){
-
+  unsubscribeWebSockets(){
+    // Disconnect from every WebSocket.
+    Object.keys(this.sockets).forEach(property => {
+      var subject = this.sockets[property] as WebSocketSubject<any>;
+      subject.unsubscribe();
+    })
   }
 
   private push(){
@@ -51,11 +68,7 @@ export class DashboardComponent implements OnInit {
 
 
   ngOnDestroy(){
-    // Disconnect from every WebSocket.
-    Object.keys(this.sockets).forEach(property => {
-      var subject = this.sockets[property] as WebSocketSubject<any>;
-      subject.unsubscribe();
-    })
+    this.unsubscribeWebSockets();
   }
 
 }

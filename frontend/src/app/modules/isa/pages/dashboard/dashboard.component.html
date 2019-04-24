@@ -1,5 +1,9 @@
 <div class="dashboard">
 
+    <div class="try_again" *ngIf="!connected">
+        <button [disabled]="connecting" (click)="subscribeToWebSockets()">Connect to your vehicle.</button>
+    </div>
+
     <div class="status_container">
         <div class="status" [ngClass]="connected ? 'active' : 'inactive'">
             <div *ngIf="connected; else notConnected">
@@ -9,13 +13,13 @@
             <ng-template #notConnected>
                 <div>
                     <i class="material-icons"> wifi_off </i>
-                    Connecting to your vehicle...
+                    Not connected...
                 </div>
             </ng-template>
         </div>
     </div>
 
-    <div class="velocity">
+    <div [ngClass]="connected ? 'velocity active' : 'velocity inactive'">
         <span class="value">
             <span *ngIf="!vehicleData.velocity">...</span>
             {{ vehicleData.velocity }}
@@ -25,7 +29,7 @@
 
     <div class="speedLimit"></div>
 
-    <app-map id="map_container" #map></app-map>
+    <app-map [ngClass]="connected ? 'active' : 'inactive'" id="map_container" #map></app-map>
     
 
  
