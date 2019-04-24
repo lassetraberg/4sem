@@ -18,6 +18,5 @@ public interface ISpeedAssistantService {
 
     boolean isSpeeding(UUID deviceId);
 
-    void publishSpeedingAlarm(UUID deviceId);
-
+    void publishSpeedingAlarm(UUID deviceId, boolean isSpeeding);
 }
