@@ -6,6 +6,7 @@ import commonvehicle.domain.model.vehicledata.Acceleration;
 import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 import commonvehicle.domain.model.vehicledata.Velocity;
 import speedassistant.domain.dto.GpsDto;
+import speedassistant.domain.dto.SpeedLimitDto;
 import speedassistant.domain.service.ISpeedAssistantService;
 
 import java.util.UUID;
@@ -29,7 +30,9 @@ public class WebSocketCommunicationService extends AbstractWebSocketEndpoint<UUI
     public void onVelocityMessage(UUID deviceId) {
         Short velocity = speedAssistantService.getLatestVelocity(deviceId);
         Velocity velocityObject = new Velocity(velocity);
+        SpeedLimitDto speedLimitDto = new SpeedLimitDto(speedAssistantService.getLatestSpeedLimit(deviceId));
         sendTo(deviceId, velocityObject, "velocity");
+        sendTo(deviceId, speedLimitDto, "speedLimit");
     }
 
     @Override
