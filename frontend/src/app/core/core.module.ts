@@ -11,6 +11,8 @@ import { SharedModule } from '../shared/components/shared.module';
 import { DataService } from '../shared/services/data.service';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../shared/interceptors/AuthInterceptor';
+import { CoreRoutingModule } from './core-routing.module';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { AuthInterceptor } from '../shared/interceptors/AuthInterceptor';
       HeaderComponent
   ],
   imports: [
-    SharedModule
+      CoreRoutingModule,
+      SharedModule
   ],
   providers: [
     ScreenService, 

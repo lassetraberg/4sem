@@ -1,21 +1,24 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { NavComponent } from './nav/nav.component';
-import { CoreRoutingModule } from 'src/app/core/core-routing.module';
+import { MapComponent } from './map/map.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
     declarations: [
-        NavComponent
+        NavComponent,
+        MapComponent
     ],
-    imports: [ 
-        CoreRoutingModule,
-        BrowserAnimationsModule
+    imports: [
+        RouterModule,
+        CommonModule
     ],
     exports: [
         NavComponent,
-        CoreRoutingModule,
-        BrowserAnimationsModule
+        MapComponent,
+        RouterModule,
+        CommonModule,
     ],
     providers: []
   })

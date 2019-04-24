@@ -1,4 +1,5 @@
 .dashboard{
+    color: white;
 
     position: relative;
 
@@ -37,6 +38,7 @@
     }
 
     .velocity{
+        height: calc((100% - 26px) / 3);
         width: 100%;
         color: var(--text-color);
         display: flex;
@@ -52,6 +54,16 @@
             font-size: 0.875rem;
             color: #D6D6D6;
         }
+    }
+
+    .speedLimit{
+        height: calc((100% - 26px) / 3);
+    }
+
+    #map_container{
+        height: calc((100% - 26px) / 3);
+        position: relative;
+        display: block;
     }
 
 
