@@ -67,7 +67,7 @@ public abstract class AbstractWebSocketEndpoint<T> {
 
         if (sessionList != null && sessionList.size() > 0) {
             for (WsSession session : sessionList) {
-                if (session.pathParam(variablePath).equalsIgnoreCase(pathParam)) {
+                if (session.pathParam(variablePath).equalsIgnoreCase(pathParam) && session != null) {
                     session.send(msg);
                 }
             }
