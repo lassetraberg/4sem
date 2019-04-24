@@ -81,8 +81,8 @@ public class SpeedAssistantService implements ISpeedAssistantService {
     }
 
     @Override
-    public void publishSpeedingAlarm(UUID deviceId) {
-        mqttService.publish(VariableMqttTopic.VEHICLE_ALARM_SPEEDING, deviceId, "1");
+    public void publishSpeedingAlarm(UUID deviceId, boolean isSpeeding) {
+        mqttService.publish(VariableMqttTopic.VEHICLE_ALARM_SPEEDING, deviceId, isSpeeding ? "1" : "0");
     }
 
     private void subscribe(StaticMqttTopic... definedTopics) {
