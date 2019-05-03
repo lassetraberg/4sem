@@ -24,7 +24,6 @@ export class AuthService {
      */
     register(username: string, password: string): Observable<any> {
         const credentials = {username, password};
-        console.log(credentials);
         return this.http.post<string>(`${environment.restapi}/accounts`, credentials, httpOptions);
     }
 
@@ -34,6 +33,7 @@ export class AuthService {
      * @param password credentials
      */
     login(username:string, password:string): Observable<any> {
+        this.logout();
         return this.http.post<string>(`${environment.restapi}/accounts/login`, {
             username,
             password
@@ -49,13 +49,23 @@ export class AuthService {
         localStorage.removeItem('id_token');
     }
 
+    getRole(): string {
+        const userJson = localStorage.getItem("user")
+        if (userJson) {
+            return JSON.parse(userJson).role
+        } else {
+            return null
+        }
+    }
+
     /**
      * Assigns JWT and expiration to local storage.
      * @param result token retrieved from API.
      */
     private setSession(result): void {
         localStorage.setItem('id_token', result.token);
-        localStorage.setItem("expires_at", JSON.stringify(result.valueOf()) );
+        localStorage.setItem("expires_at", result.tokenExpiresAt);
+        localStorage.setItem("user", JSON.stringify(result.valueOf()))
     }
 
     /**
