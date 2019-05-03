@@ -1,8 +1,14 @@
 <h2>Vehicle Data</h2>
 <div class="buttons">
-  <button class="btn" type="button" routerLink="/admin">Back</button>
+  <button class="btn" type="button" routerLink="/admin">
+    <i class="material-icons">
+      arrow_back
+    </i>
+  </button>
   <button class="btn" type="button" (click)="getVehicleData()">
-    Refresh
+    <i class="material-icons">
+      refresh
+    </i>
   </button>
 </div>
 <ng-template #noVehicleData>There is not vehicle data yet.</ng-template>

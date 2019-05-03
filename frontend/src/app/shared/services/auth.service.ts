@@ -13,6 +13,8 @@ const httpOptions = {
 @Injectable()
 export class AuthService {
 
+    readonly roles = ["AUTHENTICATED", "ADMIN"]
+
     constructor(private http: HttpClient){
 
     }
