@@ -33,14 +33,14 @@ public class VehicleRestProvider implements IRouterService {
     public EndpointGroup getRoutes() {
         return (() -> path("vehicle", () -> {
             post(controller::registerVehicle, roles(Role.AUTHENTICATED));
-            get(controller::getVehicles, roles(Role.AUTHENTICATED));
+            get(controller::getVehicles, roles(Role.AUTHENTICATED, Role.ADMIN));
             get("licenseplate/:license-plate", controller::getVehicleLicensePlateData, roles(Role.AUTHENTICATED));
             path(":device-id", () -> {
-                get(controller::getVehicle, roles(Role.AUTHENTICATED));
+                get(controller::getVehicle, roles(Role.AUTHENTICATED, Role.ADMIN));
                 delete(controller::deleteVehicle, roles(Role.AUTHENTICATED));
                 path("data", () -> {
-                    get(controller::getVehicleData, roles(Role.AUTHENTICATED));
-                    get(":from/:to", controller::getVehicleDataFromTo, roles(Role.AUTHENTICATED));
+                    get(controller::getVehicleData, roles(Role.AUTHENTICATED, Role.ADMIN));
+                    get(":from/:to", controller::getVehicleDataFromTo, roles(Role.AUTHENTICATED, Role.ADMIN));
                 });
             });
         }));

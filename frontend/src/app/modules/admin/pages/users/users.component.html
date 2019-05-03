@@ -1,0 +1,27 @@
+<h2>User administration</h2>
+
+<div class="usersTable">
+  <table>
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Creation date</th>
+        <th>Locked</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users">
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ formatDate(user.created) }}</td>
+        <td>
+          <div>{{ user.locked }}</div>
+          <button *ngIf="user.locked" (click)="unlockAccount(user.id)">
+            unlock
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
