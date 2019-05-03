@@ -1,6 +1,9 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, ViewChild } from "@angular/core";
 import { DataService } from "src/app/shared/services/data.service";
 import { User } from "src/app/shared/models/user";
+import { MatTableDataSource } from "@angular/material/table";
+import { DataSource } from "@angular/cdk/table";
+import { MatPaginator } from "@angular/material";
 
 @Component({
   selector: "app-users",
@@ -9,6 +12,17 @@ import { User } from "src/app/shared/models/user";
 })
 export class UsersComponent implements OnInit {
   users: Array<User> = [];
+
+  dataSource: MatTableDataSource<User>;
+  tableColumns: string[] = [
+    "id",
+    "username",
+    "created",
+    "lastLoginAttempt",
+    "role",
+    "locked"
+  ];
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private data: DataService) {}
 
@@ -22,14 +36,26 @@ export class UsersComponent implements OnInit {
   }
 
   unlockAccount(userId: number) {
-    this.data.unlockAccount(userId).subscribe(res => {
-      this.getUsers();
-    });
+    this.data
+      .unlockAccount(userId)
+      .toPromise()
+      .then(res => {
+        this.getUsers();
+      });
   }
 
   getUsers() {
-    this.data.getUsers().subscribe(users => {
-      this.users = users;
-    });
+    this.data
+      .getUsers()
+      .toPromise()
+      .then(users => {
+        this.users = users;
+        this.setupDataSource();
+      });
+  }
+
+  private setupDataSource() {
+    this.dataSource = new MatTableDataSource<User>(this.users);
+    this.dataSource.paginator = this.paginator;
   }
 }

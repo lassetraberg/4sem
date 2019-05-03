@@ -1,21 +1,13 @@
-.usersTable {
+.users-table {
   table {
     width: 100%;
-
-    tbody {
-      tr {
-        td {
-          text-align: center;
-          button {
-            margin: 0 auto;
-          }
-        }
-      }
-    }
   }
 }
-
-.back-btn {
-  margin: 1em;
-  max-width: 150px;
+.buttons {
+  display: flex;
+  flex-direction: row;
+  .btn {
+    margin: 1em;
+    max-width: 150px;
+  }
 }

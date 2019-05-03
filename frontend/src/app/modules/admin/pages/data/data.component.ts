@@ -32,11 +32,14 @@ export class DataComponent implements OnInit {
   }
 
   private getVehicleData() {
-    this.data.getAllData().subscribe(vehicleData => {
-      this.vehicleData = vehicleData.reduce((results, curr) => {
-        (results[curr.deviceId] = results[curr.deviceId] || []).push(curr);
-        return results;
-      }, {});
-    });
+    this.data
+      .getAllData()
+      .toPromise()
+      .then(vehicleData => {
+        this.vehicleData = vehicleData.reduce((results, curr) => {
+          (results[curr.deviceId] = results[curr.deviceId] || []).push(curr);
+          return results;
+        }, {});
+      });
   }
 }
