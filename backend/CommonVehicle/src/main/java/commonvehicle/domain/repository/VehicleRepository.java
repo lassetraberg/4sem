@@ -74,6 +74,35 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
         return vehicleDataList;
     }
 
+
+    @Override
+    public List<Vehicle> getAllData() {
+        Instant from = Instant.parse("1970-01-01T00:00:00.00Z");
+        Instant to = Instant.parse("3000-01-01T00:00:00.00Z");
+        return this.getAllData(from, to);
+    }
+
+    @Override
+    public List<Vehicle> getAllData(Instant from, Instant to) {
+        String sql = "SELECT device_id, speed, timestamp, acceleration, speed_limit, latitude, longitude FROM vehicle WHERE timestamp BETWEEN ? AND ? ORDER BY timestamp";
+         List<Vehicle> vehicleDataList = new ArrayList<>();
+        this.executeQuery(conn -> {
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setTimestamp(1, Timestamp.from(from));
+            stmt.setTimestamp(2, Timestamp.from(to));
+
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Vehicle v = vehicleFromResultSet(rs);
+                vehicleDataList.add(v);
+            }
+        });
+
+        return vehicleDataList;
+    }
+
     @Override
     public Device getDevice(String deviceId) {
         String sql = "SELECT device_id, last_active, license_plate FROM device WHERE device_id = ?";

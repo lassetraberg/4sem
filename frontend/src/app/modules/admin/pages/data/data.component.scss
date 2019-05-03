@@ -1,0 +1,17 @@
+.buttons {
+  display: flex;
+  flex-direction: row;
+  .btn {
+    margin: 1em;
+    max-width: 150px;
+  }
+}
+
+.scrolling-panel {
+  overflow-y: scroll !important;
+  max-height: 400px;
+}
+
+table {
+  width: 100%;
+}

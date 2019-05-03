@@ -7,6 +7,7 @@ import {
 import { environment } from "src/environments/environment";
 import { User } from "../models/user";
 import { Observable } from "rxjs";
+import { VehicleData } from "../models/vehicledata";
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -33,6 +34,13 @@ export class DataService {
     return this.http.post(
       `${environment.restapi}/accounts/unlock/${userId}`,
       null,
+      httpOptions
+    );
+  }
+
+  public getAllData(): Observable<Array<VehicleData>> {
+    return this.http.get<Array<VehicleData>>(
+      `${environment.restapi}/vehicle/all-data`,
       httpOptions
     );
   }

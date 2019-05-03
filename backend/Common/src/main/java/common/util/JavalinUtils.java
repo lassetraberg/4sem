@@ -15,4 +15,8 @@ public class JavalinUtils {
     public static Set<Role> roles(Role... roles) {
         return new HashSet<>(Arrays.asList(roles));
     }
+
+    public static String getRole(Context ctx) {
+        return ctx.attribute("role");
+    }
 }

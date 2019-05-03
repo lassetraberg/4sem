@@ -35,6 +35,7 @@ public class VehicleRestProvider implements IRouterService {
             post(controller::registerVehicle, roles(Role.AUTHENTICATED));
             get(controller::getVehicles, roles(Role.AUTHENTICATED, Role.ADMIN));
             get("licenseplate/:license-plate", controller::getVehicleLicensePlateData, roles(Role.AUTHENTICATED));
+            get("all-data", controller::getAllVehiclesData, roles(Role.ADMIN));
             path(":device-id", () -> {
                 get(controller::getVehicle, roles(Role.AUTHENTICATED, Role.ADMIN));
                 delete(controller::deleteVehicle, roles(Role.AUTHENTICATED));
