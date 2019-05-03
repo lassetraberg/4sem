@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/shared/services/auth.service';
 
 import { CONTENT_URL_PREFIX } from 'src/app/shared/services/document.service';
+import { DataService } from 'src/app/shared/services/data.service';
+import { Vehicle } from 'src/app/shared/models/vehicle';
 
 @Component({
   selector: 'app-user',
@@ -12,51 +14,18 @@ export class UserComponent implements OnInit {
 
   vehiclesPath: string = CONTENT_URL_PREFIX + 'img/vehicles';
   vehicleIsSelected: boolean = false;
+  selectedLicensePlate: string = null;
 
-  myVehicle = {
-    "licensePlate": "AZ92432",
-    "type": "mini",
-    "brand": "Toyota",
-    "model": "Aygo"
-  };
+  myVehicle: Vehicle = null;
 
-  vehicles = [
-    {
-    "licensePlate": "AZ92432",
-    "type": "mini",
-    "brand": "Toyota",
-    "model": "Aygo"
-    },
-    {
-      "licensePlate": "AZ92433",
-      "type": "sedan",
-      "brand": "Toyota",
-      "model": "Aygo"
-    },
-    {
-      "licensePlate": "AZ92434",
-      "type": "sport",
-      "brand": "Toyota",
-      "model": "Aygo"
-    },
-    {
-      "licensePlate": "AZ92435",
-      "type": "suv",
-      "brand": "Toyota",
-      "model": "Aygo"
-    },
-    {
-      "licensePlate": "AZ92436",
-      "type": "van",
-      "brand": "Toyota",
-      "model": "Aygo"
-    },
-  ];
+  vehicles: Array<Vehicle> = [];
 
-  constructor(private auth: AuthService) { }
+  constructor(private auth: AuthService, private data: DataService) { }
 
   ngOnInit() {
     // Load users vehicles into vehicles array.
+    this.getVehicles()
+    this.setMyVehicle();
   }
 
   /**
@@ -64,6 +33,7 @@ export class UserComponent implements OnInit {
    * @param licensePlate id of the vehicle.
    */
   public selectVehicle(licensePlate: string): void{
+    this.selectedLicensePlate = licensePlate
     var radioButton = document.getElementById("radio_" + licensePlate) as HTMLInputElement;
     if(radioButton.checked){
       radioButton.checked = false;
@@ -74,9 +44,15 @@ export class UserComponent implements OnInit {
     }
   }
 
-  public deleteVehicle(licensePlate: string): void{
+  public async deleteVehicle(deviceId: string) {
     event.stopPropagation();
-    console.log("Deleted " + licensePlate);
+    const myVehicle = this.data.getMyVehicle()
+    if (myVehicle && myVehicle.deviceId === deviceId) {
+      this.data.setMyVehicle(null)
+      this.setMyVehicle();
+    }
+    await this.data.deleteVehicle(deviceId).toPromise();
+    this.getVehicles();
   }
 
 
@@ -96,15 +72,27 @@ export class UserComponent implements OnInit {
   }
 
   private setVehicle(){
-    console.log("Vehicle set!");
+    const vehicle = this.vehicles.find(v => v.licensePlate === this.selectedLicensePlate)
+    this.data.setMyVehicle(vehicle)
     this.toggleListOfVehicles();
+    this.setMyVehicle()
   }
 
-  /**
-   * Method 
-   */
-  private addVehicle(): void{
-    console.log("Let's add a new vehicle");
+  private async setMyVehicle() {
+    this.myVehicle = await this.data.getMyVehicle()
+  }
+
+  private async getVehicles() {
+    this.data.getVehicles().toPromise()
+    .then(vehicles => {
+      vehicles.forEach(async vehicle => {
+        const plateData = await this.data.getPlateData(vehicle.licensePlate).toPromise()
+        vehicle.brand = plateData.make;
+        vehicle.model = plateData.model;
+        vehicle.type = this.data.vehicleTypeMapper[plateData.chassis_type] || this.data.types[1];
+      })
+      this.vehicles = vehicles;
+    })
   }
 
 }
