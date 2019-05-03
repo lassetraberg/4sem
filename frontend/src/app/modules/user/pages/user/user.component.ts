@@ -26,6 +26,10 @@ export class UserComponent implements OnInit {
     // Load users vehicles into vehicles array.
     this.getVehicles()
     this.setMyVehicle();
+
+    if (this.myVehicle === null){
+      this.toggleListOfVehicles()
+    }
   }
 
   /**

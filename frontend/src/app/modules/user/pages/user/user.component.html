@@ -6,7 +6,7 @@
 
     <div class="my_vehicle" >
       <div class="vehicle" id="{{myVehicle && myVehicle.licensePlate}}">
-        <img class="icon" src="{{vehiclesPath}}/{{myVehicle && myVehicle.type}}.svg">
+        <img class="icon" src="{{vehiclesPath}}/{{myVehicle && myVehicle.type || 'NOTFOUND'}}.svg">
         <div class="details" *ngIf="myVehicle">
           <span class="name">{{myVehicle.brand}} {{myVehicle.model}}</span>
           <span class="licensePlate">{{myVehicle.licensePlate}}</span>
