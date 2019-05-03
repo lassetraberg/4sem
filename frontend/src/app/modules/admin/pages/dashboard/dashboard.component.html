@@ -1,3 +1,16 @@
 <h2>Admin Dashboard</h2>
-<button type="button" routerLink="/admin/users">User Administration</button>
-<button type="button" routerLink="/admin/data">Vehicle data</button>
+
+<div class="pages">
+  <mat-card *ngFor="let page of pages">
+    <mat-card-content>
+      <p>
+        {{ page.text }}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button type="button" routerLink="{{ page.path }}">
+        User Administration
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

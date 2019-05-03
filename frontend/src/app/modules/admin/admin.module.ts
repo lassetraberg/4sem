@@ -3,6 +3,7 @@ import { CommonModule } from "@angular/common";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatTableModule } from "@angular/material/table";
 import { MatPaginatorModule } from "@angular/material/paginator";
+import { MatCardModule } from "@angular/material/card";
 import { AdminRoutingModule } from "./admin-routing.module";
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { UsersComponent } from "./pages/users/users.component";
@@ -14,7 +15,8 @@ import { DataComponent } from "./pages/data/data.component";
     AdminRoutingModule,
     MatExpansionModule,
     MatTableModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatCardModule
   ],
   providers: []
 })
