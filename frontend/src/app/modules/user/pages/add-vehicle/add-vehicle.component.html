@@ -1,13 +1,63 @@
 <div class="add-vehicle">
+  <form [formGroup]="form" (submit)="submit()">
+    <span class="step">
+      First, simply enter your car's licenseplate.
+    </span>
+    <div class="form-group">
+      <div class="licensePlate">
+        <div class="flag"></div>
+        <input
+          [class.error]="
+            licensePlate.invalid && (licensePlate.dirty || licensePlate.touched)
+          "
+          id="licensePlate"
+          class="form-control"
+          type="text"
+          formControlName="licensePlate"
+          placeholder="AB 12 345"
+          required
+        />
+      </div>
+      <div
+        *ngIf="
+          licensePlate.invalid && (licensePlate.dirty || licensePlate.touched)
+        "
+        class="alert"
+      >
+        <div *ngIf="licensePlate.errors.required">
+          License plate is required.
+        </div>
+      </div>
+    </div>
 
-  <span class="step">
-    First, simply enter your car's licenseplate.
-  </span>
+    <span class="step">
+      Next, enter 32 character identifier that was provided with your device.
+    </span>
+    <div class="form-group">
+      <input
+        [class.error]="deviceId && deviceId.invalid && (deviceId.dirty || deviceId.touched)"
+        id="deviceId"
+        class="form-control"
+        type="text"
+        formControlName="deviceId"
+        placeholder="2905d0e7-615c-455b-8807-ddd7665d3994"
+        required
+      />
+      <div
+        *ngIf="deviceId && deviceId.invalid && (deviceId.dirty || deviceId.touched)"
+        class="alert"
+      >
+        <div *ngIf="deviceId && deviceId.errors.required">
+          A device id is required.
+        </div>
+        <div *ngIf="deviceId && deviceId.errors.maxLength || deviceId.errors.minLength">
+          A device id must be 32 characters (36 including dashes).
+        </div>
+      </div>
+    </div>
 
-  <div class="licensePlate">
-    <div class="flag"></div>
-    <input id="licensePlate" type="text" name="licensePlate" placeholder="AB 12 345"> 
-  </div>
-  <button>Continue</button>
-
+    <div class="form-group form-group--actions">
+      <button type="submit">Register Vehicle</button>
+    </div>
+  </form>
 </div>

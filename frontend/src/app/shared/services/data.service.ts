@@ -19,6 +19,16 @@ const httpOptions = {
 export class DataService {
   constructor(private http: HttpClient) {}
 
+  readonly types = ["mini", "sedan", "sport", "suv", "van"];
+
+  public registerVehicle(licensePlate: string, deviceId: string) {
+    return this.http.post(
+      `${environment.restapi}/vehicle`,
+      { licensePlate, deviceId },
+      httpOptions
+    );
+  }
+
   public getVehicles() {
     return this.http.get(`${environment.restapi}/vehicle/`, httpOptions);
   }
