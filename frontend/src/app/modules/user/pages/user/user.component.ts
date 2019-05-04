@@ -25,8 +25,12 @@ export class UserComponent implements OnInit {
   ngOnInit() {
     // Load users vehicles into vehicles array.
     this.getVehicles()
-    this.setMyVehicle();
 
+    if (this.vehicles.length === 0) {
+      this.data.unsetMyVehicle()
+    }
+
+    this.setMyVehicle();
     if (this.myVehicle === null){
       this.toggleListOfVehicles()
     }
@@ -52,7 +56,7 @@ export class UserComponent implements OnInit {
     event.stopPropagation();
     const myVehicle = this.data.getMyVehicle()
     if (myVehicle && myVehicle.deviceId === deviceId) {
-      this.data.setMyVehicle(null)
+      this.data.unsetMyVehicle()
       this.setMyVehicle();
     }
     await this.data.deleteVehicle(deviceId).toPromise();

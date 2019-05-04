@@ -51,6 +51,10 @@ export class DataService {
     localStorage.setItem('myVehicle', JSON.stringify(vehicle))
   }
 
+  public unsetMyVehicle() {
+    localStorage.removeItem('myVehicle')
+  }
+
   public getMyVehicle(): Vehicle | null {
     const vehicleJson = localStorage.getItem('myVehicle')
     if (vehicleJson) {

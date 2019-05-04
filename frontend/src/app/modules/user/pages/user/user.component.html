@@ -33,7 +33,7 @@
       </form>
       <div class="button_group">
         <button routerLink="add-vehicle"><i class="material-icons"> add </i>Add New Vehicle</button>
-        <button [disabled]="!vehicleIsSelected" (click)="setVehicle()">Set As My Vehicle</button>
+        <button [disabled]="!vehicleIsSelected || vehicles.length === 0" (click)="setVehicle()">Set As My Vehicle</button>
       </div>
     </div>
 

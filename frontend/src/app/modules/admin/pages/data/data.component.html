@@ -11,7 +11,7 @@
     </i>
   </button>
 </div>
-<ng-template #noVehicleData>There is not vehicle data yet.</ng-template>
+<ng-template #noVehicleData>There is no vehicle data yet.</ng-template>
 <mat-accordion *ngIf="hasVehicleData(); else noVehicleData">
   <mat-expansion-panel
     *ngFor="let data of vehicleData | keyvalue"
