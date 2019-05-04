@@ -9,9 +9,24 @@
 
 .scrolling-panel {
   overflow-y: scroll !important;
-  max-height: 400px;
+  max-height: 600px;
 }
 
-table {
-  width: 100%;
+.data-container {
+  display: flex;
+  flex-direction: row;
+
+  .table,
+  table {
+    width: 100%;
+  }
+
+  .replay {
+    max-height: 500px;
+    width: 700px;
+
+    .speeding {
+      color: red;
+    }
+  }
 }
