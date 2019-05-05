@@ -40,6 +40,7 @@ export class DataComponent implements OnInit {
       this.showMap[data[0].deviceId] = true;
     }
     const loop = i => {
+      if (!this.showMap[data[0].deviceId]) return;
       if (i === data.length - 1) return;
       const currentTimestamp = new Date(data[i].timestamp);
       const nextTimestamp = new Date(data[i + 1].timestamp);
@@ -74,7 +75,6 @@ export class DataComponent implements OnInit {
     if (data.length > 0) {
       this.showMap[data[0].deviceId] = false;
     }
-    // TODO figure out how to stop the setTimeout
   }
 
   private getVehicleData() {
