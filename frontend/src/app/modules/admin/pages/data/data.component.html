@@ -18,6 +18,7 @@
     expanded="false"
     class="scrolling-panel"
     hideToggle="true"
+    (afterCollapse)="stopReplay(data.value)"
   >
     <mat-expansion-panel-header>
       <mat-panel-title>
@@ -69,6 +70,22 @@
             </table>
           </div>
           <div class="replay" *ngIf="showMap[data.key]">
+            <div>
+              Speed:
+              <select [(ngModel)]="speedModifier[data.key]">
+                <option
+                  [value]="option"
+                  [selected]="speedModifier[data.key] === option"
+                  *ngFor="let option of speedModifierEnumArr"
+                >
+                  {{ option | titlecase }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <span>Record #</span>
+              <span id="{{ data.key }}-recordIndex"></span>
+            </div>
             <div class="vehicleInfo">
               <div class="velocity">
                 <span>Velocity:</span>
@@ -83,7 +100,7 @@
             </div>
             <app-map
               [ngClass]="connected ? 'active' : 'inactive'"
-              id="map_container"
+              id="{{ data.key }}-map_container"
               #map
             ></app-map>
           </div>

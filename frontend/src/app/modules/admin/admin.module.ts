@@ -9,6 +9,7 @@ import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { UsersComponent } from "./pages/users/users.component";
 import { DataComponent } from "./pages/data/data.component";
 import { SharedModule } from "src/app/shared/components/shared.module";
+import { FormsModule } from "@angular/forms";
 @NgModule({
   declarations: [DashboardComponent, UsersComponent, DataComponent],
   imports: [
@@ -18,7 +19,8 @@ import { SharedModule } from "src/app/shared/components/shared.module";
     MatTableModule,
     MatPaginatorModule,
     MatCardModule,
-    SharedModule
+    SharedModule,
+    FormsModule
   ],
   providers: []
 })

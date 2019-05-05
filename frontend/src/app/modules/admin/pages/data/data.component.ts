@@ -1,4 +1,13 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ViewChildren,
+  QueryList,
+  ElementRef,
+  ViewContainerRef
+} from "@angular/core";
+import { FormsModule } from "@angular/forms";
 import { DataService } from "src/app/shared/services/data.service";
 import { VehicleData } from "src/app/shared/models/vehicledata";
 import { MapComponent } from "src/app/shared/components/map/map.component";
@@ -9,7 +18,6 @@ import { MapComponent } from "src/app/shared/components/map/map.component";
   styleUrls: ["./data.component.scss"]
 })
 export class DataComponent implements OnInit {
-  vehicleData: any = {};
   tableColumns: string[] = [
     "timestamp",
     "gps",
@@ -17,13 +25,26 @@ export class DataComponent implements OnInit {
     "speedLimit",
     "acceleration"
   ];
-  @ViewChild(MapComponent) map;
+  vehicleData: any = {};
   showMap: any = {};
+  speedModifier: any = {};
+  speedModifierEnum = {
+    slow: 0.5,
+    realtime: 1,
+    fast: 2,
+    faster: 4
+  };
+  speedModifierEnumArr = Object.keys(this.speedModifierEnum);
+  @ViewChildren(MapComponent) maps: QueryList<MapComponent>;
 
   constructor(private data: DataService) {}
 
   ngOnInit() {
     this.getVehicleData();
+  }
+
+  setSpeedModifier(deviceId: string, speed: string) {
+    this.speedModifier[deviceId] = speed;
   }
 
   formatDate(date: string): string {
@@ -36,6 +57,7 @@ export class DataComponent implements OnInit {
   }
 
   replayData(data: Array<VehicleData>) {
+    this.maps.forEach(map => console.log(map));
     if (data.length > 0) {
       this.showMap[data[0].deviceId] = true;
     }
@@ -44,24 +66,13 @@ export class DataComponent implements OnInit {
       if (i === data.length - 1) return;
       const currentTimestamp = new Date(data[i].timestamp);
       const nextTimestamp = new Date(data[i + 1].timestamp);
-      const diffInMS = nextTimestamp.getTime() - currentTimestamp.getTime();
+      const diffInMS =
+        (nextTimestamp.getTime() - currentTimestamp.getTime()) /
+        this.speedModifierEnum[this.speedModifier[data[i].deviceId]];
+      const map = this.maps.first;
 
-      if (this.map) {
-        this.map.updateMap(data[i].gps);
-        const velocityElem = document.getElementById(
-          `${data[i].deviceId}-velocity`
-        );
-        const speedLimitElem = document.getElementById(
-          `${data[i].deviceId}-speedLimit`
-        );
-        velocityElem.innerText = " " + data[i].velocity + " ";
-        speedLimitElem.innerText = " " + data[i].speedLimit + " ";
-
-        if (data[i].velocity > data[i].speedLimit) {
-          velocityElem.classList.add("speeding");
-        } else {
-          velocityElem.classList.remove("speeding");
-        }
+      if (map) {
+        this.updateMap(map, data[i], i);
       }
 
       setTimeout(() => {
@@ -77,6 +88,28 @@ export class DataComponent implements OnInit {
     }
   }
 
+  private updateMap(map: MapComponent, dataRow: VehicleData, index: number) {
+    map.updateMap(dataRow.gps);
+    const velocityElem = document.getElementById(
+      `${dataRow.deviceId}-velocity`
+    );
+    const speedLimitElem = document.getElementById(
+      `${dataRow.deviceId}-speedLimit`
+    );
+    const recordElem = document.getElementById(
+      `${dataRow.deviceId}-recordIndex`
+    );
+    velocityElem.innerText = " " + dataRow.velocity + " ";
+    speedLimitElem.innerText = " " + dataRow.speedLimit + " ";
+    recordElem.innerText = " " + index + " ";
+
+    if (dataRow.velocity > dataRow.speedLimit) {
+      velocityElem.classList.add("speeding");
+    } else {
+      velocityElem.classList.remove("speeding");
+    }
+  }
+
   private getVehicleData() {
     this.data
       .getAllData()
@@ -85,6 +118,7 @@ export class DataComponent implements OnInit {
         this.vehicleData = vehicleData.reduce((results, curr) => {
           (results[curr.deviceId] = results[curr.deviceId] || []).push(curr);
           this.showMap[curr.deviceId] = false;
+          this.speedModifier[curr.deviceId] = "realtime";
           return results;
         }, {});
       });
