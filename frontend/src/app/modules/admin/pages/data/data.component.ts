@@ -57,7 +57,6 @@ export class DataComponent implements OnInit {
   }
 
   replayData(data: Array<VehicleData>) {
-    this.maps.forEach(map => console.log(map));
     if (data.length > 0) {
       this.showMap[data[0].deviceId] = true;
     }
