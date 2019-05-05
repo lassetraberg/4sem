@@ -11,6 +11,7 @@ import { FormsModule } from "@angular/forms";
 import { DataService } from "src/app/shared/services/data.service";
 import { VehicleData } from "src/app/shared/models/vehicledata";
 import { MapComponent } from "src/app/shared/components/map/map.component";
+import { GPS } from "src/app/shared/models/gps";
 
 @Component({
   selector: "app-data",
@@ -28,6 +29,7 @@ export class DataComponent implements OnInit {
   vehicleData: any = {};
   showMap: any = {};
   speedModifier: any = {};
+  index: any = {};
   speedModifierEnum = {
     slow: 0.5,
     realtime: 1,
@@ -63,19 +65,22 @@ export class DataComponent implements OnInit {
     const loop = i => {
       if (!this.showMap[data[0].deviceId]) return;
       if (i === data.length - 1) return;
-      const currentTimestamp = new Date(data[i].timestamp);
-      const nextTimestamp = new Date(data[i + 1].timestamp);
+      const row = data[i];
+      const nextRow = data[i + 1];
+      const currentTimestamp = new Date(row.timestamp);
+      const nextTimestamp = new Date(nextRow.timestamp);
       const diffInMS =
         (nextTimestamp.getTime() - currentTimestamp.getTime()) /
-        this.speedModifierEnum[this.speedModifier[data[i].deviceId]];
+        this.speedModifierEnum[this.speedModifier[row.deviceId]];
       const map = this.maps.first;
 
       if (map) {
-        this.updateMap(map, data[i], i);
+        this.updateMap(map, row);
       }
 
+      this.index[row.deviceId] = this.index[row.deviceId] + 1;
       setTimeout(() => {
-        loop(i + 1);
+        loop(this.index[row.deviceId]);
       }, diffInMS);
     };
     loop(0);
@@ -84,10 +89,17 @@ export class DataComponent implements OnInit {
   stopReplay(data: Array<VehicleData>) {
     if (data.length > 0) {
       this.showMap[data[0].deviceId] = false;
+      this.index[data[0].deviceId] = 0;
     }
   }
 
-  private updateMap(map: MapComponent, dataRow: VehicleData, index: number) {
+  createMapUrl(gps: GPS): string {
+    return `https://www.openstreetmap.org/?mlat=${gps.lat}&mlon=${
+      gps.lon
+    }#map=18/${gps.lat}/${gps.lon}&layers=N`;
+  }
+
+  private updateMap(map: MapComponent, dataRow: VehicleData) {
     map.updateMap(dataRow.gps);
     const velocityElem = document.getElementById(
       `${dataRow.deviceId}-velocity`
@@ -95,12 +107,8 @@ export class DataComponent implements OnInit {
     const speedLimitElem = document.getElementById(
       `${dataRow.deviceId}-speedLimit`
     );
-    const recordElem = document.getElementById(
-      `${dataRow.deviceId}-recordIndex`
-    );
     velocityElem.innerText = " " + dataRow.velocity + " ";
     speedLimitElem.innerText = " " + dataRow.speedLimit + " ";
-    recordElem.innerText = " " + index + " ";
 
     if (dataRow.velocity > dataRow.speedLimit) {
       velocityElem.classList.add("speeding");
@@ -118,6 +126,7 @@ export class DataComponent implements OnInit {
           (results[curr.deviceId] = results[curr.deviceId] || []).push(curr);
           this.showMap[curr.deviceId] = false;
           this.speedModifier[curr.deviceId] = "realtime";
+          this.index[curr.deviceId] = 0;
           return results;
         }, {});
       });

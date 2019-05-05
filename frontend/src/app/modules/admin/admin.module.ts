@@ -4,6 +4,7 @@ import { MatExpansionModule } from "@angular/material/expansion";
 import { MatTableModule } from "@angular/material/table";
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { MatCardModule } from "@angular/material/card";
+import { MatSliderModule, MatSlider } from "@angular/material/slider";
 import { AdminRoutingModule } from "./admin-routing.module";
 import { DashboardComponent } from "./pages/dashboard/dashboard.component";
 import { UsersComponent } from "./pages/users/users.component";
@@ -19,6 +20,7 @@ import { FormsModule } from "@angular/forms";
     MatTableModule,
     MatPaginatorModule,
     MatCardModule,
+    MatSliderModule,
     SharedModule,
     FormsModule
   ],
