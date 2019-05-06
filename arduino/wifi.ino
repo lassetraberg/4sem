@@ -9,7 +9,7 @@ void setupWifi() {
   Serial.println(ssid);
 
   // try to connect until successful
-  while(WiFi.begin(ssid) != WL_CONNECTED) {
+  while(WiFi.begin(ssid, pass) != WL_CONNECTED) {
     Serial.println(".");
     delay(5000);
   }

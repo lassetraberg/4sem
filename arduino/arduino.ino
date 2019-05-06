@@ -145,6 +145,7 @@ boolean alarmBlink = false;
 static void blinkLED() {
   if(speedAlarm) {
     alarmBlink = !alarmBlink;
+    sendMessage("ALARM");
     
     if(alarmBlink) {
       toggleRedLED(150);
@@ -182,10 +183,9 @@ void loop() {
     // save the last time a message was sent
     previousMillis = currentMillis;
     
-//    sendGPS(); 
-//    sendVelocity();
-//    sendAcceleration();
-    sendMessage("Hallo World!");
+    sendGPS(); 
+    sendVelocity();
+    sendAcceleration();
 
     blinkLED();
     smartDelay(1000);
