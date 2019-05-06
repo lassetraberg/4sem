@@ -17,8 +17,8 @@ void reconnect(PubSubClient* mqttClient) {
     
     Serial.println(clientId);
    
-//    if(mqttClient -> connect(clientId.c_str(), "sdugrp4", "password")) {
-    if(mqttClient -> connect(clientId.c_str())) {
+    if(mqttClient -> connect(clientId.c_str(), "sdugrp4", "password")) {
+//    if(mqttClient -> connect(clientId.c_str())) {
       Serial.println(mqttTopic + "alarms/#");
       mqttClient -> subscribe((mqttTopic + "alarms/#").c_str());
       

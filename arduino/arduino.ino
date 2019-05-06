@@ -22,7 +22,7 @@
 const String id = "cc9d7c9b-fb0f-40d7-bd83-ba4d4e97e48b";
 const String mqttTopic = "/vehicle/" + id + "/";
 
-const char broker[] = "test.mosquitto.org";
+const char broker[] = "192.168.43.40"; // test.mosquitto.org
 int        port     = 1883;
 
 const long interval = 2000;
@@ -182,10 +182,10 @@ void loop() {
     // save the last time a message was sent
     previousMillis = currentMillis;
     
-    sendGPS();
-    sendVelocity();
+//    sendGPS(); 
+//    sendVelocity();
+//    sendAcceleration();
     sendMessage("Hallo World!");
-    sendAcceleration();
 
     blinkLED();
     smartDelay(1000);
