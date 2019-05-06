@@ -1,0 +1,19 @@
+<h2>Admin Dashboard</h2>
+
+<div class="pages">
+  <mat-card *ngFor="let page of pages">
+    <mat-card-header>
+      {{ page.title }}
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        {{ page.text }}
+      </p>
+    </mat-card-content>
+    <mat-card-actions>
+      <button type="button" routerLink="{{ page.path }}">
+        Open
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

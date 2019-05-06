@@ -50,7 +50,16 @@ public class GPSSensor extends AbstractDevice {
     }
 
     private String toJson(double[] gpsLatLon) {
-        return String.format("{ \"lat\": %f, \"lon\": %f }", gpsLatLon[0], gpsLatLon[1]);
+        String json = "{\n" +
+                "  \"satellites\": 1,\n" +
+                "  \"date\": \"24/04/2019\",\n" +
+                "  \"time\": \"14:22:00\",\n" +
+                "  \"coordinates\": {\n" +
+                "    \"lat\": %f,\n" +
+                "    \"lon\": %f\n" +
+                "  }\n" +
+                "}";
+        return String.format(json, gpsLatLon[0], gpsLatLon[1]);
     }
 
     private double[] generateRandomGpsLatLon() {

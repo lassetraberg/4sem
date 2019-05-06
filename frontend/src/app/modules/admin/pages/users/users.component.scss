@@ -1,0 +1,13 @@
+.users-table {
+  table {
+    width: 100%;
+  }
+}
+.buttons {
+  display: flex;
+  flex-direction: row;
+  .btn {
+    margin: 1em;
+    max-width: 150px;
+  }
+}

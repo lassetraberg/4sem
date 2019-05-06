@@ -19,6 +19,7 @@ public class Account {
     private int loginAttempts;
     private Instant lastLoginAttempt;
     private Role role;
+    private Instant tokenExpiresAt;
 
     public Account(Long id, String username, String password, Instant created, Instant lastLogin, int loginAttempts, Instant lastLoginAttempt, Role role) {
         this.id = id;
@@ -106,5 +107,13 @@ public class Account {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public Instant getTokenExpiresAt() {
+        return tokenExpiresAt;
+    }
+
+    public void setTokenExpiresAt(Instant tokenExpiresAt) {
+        this.tokenExpiresAt = tokenExpiresAt;
     }
 }

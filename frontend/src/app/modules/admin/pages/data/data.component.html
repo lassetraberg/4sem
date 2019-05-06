@@ -1,0 +1,117 @@
+<h2>Vehicle Data</h2>
+<div class="buttons">
+  <button class="btn" type="button" routerLink="/admin">
+    <i class="material-icons">
+      arrow_back
+    </i>
+  </button>
+  <button class="btn" type="button" (click)="getVehicleData()">
+    <i class="material-icons">
+      refresh
+    </i>
+  </button>
+</div>
+<ng-template #noVehicleData>There is no vehicle data yet.</ng-template>
+<mat-accordion *ngIf="hasVehicleData(); else noVehicleData">
+  <mat-expansion-panel
+    *ngFor="let data of vehicleData | keyvalue"
+    expanded="false"
+    class="scrolling-panel"
+    hideToggle="true"
+    (afterCollapse)="stopReplay(data.value)"
+  >
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        {{ data.key }}
+      </mat-panel-title>
+      <mat-panel-description>
+        {{ data.value.length }} records
+      </mat-panel-description>
+
+      <ng-template matExpansionPanelContent>
+        <div class="actions buttons">
+          <button class="btn" (click)="replayData(data.value)">Replay</button>
+          <button class="btn" (click)="stopReplay(data.value)">Stop</button>
+        </div>
+        <div class="data-container">
+          <div class="table">
+            <table mat-table [dataSource]="data.value">
+              <ng-container matColumnDef="timestamp">
+                <th mat-header-cell *matHeaderCellDef>Timestamp</th>
+                <td mat-cell *matCellDef="let record">
+                  {{ formatDate(record.timestamp) }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="gps">
+                <th mat-header-cell *matHeaderCellDef>GPS</th>
+                <td mat-cell *matCellDef="let record">
+                  <a href="{{ createMapUrl(record.gps) }}">
+                    {{ record.gps.lat }}, <br />
+                    {{ record.gps.lon }}
+                  </a>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="velocity">
+                <th mat-header-cell *matHeaderCellDef>Velocity</th>
+                <td mat-cell *matCellDef="let record">{{ record.velocity }}</td>
+              </ng-container>
+              <ng-container matColumnDef="speedLimit">
+                <th mat-header-cell *matHeaderCellDef>Speed limit</th>
+                <td mat-cell *matCellDef="let record">
+                  {{ record.speedLimit == 32767 ? "n/a" : record.speedLimit }}
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="acceleration">
+                <th mat-header-cell *matHeaderCellDef>Acceleration</th>
+                <td mat-cell *matCellDef="let record">
+                  {{ record.acceleration }}
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
+            </table>
+          </div>
+          <div class="replay" *ngIf="showMap[data.key]">
+            <div>
+              Speed:
+              <select [(ngModel)]="speedModifier[data.key]">
+                <option
+                  [value]="option"
+                  [selected]="speedModifier[data.key] === option"
+                  *ngFor="let option of speedModifierEnumArr"
+                >
+                  {{ option | titlecase }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <mat-slider
+                min="0"
+                [max]="data.value.length"
+                [(ngModel)]="index[data.key]"
+                step="1"
+              ></mat-slider>
+            </div>
+            <div class="vehicleInfo">
+              <div class="velocity">
+                <span>Velocity:</span>
+                <span id="{{ data.key }}-velocity"></span>
+                <span>KM/H</span>
+              </div>
+              <div class="speedLimit">
+                <span>Speed limit:</span>
+                <span id="{{ data.key }}-speedLimit"></span>
+                <span>KM/H</span>
+              </div>
+            </div>
+            <app-map
+              [ngClass]="connected ? 'active' : 'inactive'"
+              id="{{ data.key }}-map_container"
+              #map
+            ></app-map>
+          </div>
+        </div>
+      </ng-template>
+    </mat-expansion-panel-header>
+  </mat-expansion-panel>
+</mat-accordion>

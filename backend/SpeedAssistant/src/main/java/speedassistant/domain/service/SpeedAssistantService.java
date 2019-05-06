@@ -9,6 +9,7 @@ import commonvehicle.domain.model.vehicledata.Acceleration;
 import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 import commonvehicle.domain.model.vehicledata.Vehicle;
 import commonvehicle.domain.model.vehicledata.Velocity;
+import speedassistant.domain.dto.MqttGpsDto;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,31 +39,42 @@ public class SpeedAssistantService implements ISpeedAssistantService {
 
     @Override
     public Short getLatestVelocity(UUID deviceId) {
-        return latestValues.get(deviceId).getVelocity();
+        Short latestVelocity = latestValues.get(deviceId).getVelocity();
+        return latestVelocity != null ? latestVelocity : Short.MIN_VALUE;
+
     }
 
     @Override
     public double getLatestAcceleration(UUID deviceId) {
-        return latestValues.get(deviceId).getAcceleration();
+        Double latestAccel = latestValues.get(deviceId).getAcceleration();
+       return latestAccel != null ? latestAccel : Double.MIN_VALUE;
     }
 
     @Override
     public short getLatestSpeedLimit(UUID deviceId) {
-        return latestValues.get(deviceId).getSpeedLimit();
+        Short speedLimit = latestValues.get(deviceId).getSpeedLimit();
+        return speedLimit != null ? speedLimit : Short.MAX_VALUE;
     }
 
     @Override
     public GpsCoordinates getLatestGpsCoordinate(UUID deviceId) {
-        return latestValues.get(deviceId).getGpsCoordinates();
+        Vehicle v = latestValues.get(deviceId);
+        if (v != null) {
+            return v.getGpsCoordinates();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public Vehicle getLatestVehicleData(UUID deviceId) {
         Vehicle vehicle = latestValues.get(deviceId);
-        vehicle.setDeviceId(deviceId);
+        if (vehicle != null) {
+            vehicle.setDeviceId(deviceId);
+        }
         // Only return when all values are not null
 
-        if (vehicle.getSpeedLimit() != null && vehicle.getVelocity() != null
+        if (vehicle != null && vehicle.getSpeedLimit() != null && vehicle.getVelocity() != null
                 && vehicle.getGpsCoordinates() != null && vehicle.getAcceleration() != null) {
             return vehicle;
         } else {
@@ -81,8 +93,8 @@ public class SpeedAssistantService implements ISpeedAssistantService {
     }
 
     @Override
-    public void publishSpeedingAlarm(UUID deviceId) {
-        mqttService.publish(VariableMqttTopic.VEHICLE_ALARM_SPEEDING, deviceId, "1");
+    public void publishSpeedingAlarm(UUID deviceId, boolean isSpeeding) {
+        mqttService.publish(VariableMqttTopic.VEHICLE_ALARM_SPEEDING, deviceId, isSpeeding ? "1" : "0");
     }
 
     private void subscribe(StaticMqttTopic... definedTopics) {
@@ -102,8 +114,10 @@ public class SpeedAssistantService implements ISpeedAssistantService {
         UUID deviceId = StringUtils.getUUIDFromTopic(receivedTopic);
         switch (definedTopic) {
             case ALL_VEHICLES_GPS:
-                GpsCoordinates gps = mapper.readValue(message, GpsCoordinates.class);
-                updateGpsAndSpeedLimit(deviceId, gps);
+                MqttGpsDto gps = mapper.readValue(message, MqttGpsDto.class);
+                if (gps.getSatellites() != 0) {
+                    updateGpsAndSpeedLimit(deviceId, gps.getCoordinates());
+                }
                 break;
             case ALL_VEHICLES_VELOCITY:
                 Velocity velocity = mapper.readValue(message, Velocity.class);

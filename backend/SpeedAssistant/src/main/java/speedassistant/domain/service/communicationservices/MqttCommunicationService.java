@@ -18,7 +18,9 @@ public class MqttCommunicationService implements ISpeedAssistantCommunication {
 
     public void onVelocityMessage(UUID deviceId) {
         if (speedAssistantService.isSpeeding(deviceId)) {
-            speedAssistantService.publishSpeedingAlarm(deviceId);
+            speedAssistantService.publishSpeedingAlarm(deviceId, true);
+        } else {
+            speedAssistantService.publishSpeedingAlarm(deviceId, false);
         }
     }
 

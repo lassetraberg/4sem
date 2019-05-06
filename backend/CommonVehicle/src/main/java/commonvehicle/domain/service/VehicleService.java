@@ -1,6 +1,7 @@
 package commonvehicle.domain.service;
 
 
+import common.web.exceptions.ValidationException;
 import commonAuthentication.domain.model.Account;
 import commonAuthentication.domain.repository.IAccountRepository;
 import commonvehicle.domain.model.Device;
@@ -50,24 +51,39 @@ public class VehicleService implements IVehicleService {
             throw new NotFoundResponse("Vehicle not found");
         }
 
-        Instant from = null;
-        Instant to = null;
-        try {
-            if (fromDateTime != null && toDateTime != null) {
-                from = dateTimeFormatter.parse(fromDateTime, Instant::from);
-                to = dateTimeFormatter.parse(toDateTime, Instant::from);
-            }
-        } catch (DateTimeParseException ex) {
-            ex.printStackTrace();
-            from = null;
-            to = null;
-        }
-
+        Instant from = tryParseInstant(fromDateTime);
+        Instant to = tryParseInstant(toDateTime);
         if (from == null || to == null) {
             return vehicleRepository.getData(deviceId.toString());
         } else {
             return vehicleRepository.getData(deviceId.toString(), from, to);
         }
+    }
+
+    @Override
+    public List<Vehicle> getAllData(String fromDateTime, String toDateTime) {
+        Instant from = tryParseInstant(fromDateTime);
+        Instant to = tryParseInstant(toDateTime);
+        if (from == null || to == null) {
+            return vehicleRepository.getAllData();
+        } else {
+            return vehicleRepository.getAllData(from, to);
+        }
+
+    }
+
+    private Instant tryParseInstant(String instantString) {
+        Instant instant = null;
+        try {
+            if (instantString != null ) {
+                instant = dateTimeFormatter.parse(instantString, Instant::from);
+            }
+        } catch (DateTimeParseException ex) {
+            instant = null;
+            throw new ValidationException(instantString + " is not a valid time string");
+        }
+
+        return instant;
     }
 
     @Override

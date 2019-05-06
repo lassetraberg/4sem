@@ -13,10 +13,10 @@ public class SpeedingAlarmActuator extends AbstractDevice {
     @Override
     public void call(State state) {
         client.subscribe(VariableMqttTopic.VEHICLE_ALARM_SPEEDING, state.getDeviceId(), (mqttTopic, msg) -> {
-            if (msg.equalsIgnoreCase("true")) {
+            if (msg.equalsIgnoreCase("1")) {
                 state.setShouldBrake(true);
                 System.out.println("You are speeding!");
-            } else if (msg.equalsIgnoreCase("false")) {
+            } else if (msg.equalsIgnoreCase("0")) {
                 state.setShouldBrake(false);
                 System.out.println("You are not speeding");
             }

@@ -2,6 +2,7 @@ package vehicle.web;
 
 import common.domain.model.Response;
 import common.util.JavalinUtils;
+import commonAuthentication.config.authConfig.Role;
 import commonvehicle.domain.model.vehicledata.Vehicle;
 import commonvehicle.domain.service.IVehicleService;
 import io.javalin.Context;
@@ -93,4 +94,7 @@ public class VehicleController {
         ctx.result(licensePlateService.getData(licensePlate));
     }
 
+    public void getAllVehiclesData(Context ctx) {
+        ctx.json( vehicleService.getAllData(null, null));
+    }
 }

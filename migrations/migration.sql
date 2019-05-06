@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS connects CASCADE;
 DROP TABLE IF EXISTS device CASCADE;
 DROP TABLE IF EXISTS vehicle CASCADE;
 
+
 CREATE TABLE account (
     account_id BIGSERIAL PRIMARY KEY,
     username TEXT NOT NULL UNIQUE,
@@ -36,3 +37,15 @@ CREATE TABLE connects (
     PRIMARY KEY(account_id, device_id)
 );
 
+-- Triggers
+CREATE OR REPLACE FUNCTION update_last_active() RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE device SET last_active = NOW() WHERE device_id = NEW.device_id;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+CREATE TRIGGER update_last_active_trigger
+    AFTER INSERT ON vehicle
+    FOR EACH ROW
+        EXECUTE PROCEDURE update_last_active();
