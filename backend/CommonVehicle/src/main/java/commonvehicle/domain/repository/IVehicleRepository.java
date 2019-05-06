@@ -23,4 +23,7 @@ public interface IVehicleRepository {
 
     boolean registerDevice(String deviceId, Long accountId, String licensePlate);
 
+    List<Vehicle> getAllData();
+
+    List<Vehicle> getAllData(Instant from, Instant to);
 }

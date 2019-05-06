@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from '../shared/guards/auth.guard';
+import { AdminAuthGuard } from '../shared/guards/adminAuth.guard';
 const routes: Routes = [
     {
       path: '',
@@ -19,6 +20,11 @@ const routes: Routes = [
       path: 'user',
       loadChildren: "../modules/user/user.module#UserModule",
       canActivate: [AuthGuard]
+    },
+    {
+      path: 'admin',
+      loadChildren: "../modules/admin/admin.module#AdminModule",
+      canActivate: [AdminAuthGuard]
     }
 ];
 

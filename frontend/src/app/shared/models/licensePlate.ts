@@ -1,0 +1,30 @@
+export interface LicensePlate {
+    registration_number: string;
+    status: string;
+    status_date: Date;
+    type: string;
+    use: string;
+    first_registration: string;
+    vin: string;
+    own_weight: string;
+    total_weight: string;
+    axels: string;
+    pulling_axels: string;
+    seats: string;
+    coupling: boolean;
+    doors: string;
+    make: string;
+    model: string;
+    variant: string;
+    model_type: string;
+    model_year: string;
+    color: string;
+    chassis_type: string;
+    engine_cylinders: string;
+    engine_volume: string;
+    engine_power: string;
+    fuel_type: string;
+    registration_zipcode: string;
+    vehicle_id: string;
+    batch_id: string;
+}

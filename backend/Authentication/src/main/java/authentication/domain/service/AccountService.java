@@ -72,6 +72,7 @@ public class AccountService implements IAccountService {
         Instant lastLogin = accountRepository.updateLastLogin(existingAccount);
         existingAccount.setLastLogin(lastLogin);
         existingAccount.setToken(generateJwtToken(existingAccount));
+        existingAccount.setTokenExpiresAt(jwtProvider.getTokenExpirationDate());
         return existingAccount;
     }
 
