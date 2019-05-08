@@ -4,10 +4,10 @@
   <div class="vehicles group">
     <span class="group_label">Vehicles</span>
 
-    <div class="my_vehicle">
-      <div class="vehicle" id="{{myVehicle.licensePlate}}">
-        <img class="icon" src="{{vehiclesPath}}/{{myVehicle.type}}.svg">
-        <div class="details">
+    <div class="my_vehicle" >
+      <div class="vehicle" id="{{myVehicle && myVehicle.licensePlate}}">
+        <img class="icon" src="{{vehiclesPath}}/{{myVehicle && myVehicle.type || 'NOTFOUND'}}.svg">
+        <div class="details" *ngIf="myVehicle">
           <span class="name">{{myVehicle.brand}} {{myVehicle.model}}</span>
           <span class="licensePlate">{{myVehicle.licensePlate}}</span>
         </div>
@@ -26,14 +26,14 @@
           </div>
           <div class="actions">
             <input hidden id="radio_{{vehicle.licensePlate}}" type="radio" name="vehicle" value="{{vehicle.licensePlate}}">
-            <i (click)="deleteVehicle(vehicle.licensePlate)" class="material-icons delete"> delete </i>
+            <i (click)="deleteVehicle(vehicle.deviceId)" class="material-icons delete"> delete </i>
             <span class="checkmark"></span>
           </div>
         </div>
       </form>
       <div class="button_group">
         <button routerLink="add-vehicle"><i class="material-icons"> add </i>Add New Vehicle</button>
-        <button [disabled]="!vehicleIsSelected" (click)="setVehicle()">Set As My Vehicle</button>
+        <button [disabled]="!vehicleIsSelected || vehicles.length === 0" (click)="setVehicle()">Set As My Vehicle</button>
       </div>
     </div>
 

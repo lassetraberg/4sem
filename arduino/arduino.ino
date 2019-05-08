@@ -7,45 +7,22 @@
    - pubsubclient       by knolleary
    - ArduinoJson        by Benoit Jackson
    - TinyGPS++          by mikalhart (Github)
+   - OBD2UART           by stanleyhuangyc (Github)
 
-   All three libraries are available on Arduino Manager.
+  If not specified, the library can be found on the Arduino Library Manager.
 */
-
-/*
-  ArduinoMqttClient - WiFi Simple Sender
-
-  This example connects to a MQTT broker and publishes a message to
-  a topic once a second.
-
-  The circuit:
-  - Arduino MKR 1000, MKR 1010 or Uno WiFi Rev.2 board
-
-  This example code is in the public domain.
-*/
-
-const String id = "cc9d7c9b-fb0f-40d7-bd83-ba4d4e97e48b";
 
 #include <ArduinoJson.h>
-#include <PubSubClient.h>
-#include <WiFi101.h> // for MKR1000 change to: #include <WiFi101.h>
 #include <TinyGPS++.h>
 #include <SoftwareSerial.h>
+#include <PubSubClient.h>
+#include <WiFi101.h> // for MKR1000 change to: #include <WiFi101.h>
+// #include <OBD2UART.h>
 
-#include "arduino_secrets.h"
-///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = SECRET_SSID;        // your network SSID (name)
-char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
+const String id = "cc9d7c9b-fb0f-40d7-bd83-ba4d4e97e48b";
+const String mqttTopic = "/vehicle/" + id + "/";
 
-// To connect with SSL/TLS:
-// 1) Change WiFiClient to WiFiSSLClient.
-// 2) Change port value from 1883 to 8883.
-// 3) Change broker value to a server with a known SSL/TLS root certificate
-//    flashed in the WiFi module.
-
-// Callback function header
-void callback(char* topic, byte* payload, unsigned int length);
-
-const char broker[] = "192.168.43.40";
+const char broker[] = "192.168.43.40"; // test.mosquitto.org
 int        port     = 1883;
 
 const long interval = 2000;
@@ -53,6 +30,13 @@ unsigned long previousMillis = 0;
 
 static const int RXPin = 11, TXPin = 10;
 static const uint32_t GPSBaud = 9600;
+
+static const int redPin = A15;
+static const int greenPin = A14;
+
+static boolean speedAlarm = false;
+
+// COBD obd;
 
 // The TinyGPS++ object
 TinyGPSPlus gps;
@@ -63,71 +47,12 @@ SoftwareSerial ss(RXPin, TXPin);
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
-void setupWifi() {
-  Serial.print("Attemping to connect to SSID: ");
-  Serial.println(ssid);
-
-  // try to connect until successful
-  while(WiFi.begin(ssid) != WL_CONNECTED) {
-    Serial.println(".");
-    delay(5000);
-  }
-
-  Serial.println("You are connected to the network!");
-  Serial.println("");
-
-  delay(5000);
-}
-
-void setupMQTT() {
-  Serial.print("Attempting to connect to the MQTT broker: ");
-  Serial.println(broker);
-
-  mqttClient.setServer(broker, port);
-  mqttClient.setCallback(callback);
-}
-
-void reconnect() {  
-  while(!mqttClient.connected()) {
-    String clientId = id;
-    clientId += ":";
-    clientId += String(random(0xffff), HEX);
-
-    Serial.println(WiFi.status() == WL_CONNECTED);
-    Serial.println(clientId);
-   
-    if(mqttClient.connect(clientId.c_str(), "sdugrp4", "password")) {
-//       mqttClient.subscribe("/vehicle/" + id + "/alarms/speeding");
-//      mqttClient.subscribe("/test");
-      
-      Serial.print("Connection Established to: ");
-      Serial.println(broker);
-      Serial.println("");
-    } else {
-      Serial.println(".");
-      delay(5000);
-    }
-  }
-}
-
-void sendMQTT(String topic, String json) {
-  topic = "/" + topic;
+void sendGPS() {
+  if(gps.location.lat() == 0 && gps.location.lng() == 0) return;
   
-  char charTopic[topic.length() + 1];
-  topic.toCharArray(charTopic, topic.length() + 1);
-
-  Serial.println(charTopic);
-  
-  mqttClient.beginPublish(charTopic, json.length(), true);
-  mqttClient.print(json);
-  mqttClient.endPublish();
-}
-
-void sendGPS() { 
   StaticJsonDocument<500> doc;
-
-  doc["id"] = id;
-  doc["satelites"] = gps.satellites.value();
+  
+  doc["satellites"] = gps.satellites.value();
 
   // used for time and date
   char sz[32]; 
@@ -146,64 +71,55 @@ void sendGPS() {
   Serial.println(gps.location.lat(), 8);
   Serial.println(gps.location.lng(), 8);
   
-  sendMQTT(id + "/gps", json);
+  sendMQTT(&mqttClient, "gps", json);
 }
+
+float acceleration = 0;
+float velocity;
 
 void sendVelocity() { 
   StaticJsonDocument<500> doc;
 
-  doc["id"] = id;
-  doc["velocity"] = 142;
+  velocity += acceleration;
+
+  if(velocity < 0) velocity = 0;
+
+  doc["velocity"] = velocity;
  
   String json;
   serializeJsonPretty(doc, json);
 
-  sendMQTT(id + "/velocity", json);
+  sendMQTT(&mqttClient, "velocity", json);
 }
 
-void sendMessage() { 
+void sendMessage(char* text) { 
   StaticJsonDocument<500> doc;
 
-  doc["id"] = id;
-  doc["message"] = "OLE HAR EN KO INDE I SIT HUS!";
+  doc["message"] = text;
  
   String json;
   serializeJsonPretty(doc, json);
 
-  sendMQTT(id + "/message", json);
+  sendMQTT(&mqttClient, "message", json);
 }
 
-// Callback function
-void callback(char* topic, byte* payload, unsigned int length) {
-  // In order to republish this payload, a copy must be made
-  // as the orignal payload buffer will be overwritten whilst
-  // constructing the PUBLISH packet.
-
-  // Allocate the correct amount of memory for the payload copy
-  //byte* p = (byte*)malloc(length);
-  // Copy the payload to the new buffer
-  //memcpy(p,payload,length);
-  //client.publish("outTopic", p, length);
-  // Free the memory
-  // free(p);
-
-//   Allocate the correct amount of memory for the payload copy
-  byte* p = (byte*)malloc(length);
-//   Copy the payload to the new buffer
-  memcpy(p,payload,length);
-  mqttClient.publish("/testo", p, length);
-
-  String s = String((char*) p);
-
-  Serial.println(topic);
-  Serial.println(s);
-
-  //   Free the memory
-   free(p);
+void sendAcceleration() { 
+  StaticJsonDocument<500> doc;
   
-  //Serial.println("Callback on " + topic);
-  //Serial.println(payload);
-  //Serial.println();
+  if(acceleration > 3) {
+    acceleration += random(-1000, 0) / 1000.0;
+  } else if(acceleration < -3) {
+    acceleration += random(0, 1000) / 1000.0;
+  } else {
+    acceleration += random(-1000, 1000) / 1000.0;
+  }
+
+  doc["acceleration"] = acceleration;
+ 
+  String json;
+  serializeJsonPretty(doc, json);
+
+  sendMQTT(&mqttClient, "acceleration", json);
 }
 
 // This custom version of delay() ensures that the gps object
@@ -216,19 +132,49 @@ static void smartDelay(unsigned long ms) {
   } while (millis() - start < ms);
 }
 
+static void toggleGreenLED(unsigned char brightness) {
+  analogWrite(greenPin, brightness);
+}
+
+static void toggleRedLED(unsigned char brightness) {
+  analogWrite(redPin, brightness);
+}
+
+boolean alarmBlink = false;
+
+static void blinkLED() {
+  if(speedAlarm) {
+    alarmBlink = !alarmBlink;
+    sendMessage("ALARM");
+    
+    if(alarmBlink) {
+      toggleRedLED(150);
+      toggleGreenLED(150);
+    } else {
+      toggleRedLED(0);
+      toggleGreenLED(0);
+    }
+  }
+}
+
+/*
+ * 
+ * SETUP AND LOOP
+ * 
+ */
+
 void setup() {
   // Serial Monitor
-//  Serial.begin(9600);
   Serial.begin(9600);
   ss.begin(GPSBaud);
   
   setupWifi();
-  setupMQTT();
-  reconnect();
+  setupMQTT(&mqttClient);
+  reconnect(&mqttClient);
 }
 
-void loop() {
-  reconnect();
+void loop() {  
+  reconnect(&mqttClient);
   mqttClient.loop();
   
   unsigned long currentMillis = millis();
@@ -236,11 +182,12 @@ void loop() {
   if (currentMillis - previousMillis >= interval) {
     // save the last time a message was sent
     previousMillis = currentMillis;
-
-    sendGPS();
+    
+    sendGPS(); 
     sendVelocity();
-    sendMessage();
+    sendAcceleration();
 
+    blinkLED();
     smartDelay(1000);
   }
 }

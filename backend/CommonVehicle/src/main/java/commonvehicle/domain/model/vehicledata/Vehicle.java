@@ -1,5 +1,7 @@
 package commonvehicle.domain.model.vehicledata;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.Instant;
 import java.util.UUID;
 
@@ -9,6 +11,8 @@ public class Vehicle {
     private Instant timestamp;
     private Double acceleration;
     private Short speedLimit;
+
+    @JsonProperty("gps")
     private GpsCoordinates gpsCoordinates;
 
     public Vehicle(UUID deviceId, Short velocity, Instant timestamp, Double acceleration, Short speedLimit, GpsCoordinates gpsCoordinates) {

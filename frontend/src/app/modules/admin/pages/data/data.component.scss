@@ -1,0 +1,36 @@
+.buttons {
+  display: flex;
+  flex-direction: row;
+  .btn {
+    margin: 1em;
+    max-width: 150px;
+  }
+}
+
+.scrolling-panel {
+  overflow-y: scroll !important;
+  max-height: 600px;
+}
+
+.data-container {
+  display: flex;
+  flex-direction: row;
+
+  .table,
+  table {
+    width: 100%;
+  }
+
+  .replay {
+    max-height: 500px;
+    width: 700px;
+
+    mat-slider {
+      width: 100%;
+    }
+
+    .speeding {
+      color: red;
+    }
+  }
+}

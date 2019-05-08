@@ -4,6 +4,7 @@ import { UserRoutingModule } from './user-routing.module';
 import { UserComponent } from './pages/user/user.component';
 import { AuthService } from 'src/app/shared/services/auth.service';
 import { AddVehicleComponent } from './pages/add-vehicle/add-vehicle.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 @NgModule({
     declarations: [
         UserComponent,
@@ -11,7 +12,9 @@ import { AddVehicleComponent } from './pages/add-vehicle/add-vehicle.component';
     ],
     imports: [ 
         CommonModule,
-        UserRoutingModule
+        UserRoutingModule,
+        ReactiveFormsModule,
+        FormsModule
     ],
     providers: [AuthService]
   })

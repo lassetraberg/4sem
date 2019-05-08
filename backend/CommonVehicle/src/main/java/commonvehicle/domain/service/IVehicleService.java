@@ -14,6 +14,8 @@ public interface IVehicleService {
 
     List<Vehicle> getData(UUID deviceId, String username, String fromDateTime, String toDateTime);
 
+    List<Vehicle> getAllData(String fromDateTime, String toDateTime);
+
     boolean userOwnsVehicle(UUID deviceId, String username);
 
     boolean registerDevice(UUID deviceId, String username, String licensePlate);
