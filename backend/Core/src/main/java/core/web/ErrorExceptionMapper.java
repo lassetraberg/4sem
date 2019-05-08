@@ -44,7 +44,7 @@ public class ErrorExceptionMapper {
         });
 
         app.exception(NotFoundResponse.class, (e, ctx) -> {
-            log.error(String.format("NotFoundResponse occurred for req -> %s", e));
+            log.error(String.format("NotFoundResponse occurred for req -> %s (%s)", e, ctx.path()));
             String msg = !e.getMessage().isEmpty() ? e.getMessage() : "404 Not Found";
             ErrorResponse err = new ErrorResponse(Collections.singletonMap("body", Collections.singletonList(msg)));
             ctx.json(err).status(HttpStatus.NOT_FOUND_404);
