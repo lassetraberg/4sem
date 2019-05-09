@@ -110,7 +110,7 @@ public class SpeedAssistantService implements ISpeedAssistantService {
     }
 
     private void onMessage(String receivedTopic, String message, StaticMqttTopic definedTopic) throws IOException {
-        System.out.println(message);
+        //System.out.println(message);
         UUID deviceId = StringUtils.getUUIDFromTopic(receivedTopic);
         switch (definedTopic) {
             case ALL_VEHICLES_GPS:
