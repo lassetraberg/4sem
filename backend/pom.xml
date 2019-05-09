@@ -19,6 +19,9 @@
         <module>CommonVehicle</module>
     </modules>
 
+    <properties>
+        <maven.test.skip>true</maven.test.skip>
+    </properties>
 
     <build>
         <plugins>
