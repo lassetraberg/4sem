@@ -34,7 +34,7 @@ public class Account {
 
     @JsonProperty("locked")
     public boolean isLocked() {
-       return loginAttempts >= Integer.parseInt(Config.getInstance().getProperty("auth.maxLoginAttempts"));
+        return loginAttempts >= Integer.parseInt(Config.getInstance().getProperty("auth.maxLoginAttempts"));
     }
 
     public Long getId() {

@@ -25,6 +25,7 @@ public interface IAccountRepository {
 
     /**
      * Find an account, based on account id.
+     *
      * @param id account id
      * @return account belonging with that account id. Returns null of no account was found
      */
@@ -32,6 +33,7 @@ public interface IAccountRepository {
 
     /**
      * Updates the last time, the account was logged in,
+     *
      * @param account an account
      * @return The last logged in time
      */
@@ -39,6 +41,7 @@ public interface IAccountRepository {
 
     /**
      * Update the last login attempt value.
+     *
      * @param account an account
      * @return how many login attempts there are now
      */
@@ -46,6 +49,7 @@ public interface IAccountRepository {
 
     /**
      * Unlock an account
+     *
      * @param account an account
      * @return true if it was unlocked successfully
      */
@@ -53,6 +57,7 @@ public interface IAccountRepository {
 
     /**
      * Find all accounts in the database
+     *
      * @return list of accounts
      */
     List<Account> findAll();

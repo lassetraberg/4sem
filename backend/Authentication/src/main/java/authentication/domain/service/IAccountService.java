@@ -8,7 +8,7 @@ public interface IAccountService {
     /**
      * Create an account, returning the newly created account.
      *
-     * @param account an account
+     * @param account  an account
      * @param sourceIp the ip that made the creation request
      * @return the newly created account
      */
@@ -24,6 +24,7 @@ public interface IAccountService {
 
     /**
      * Unlock an account
+     *
      * @param accountId id of account
      * @return true if the account was unlocked successfully
      */
@@ -31,6 +32,7 @@ public interface IAccountService {
 
     /**
      * Get all accounts in the system
+     *
      * @return List of accounts
      */
     List<Account> getAllAccounts();

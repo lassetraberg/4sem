@@ -12,7 +12,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -27,6 +26,7 @@ public class GPSSensor extends AbstractDevice {
         SDU_Munkebjergvej_Motorvej_SDU("1.txt"), SDU_OdenseNord_SDU("2.txt"), SDU_Nyborg("3.txt"), Random(null);
 
         private String file;
+
         Route(String s) {
             this.file = s;
         }

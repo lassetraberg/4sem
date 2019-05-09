@@ -5,7 +5,6 @@ import commonvehicle.domain.model.Device;
 import commonvehicle.domain.model.vehicledata.Vehicle;
 import commonvehicle.domain.repository.IVehicleRepository;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 

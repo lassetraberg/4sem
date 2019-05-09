@@ -117,9 +117,14 @@ public class AccountRepository extends DatabaseConnection implements IAccountRep
         this.executeQuery(conn -> {
             PreparedStatement stmt = conn.prepareStatement(sql);
             switch (value.getClass().getSimpleName()) {
-                case "String": stmt.setString(1, (String) value); break;
-                case "Long": stmt.setLong(1, (Long) value); break;
-                default: throw new RuntimeException(String.format("%s is not a supported type of value", value.getClass().getSimpleName()));
+                case "String":
+                    stmt.setString(1, (String) value);
+                    break;
+                case "Long":
+                    stmt.setLong(1, (Long) value);
+                    break;
+                default:
+                    throw new RuntimeException(String.format("%s is not a supported type of value", value.getClass().getSimpleName()));
             }
 
             ResultSet result = stmt.executeQuery();
