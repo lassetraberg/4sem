@@ -28,26 +28,31 @@ public class SpeedLimitServiceTest {
 
     @Test
     public void getSpeedLimit_FastRequests_ShouldGetRateLimited() {
+        // Arrange
         GpsCoordinates limit60Coordinate = new GpsCoordinates(55.375049, 10.425339); // Niels Bohrs Alle, near Campusvej. Limit should be 60
-        short speedLimit60 = speedLimitService.getSpeedLimit(limit60Coordinate);
-
         GpsCoordinates limit110Coordinate = new GpsCoordinates(55.353179, 10.375056); // On motorway. Limit should be 110
+
+        // Act
+        short speedLimit60 = speedLimitService.getSpeedLimit(limit60Coordinate);
         short speedLimit110 = speedLimitService.getSpeedLimit(limit110Coordinate);
 
+        // Assert
         Assert.assertEquals(60, speedLimit60);
         Assert.assertEquals(60, speedLimit110); // Should be 60 also, because rate limiting returns the previous value, if requests happen too quickly
     }
 
     @Test
     public void getSpeedLimit_SlowRequests_NoRateLimit() throws InterruptedException {
+        // Arrange
         GpsCoordinates limit60Coordinate = new GpsCoordinates(55.375049, 10.425339); // Niels Bohrs Alle, near Campusvej. Limit should be 60
-        short speedLimit60 = speedLimitService.getSpeedLimit(limit60Coordinate);
-
-        TimeUnit.SECONDS.sleep(rateLimit+1);
-
         GpsCoordinates limit110Coordinate = new GpsCoordinates(55.353179, 10.375056); // On motorway. Limit should be 110
+
+        // Act
+        short speedLimit60 = speedLimitService.getSpeedLimit(limit60Coordinate);
+        TimeUnit.SECONDS.sleep(rateLimit+1);
         short speedLimit110 = speedLimitService.getSpeedLimit(limit110Coordinate);
 
+        // Assert
         Assert.assertEquals(60, speedLimit60);
         Assert.assertEquals(110, speedLimit110);
     }
