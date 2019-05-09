@@ -4,15 +4,10 @@ import common.data.database.DatabaseConnection;
 import commonvehicle.domain.model.Device;
 import commonvehicle.domain.model.vehicledata.GpsCoordinates;
 import commonvehicle.domain.model.vehicledata.Vehicle;
-import commonvehicle.domain.model.vehicledata.Velocity;
 import org.postgresql.util.PSQLException;
 
 import java.sql.*;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -85,7 +80,7 @@ public class VehicleRepository extends DatabaseConnection implements IVehicleRep
     @Override
     public List<Vehicle> getAllData(Instant from, Instant to) {
         String sql = "SELECT device_id, speed, timestamp, acceleration, speed_limit, latitude, longitude FROM vehicle WHERE timestamp BETWEEN ? AND ? ORDER BY timestamp";
-         List<Vehicle> vehicleDataList = new ArrayList<>();
+        List<Vehicle> vehicleDataList = new ArrayList<>();
         this.executeQuery(conn -> {
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setTimestamp(1, Timestamp.from(from));

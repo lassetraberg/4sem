@@ -9,9 +9,7 @@ import commonAuthentication.domain.repository.IAccountRepository;
 import io.javalin.NotFoundResponse;
 import io.javalin.UnauthorizedResponse;
 
-import java.net.Inet4Address;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -75,7 +75,7 @@ public class VehicleService implements IVehicleService {
     private Instant tryParseInstant(String instantString) {
         Instant instant = null;
         try {
-            if (instantString != null ) {
+            if (instantString != null) {
                 instant = dateTimeFormatter.parse(instantString, Instant::from);
             }
         } catch (DateTimeParseException ex) {

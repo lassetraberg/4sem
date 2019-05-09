@@ -19,7 +19,6 @@ public class SpeedLimitService implements ISpeedLimitService {
     private SpeedLimit lastSpeedLimit;
 
     /**
-     *
      * @param rateLimit How often should the service be allowed hit the external API? (rateLimit = 5: every 5 seconds)
      */
     public SpeedLimitService(int rateLimit) {

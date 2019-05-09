@@ -12,7 +12,7 @@ import java.util.Date;
 public class JwtProvider {
     private Algorithm algorithm = Algorithm.HMAC256("secret"); // TODO indsæt rigtig secret her :)
 
-    private long tokenDuration = 1*24*60*60*1000; // 24 hours
+    private long tokenDuration = 1 * 24 * 60 * 60 * 1000; // 24 hours
 
     public DecodedJWT decodedJWT(String token) {
         return JWT.require(algorithm).build().verify(token);

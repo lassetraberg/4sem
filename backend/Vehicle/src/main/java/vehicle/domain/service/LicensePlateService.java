@@ -10,7 +10,7 @@ import io.javalin.NotFoundResponse;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LicensePlateService implements ILicensePlateService{
+public class LicensePlateService implements ILicensePlateService {
     private Map<String, String> dataCache;
 
     public LicensePlateService() {
@@ -21,7 +21,7 @@ public class LicensePlateService implements ILicensePlateService{
     public String getData(String licensePlate) {
         String data = "";
 
-        if(dataCache.containsKey(licensePlate)) {
+        if (dataCache.containsKey(licensePlate)) {
             data = dataCache.get(licensePlate);
         } else {
 
@@ -30,7 +30,7 @@ public class LicensePlateService implements ILicensePlateService{
 
             try {
                 HttpResponse<String> httpResponse = getRequest.asString();
-                if(httpResponse.getStatus() == 404) {
+                if (httpResponse.getStatus() == 404) {
                     throw new NotFoundResponse(httpResponse.getStatusText());
                 }
 

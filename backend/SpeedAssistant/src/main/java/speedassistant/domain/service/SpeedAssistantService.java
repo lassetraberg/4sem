@@ -47,7 +47,7 @@ public class SpeedAssistantService implements ISpeedAssistantService {
     @Override
     public double getLatestAcceleration(UUID deviceId) {
         Double latestAccel = latestValues.get(deviceId).getAcceleration();
-       return latestAccel != null ? latestAccel : Double.MIN_VALUE;
+        return latestAccel != null ? latestAccel : Double.MIN_VALUE;
     }
 
     @Override
