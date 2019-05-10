@@ -50,6 +50,7 @@ export class UsersComponent implements OnInit {
       .toPromise()
       .then(users => {
         this.users = users;
+        this.users.sort((a, b) => a.id - b.id);
         this.setupDataSource();
       });
   }
