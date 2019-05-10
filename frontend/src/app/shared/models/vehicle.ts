@@ -1,7 +1,8 @@
 export interface Vehicle {
-    deviceId: string,
-    lastActive: string | null,
-    licensePlate: string,
-    brand: string;
-    model: string;   
+  deviceId: string;
+  lastActive: string | null;
+  licensePlate: string;
+  brand: string;
+  model: string;
+  type: string;
 }

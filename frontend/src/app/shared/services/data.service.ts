@@ -8,8 +8,8 @@ import { environment } from "src/environments/environment";
 import { User } from "../models/user";
 import { Observable } from "rxjs";
 import { VehicleData } from "../models/vehicledata";
-import { LicensePlate } from '../models/licensePlate';
-import { Vehicle } from '../models/vehicle';
+import { LicensePlate } from "../models/licensePlate";
+import { Vehicle } from "../models/vehicle";
 
 const httpOptions = {
   headers: new HttpHeaders({
@@ -23,11 +23,11 @@ export class DataService {
 
   public readonly types = ["mini", "sedan", "sport", "suv", "van"];
   public readonly vehicleTypeMapper = {
-    'Hatchback': this.types[1]
-  }
+    Hatchback: this.types[1]
+  };
 
   public registerVehicle(licensePlate: string, deviceId: string) {
-    const licensePlateFormatted = licensePlate.toUpperCase().replace(/\s/g, '')
+    const licensePlateFormatted = licensePlate.toUpperCase().replace(/\s/g, "");
     return this.http.post(
       `${environment.restapi}/vehicle`,
       { licensePlate: licensePlateFormatted, deviceId },
@@ -36,31 +36,36 @@ export class DataService {
   }
 
   public getVehicles(): Observable<Array<any>> {
-    return this.http.get<Array<any>>(`${environment.restapi}/vehicle/`, httpOptions);
+    return this.http.get<Array<any>>(
+      `${environment.restapi}/vehicle/`,
+      httpOptions
+    );
   }
 
   public deleteVehicle(deviceId: string) {
-    return this.http.delete(`${environment.restapi}/vehicle/${deviceId}`)
+    return this.http.delete(`${environment.restapi}/vehicle/${deviceId}`);
   }
 
   public getPlateData(licensePlate: string): Observable<LicensePlate> {
-    return this.http.get<LicensePlate>(`${environment.restapi}/vehicle/licenseplate/${licensePlate}`)
+    return this.http.get<LicensePlate>(
+      `${environment.restapi}/vehicle/licenseplate/${licensePlate}`
+    );
   }
 
   public setMyVehicle(vehicle: Vehicle) {
-    localStorage.setItem('myVehicle', JSON.stringify(vehicle))
+    localStorage.setItem("myVehicle", JSON.stringify(vehicle));
   }
 
   public unsetMyVehicle() {
-    localStorage.removeItem('myVehicle')
+    localStorage.removeItem("myVehicle");
   }
 
   public getMyVehicle(): Vehicle | null {
-    const vehicleJson = localStorage.getItem('myVehicle')
+    const vehicleJson = localStorage.getItem("myVehicle");
     if (vehicleJson) {
-      return JSON.parse(vehicleJson)
+      return JSON.parse(vehicleJson);
     } else {
-      return null
+      return null;
     }
   }
 
@@ -82,6 +87,13 @@ export class DataService {
   public getAllData(): Observable<Array<VehicleData>> {
     return this.http.get<Array<VehicleData>>(
       `${environment.restapi}/vehicle/all-data`,
+      httpOptions
+    );
+  }
+
+  public getData(deviceId: string) {
+    return this.http.get<Array<VehicleData>>(
+      `${environment.restapi}/vehicle/${deviceId}/data`,
       httpOptions
     );
   }
