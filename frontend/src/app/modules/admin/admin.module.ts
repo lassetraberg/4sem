@@ -11,6 +11,7 @@ import { UsersComponent } from "./pages/users/users.component";
 import { DataComponent } from "./pages/data/data.component";
 import { SharedModule } from "src/app/shared/components/shared.module";
 import { FormsModule } from "@angular/forms";
+import { VehicleDataComponent } from "src/app/shared/components/vehicle-data/vehicle-data.component";
 @NgModule({
   declarations: [DashboardComponent, UsersComponent, DataComponent],
   imports: [

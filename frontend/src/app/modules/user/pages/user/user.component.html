@@ -1,53 +1,86 @@
 <div class="user">
-
   <h2>My Account</h2>
   <div class="vehicles group">
     <span class="group_label">Vehicles</span>
 
-    <div class="my_vehicle" >
-      <div class="vehicle" id="{{myVehicle && myVehicle.licensePlate}}">
-        <img class="icon" src="{{vehiclesPath}}/{{myVehicle && myVehicle.type || 'NOTFOUND'}}.svg">
+    <div class="my_vehicle">
+      <div class="vehicle" id="{{ myVehicle && myVehicle.licensePlate }}">
+        <img
+          class="icon"
+          src="{{ vehiclesPath }}/{{
+            (myVehicle && myVehicle.type) || 'NOTFOUND'
+          }}.svg"
+        />
         <div class="details" *ngIf="myVehicle">
-          <span class="name">{{myVehicle.brand}} {{myVehicle.model}}</span>
-          <span class="licensePlate">{{myVehicle.licensePlate}}</span>
+          <span class="name">{{ myVehicle.brand }} {{ myVehicle.model }}</span>
+          <span class="licensePlate">{{ myVehicle.licensePlate }}</span>
         </div>
       </div>
-      <button (click)="showMyVehicles()"><i class="material-icons"> keyboard_arrow_down </i></button>
+      <button (click)="showMyVehicles()">
+        <i class="material-icons"> keyboard_arrow_down </i>
+      </button>
     </div>
 
     <div id="vehicles_list" class="vehicles_list">
       <form class="list">
-        <div class="vehicle" id="{{vehicle.licensePlate}}" *ngFor="let vehicle of vehicles"
-          (click)="selectVehicle(vehicle.licensePlate)">
-          <img class="icon" src="{{vehiclesPath}}/{{vehicle.type}}.svg">
+        <div
+          class="vehicle"
+          id="{{ vehicle.licensePlate }}"
+          *ngFor="let vehicle of vehicles"
+          (click)="selectVehicle(vehicle.licensePlate)"
+        >
+          <img class="icon" src="{{ vehiclesPath }}/{{ vehicle.type }}.svg" />
           <div class="details">
-            <span class="name">{{vehicle.brand}} {{vehicle.model}}</span>
-            <span class="licensePlate">{{vehicle.licensePlate}}</span>
+            <span class="name">{{ vehicle.brand }} {{ vehicle.model }}</span>
+            <span class="licensePlate">{{ vehicle.licensePlate }}</span>
           </div>
           <div class="actions">
-            <input hidden id="radio_{{vehicle.licensePlate}}" type="radio" name="vehicle" value="{{vehicle.licensePlate}}">
-            <i (click)="deleteVehicle(vehicle.deviceId)" class="material-icons delete"> delete </i>
+            <input
+              hidden
+              id="radio_{{ vehicle.licensePlate }}"
+              type="radio"
+              name="vehicle"
+              value="{{ vehicle.licensePlate }}"
+            />
+            <i
+              (click)="deleteVehicle(vehicle.deviceId)"
+              class="material-icons delete"
+            >
+              delete
+            </i>
             <span class="checkmark"></span>
           </div>
         </div>
       </form>
       <div class="button_group">
-        <button routerLink="add-vehicle"><i class="material-icons"> add </i>Add New Vehicle</button>
-        <button [disabled]="!vehicleIsSelected || vehicles.length === 0" (click)="setVehicle()">Set As My Vehicle</button>
+        <button routerLink="add-vehicle">
+          <i class="material-icons"> add </i>Add New Vehicle
+        </button>
+        <button
+          [disabled]="!vehicleIsSelected || vehicles.length === 0"
+          (click)="setVehicle()"
+        >
+          Set As My Vehicle
+        </button>
       </div>
     </div>
+  </div>
 
-
+  <div class="vehicleData group">
+    <span class="group_label">Vehicle Data</span>
+    <app-vehicle-data [vehicleData]="vehicleDataArray"></app-vehicle-data>
   </div>
 
   <div class="account group">
     <span class="group_label">Account</span>
-    <button *ngIf="!auth.isAuthenticated()" routerLink="/auth/signin">Sign In</button>
+    <button *ngIf="!auth.isAuthenticated()" routerLink="/auth/signin">
+      Sign In
+    </button>
     <button *ngIf="auth.isAuthenticated()" (click)="signOut()">
       <i class="material-icons">
         exit_to_app
       </i>
-      Sign Out</button>
+      Sign Out
+    </button>
   </div>
-
 </div>

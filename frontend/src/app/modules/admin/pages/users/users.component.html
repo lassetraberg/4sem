@@ -47,19 +47,29 @@
     <ng-container matColumnDef="locked">
       <th mat-header-cell *matHeaderCellDef>Locked</th>
       <td mat-cell *matCellDef="let user">
-        {{ user.locked }}
-        <button *ngIf="user.locked" (click)="unlockAccount(user.id)">
-          Unlock
-        </button>
+        <ng-template #notLocked>
+          <i class="material-icons">
+            lock_open
+          </i>
+        </ng-template>
+        <a *ngIf="user.locked; else notLocked" (click)="unlockAccount(user.id)">
+          <i class="material-icons unlockBtn" title="Unlock account">
+            lock
+          </i>
+        </a>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
+    <tr
+      mat-row
+      [ngClass]="{ lockedRow: row.locked == true }"
+      *matRowDef="let row; columns: tableColumns"
+    ></tr>
   </table>
 
   <mat-paginator
-    [pageSizeOptions]="[5, 10, 20]"
+    [pageSizeOptions]="[10, 20, 50]"
     showFirstLastButtons
   ></mat-paginator>
 </div>
