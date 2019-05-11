@@ -44,7 +44,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>simulation.SimulationMain</mainClass>
+                                    <mainClass>grp4.simulation.SimulationMain</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
