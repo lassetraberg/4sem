@@ -1,7 +1,7 @@
 package grp4.authentication.config.authConfig;
 
-import grp4.authentication.util.JwtProvider;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import grp4.authentication.util.JwtProvider;
 import grp4.commonAuthentication.config.authConfig.Role;
 import io.javalin.Context;
 import io.javalin.ForbiddenResponse;

@@ -1,11 +1,11 @@
 package grp4.vehicle.integrationTest;
 
+import grp4.vehicle.domain.service.ILicensePlateService;
+import grp4.vehicle.domain.service.LicensePlateService;
 import io.javalin.NotFoundResponse;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import grp4.vehicle.domain.service.ILicensePlateService;
-import grp4.vehicle.domain.service.LicensePlateService;
 
 import java.time.Duration;
 import java.time.Instant;

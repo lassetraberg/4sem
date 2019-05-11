@@ -4,10 +4,10 @@ import grp4.common.domain.model.Response;
 import grp4.common.util.JavalinUtils;
 import grp4.commonvehicle.domain.model.vehicledata.Vehicle;
 import grp4.commonvehicle.domain.service.IVehicleService;
-import io.javalin.Context;
-import org.eclipse.jetty.http.HttpStatus;
 import grp4.vehicle.domain.dto.VehicleRegistrationDto;
 import grp4.vehicle.domain.service.ILicensePlateService;
+import io.javalin.Context;
+import org.eclipse.jetty.http.HttpStatus;
 
 import java.util.List;
 import java.util.UUID;

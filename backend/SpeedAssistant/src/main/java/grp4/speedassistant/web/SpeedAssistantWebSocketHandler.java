@@ -8,7 +8,6 @@ import grp4.commonvehicle.domain.service.IVehicleService;
 import io.javalin.security.Role;
 import io.javalin.websocket.WsSession;
 import org.eclipse.jetty.http.HttpStatus;
-import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.UUID;

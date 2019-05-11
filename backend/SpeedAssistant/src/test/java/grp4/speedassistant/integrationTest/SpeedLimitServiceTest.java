@@ -4,11 +4,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mashape.unirest.http.Unirest;
 import grp4.commonvehicle.domain.model.vehicledata.GpsCoordinates;
+import grp4.speedassistant.domain.service.ISpeedLimitService;
+import grp4.speedassistant.domain.service.SpeedLimitService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import grp4.speedassistant.domain.service.ISpeedLimitService;
-import grp4.speedassistant.domain.service.SpeedLimitService;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +49,7 @@ public class SpeedLimitServiceTest {
 
         // Act
         short speedLimit60 = speedLimitService.getSpeedLimit(limit60Coordinate);
-        TimeUnit.SECONDS.sleep(rateLimit+1);
+        TimeUnit.SECONDS.sleep(rateLimit + 1);
         short speedLimit110 = speedLimitService.getSpeedLimit(limit110Coordinate);
 
         // Assert

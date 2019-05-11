@@ -1,11 +1,10 @@
 package grp4.authentication.config.authConfig;
 
-import grp4.authentication.util.JwtProvider;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import grp4.authentication.util.JwtProvider;
 import grp4.common.spi.IWebSocketAuthenticationService;
 import io.javalin.security.Role;
-import org.springframework.stereotype.Service;
 
 import java.util.Set;
 

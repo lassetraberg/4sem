@@ -6,9 +6,9 @@ import grp4.commonAuthentication.config.authConfig.Role;
 import grp4.commonAuthentication.domain.repository.IAccountRepository;
 import grp4.commonvehicle.domain.repository.IVehicleRepository;
 import grp4.commonvehicle.domain.service.IVehicleService;
-import io.javalin.apibuilder.EndpointGroup;
 import grp4.vehicle.domain.service.LicensePlateService;
 import grp4.vehicle.web.VehicleController;
+import io.javalin.apibuilder.EndpointGroup;
 import org.springframework.stereotype.Service;
 
 import static grp4.common.util.JavalinUtils.roles;
