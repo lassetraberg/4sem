@@ -98,16 +98,22 @@ public class MqttServiceProvider implements IMqttService {
             client = new MqttClient(Config.getInstance().getProperty("mqtt.url"), ".mqtt-client-" + clientId, persistence);
             client.connect(options);
         } catch (MqttException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
+    @Override
     public void disconnect() {
         try {
             client.disconnect();
         } catch (MqttException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public boolean isConnected() {
+        return this.client.isConnected();
     }
 
     private Path createTempDir(String prefix) {

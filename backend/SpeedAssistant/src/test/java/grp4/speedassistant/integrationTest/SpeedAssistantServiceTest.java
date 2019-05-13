@@ -7,9 +7,7 @@ import grp4.common.spi.IMqttService;
 import grp4.speedassistant.domain.service.ISpeedAssistantService;
 import grp4.speedassistant.domain.service.ISpeedLimitService;
 import grp4.speedassistant.domain.service.SpeedAssistantService;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -26,6 +24,17 @@ public class SpeedAssistantServiceTest {
     private ISpeedAssistantService speedAssistantService;
 
     private UUID deviceId = UUID.fromString("cc9d7c9b-fb0f-40d7-bd83-ba4d4e97e48b");
+
+    @BeforeClass
+    public static void checkMqttConnection() {
+        IMqttService mqttService = new MqttServiceProvider();
+        try {
+            mqttService.connect();
+        } catch (RuntimeException e) {
+            // do nothing
+        }
+        Assume.assumeTrue(mqttService.isConnected());
+    }
 
 
     @Before
