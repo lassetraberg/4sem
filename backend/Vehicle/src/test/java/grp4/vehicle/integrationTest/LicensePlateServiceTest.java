@@ -32,7 +32,7 @@ public class LicensePlateServiceTest {
             ex = nfr;
         }
         Instant end = Instant.now();
-        System.out.println(Duration.between(start, end).getNano());
+        //System.out.println(Duration.between(start, end).getNano());
 
         // Assert
         Assert.assertNotNull(ex);
