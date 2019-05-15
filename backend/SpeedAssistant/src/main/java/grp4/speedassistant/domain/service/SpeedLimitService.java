@@ -55,7 +55,6 @@ public class SpeedLimitService implements ISpeedLimitService {
         double secondDifference = (System.currentTimeMillis() - lastRequestTime) / 1000.0;
         if (secondDifference >= requestAllowedEveryNSeconds) {
             lastRequestTime = System.currentTimeMillis();
-            //System.out.println("yes");
             try {
                 HttpResponse<SpeedLimit> speedLimitResponse = Unirest.get(url).asObject(SpeedLimit.class);
                 lastSpeedLimit = speedLimitResponse.getBody();
@@ -65,7 +64,6 @@ public class SpeedLimitService implements ISpeedLimitService {
                 return lastSpeedLimit;
             }
         } else {
-            //System.out.println("no");
             return lastSpeedLimit;
         }
     }

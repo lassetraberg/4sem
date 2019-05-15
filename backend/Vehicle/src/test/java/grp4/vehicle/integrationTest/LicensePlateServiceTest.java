@@ -25,14 +25,11 @@ public class LicensePlateServiceTest {
         NotFoundResponse ex = null;
 
         // Act
-        Instant start = Instant.now();
         try {
             String data = licensePlateService.getData(plate);
         } catch (NotFoundResponse nfr) {
             ex = nfr;
         }
-        Instant end = Instant.now();
-        System.out.println(Duration.between(start, end).getNano());
 
         // Assert
         Assert.assertNotNull(ex);
