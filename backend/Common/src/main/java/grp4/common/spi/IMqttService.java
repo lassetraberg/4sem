@@ -63,4 +63,6 @@ public interface IMqttService {
     void connect();
 
     void disconnect();
+
+    boolean isConnected();
 }
