@@ -9,5 +9,5 @@ RUN mvn clean package
 FROM openjdk:8-jre-alpine
 EXPOSE 7000
 COPY --from=builder /build/Core/target/Core-1.0-SNAPSHOT.jar /app/app.jar
-CMD exec java $JAVA_OPTS -jar /app/app.jar
+CMD exec java -jar /app/app.jar
 
