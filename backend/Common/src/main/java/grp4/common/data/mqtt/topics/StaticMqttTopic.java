@@ -2,8 +2,8 @@ package grp4.common.data.mqtt.topics;
 
 
 public enum StaticMqttTopic {
-    ALL_VEHICLES_GPS("/grp4.vehicle/+/gps"), ALL_VEHICLES_VELOCITY("/grp4.vehicle/+/velocity"),
-    ALL_VEHICLES_ACCELERATION("/grp4.vehicle/+/acceleration");
+    ALL_VEHICLES_GPS("/vehicle/+/gps"), ALL_VEHICLES_VELOCITY("/vehicle/+/velocity"),
+    ALL_VEHICLES_ACCELERATION("/vehicle/+/acceleration");
 
     private String topic;
 

@@ -6,9 +6,9 @@ import grp4.common.util.StringUtils;
 import java.util.UUID;
 
 public enum VariableMqttTopic {
-    VEHICLE_ALL("/grp4.vehicle/%s/#"), VEHICLE_GPS("/grp4.vehicle/%s/gps"), VEHICLE_VELOCITY("/grp4.vehicle/%s/velocity"),
-    VEHICLE_ACCELERATION("/grp4.vehicle/%s/acceleration"),
-    VEHICLE_ALARM_SPEEDING("/grp4.vehicle/%s/alarms/speeding"), VEHICLE_MAX_ALLOWED_VELOCITY("/grp4.vehicle/%s/maxSpeed");
+    VEHICLE_ALL("/vehicle/%s/#"), VEHICLE_GPS("/vehicle/%s/gps"), VEHICLE_VELOCITY("/vehicle/%s/velocity"),
+    VEHICLE_ACCELERATION("/vehicle/%s/acceleration"),
+    VEHICLE_ALARM_SPEEDING("/vehicle/%s/alarms/speeding"), VEHICLE_MAX_ALLOWED_VELOCITY("/vehicle/%s/maxSpeed");
 
     private String topic;
 
